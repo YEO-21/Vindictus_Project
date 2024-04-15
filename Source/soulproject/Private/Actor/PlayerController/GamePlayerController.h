@@ -92,6 +92,11 @@ private :
 	// 달리기 키 눌림 / 떼어짐 함수
 	void OnRunPressed();
 	void OnRunReleased();
+
+	// 무기 교체 입력 시 호출됩니다.
+	void OnWeaponChangePressed();
+
+
 		
 public :
 	class UGameWidget* GetGameWidget() const;

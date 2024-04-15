@@ -82,6 +82,9 @@ void AGamePlayerController::SetupInputComponent()
 	InputComponent->BindAction(TEXT("Run"), EInputEvent::IE_Released, this,
 		&ThisClass::OnRunReleased);
 
+	InputComponent->BindAction(TEXT("WeaponChange"), EInputEvent::IE_Pressed, this,
+		&ThisClass::OnWeaponChangePressed);
+
 }
 
 void AGamePlayerController::OnPossess(APawn* pawn)
@@ -261,6 +264,12 @@ void AGamePlayerController::OnRunReleased()
 {
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
 	playerCharacter->OnRunFinished();
+}
+
+void AGamePlayerController::OnWeaponChangePressed()
+{
+	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
+	playerCharacter->OnWeaponChanged();
 }
 
 UGameWidget* AGamePlayerController::GetGameWidget() const

@@ -28,6 +28,9 @@ AGameCharacter::AGameCharacter()
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> ANIMMONTAGE_HIT(
 		TEXT("/Script/Engine.AnimMontage'/Game/Resources/GirlKnight1/Animations/AnimMontage_Hit.AnimMontage_Hit'"));
 
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_AXE(
+		TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWeapons/Weapons/Blade/Axes/Blade_TechAxe/SK_Blade_TechAxe.SK_Blade_TechAxe'"));
+
 	if (ANIMMONTAGE_HIT.Succeeded())
 	{
 		HitAnimMontage = ANIMMONTAGE_HIT.Object;
@@ -56,6 +59,9 @@ AGameCharacter::AGameCharacter()
 
 	WeaponMesh =
 		CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WEAPON_MESH"));
+
+	SubWeaponMesh =
+		CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SUB_WEAPON_MESH"));
 
 
 
@@ -93,11 +99,17 @@ AGameCharacter::AGameCharacter()
 
 	// 무기 붙이기
 	WeaponMesh->SetupAttachment(GetMesh(), TEXT("Socket_Weapon"));
+	SubWeaponMesh->SetupAttachment(GetMesh(), TEXT("Socket_Weapon"));
 
 	if (SM_SABER.Succeeded())
 	{
 		WeaponMesh->SetStaticMesh(SM_SABER.Object);
 		WeaponMesh->SetCollisionProfileName(TEXT("NoCollision"));
+	}
+
+	if (SK_AXE.Succeeded())
+	{
+		SubWeaponMesh->SetSkeletalMesh(SK_AXE.Object);
 	}
 
 	// 플레이어 캐릭터의 팀을 설정합니다.
@@ -336,4 +348,20 @@ void AGameCharacter::OnStaminaEmpty()
 void AGameCharacter::OnHitFinished()
 {
 	IsHit = false;
+}
+
+void AGameCharacter::OnWeaponChanged()
+{
+	if ((WeaponCount %2) != 0)
+	{
+		WeaponMesh->SetVisibility(false);
+		SubWeaponMesh->SetVisibility(true);
+	}
+	else
+	{
+		WeaponMesh->SetVisibility(true);
+		SubWeaponMesh->SetVisibility(false);
+	}
+	++WeaponCount;
+
 }

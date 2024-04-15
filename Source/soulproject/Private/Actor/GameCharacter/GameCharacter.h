@@ -36,6 +36,9 @@ private :
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* WeaponMesh;
 
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class USkeletalMeshComponent* SubWeaponMesh;
+
 	FGenericTeamId Team;
 
 	// 피해를 입었을 경우 재생시킬 애님 몽타주
@@ -45,6 +48,10 @@ private :
 	// 현재 피해를 입는중임을 나타냅니다.
 	UPROPERTY()
 	bool IsHit;
+
+	// 무기 교체 확인을 위한 변수입니다.
+	UPROPERTY()
+	int32 WeaponCount;
 
 
 
@@ -93,6 +100,8 @@ public:
 	void OnStaminaEmpty();
 
 	void OnHitFinished();
+
+	void OnWeaponChanged();
 
 
 	FORCEINLINE class UPlayerCharacterMovementComponent* GetPlayerCharacterMovementComponent() const
