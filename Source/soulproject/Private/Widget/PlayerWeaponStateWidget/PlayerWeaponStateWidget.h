@@ -15,8 +15,6 @@ class UPlayerWeaponStateWidget : public UUserWidget
 	GENERATED_BODY()
 
 
-
-
 protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* MainWeapon;
@@ -24,11 +22,20 @@ protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* SubWeapon;
 
+	UPROPERTY(BlueprintReadOnly)
+	bool IsExChangeWeapon;
+
 
 protected:
 	 virtual void NativeConstruct() override;
 
 public:
 	void ExchangeWeaponWidget();
+
+	UFUNCTION(BlueprintCallable)
+	 bool GetExChangeWeaponState() const
+	{
+		return IsExChangeWeapon;
+	}
 
 };
