@@ -9,6 +9,7 @@
 #include "Component/PlayerCharacterInteractComponent/PlayerCharacterInteractComponent.h"
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 
+
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -99,7 +100,7 @@ AGameCharacter::AGameCharacter()
 
 	// 무기 붙이기
 	WeaponMesh->SetupAttachment(GetMesh(), TEXT("Socket_Weapon"));
-	SubWeaponMesh->SetupAttachment(GetMesh(), TEXT("Socket_Weapon"));
+	SubWeaponMesh->SetupAttachment(GetMesh(), TEXT("Socket_SubWeapon"));
 
 	if (SM_SABER.Succeeded())
 	{
@@ -110,6 +111,7 @@ AGameCharacter::AGameCharacter()
 	if (SK_AXE.Succeeded())
 	{
 		SubWeaponMesh->SetSkeletalMesh(SK_AXE.Object);
+		SubWeaponMesh->SetVisibility(false);
 	}
 
 	// 플레이어 캐릭터의 팀을 설정합니다.
@@ -123,6 +125,7 @@ AGameCharacter::AGameCharacter()
 void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
 
 	UPlayerCharacterAnimInstance* animInst = Cast<UPlayerCharacterAnimInstance>(
 		GetMesh()->GetAnimInstance());
@@ -364,4 +367,5 @@ void AGameCharacter::OnWeaponChanged()
 	}
 	++WeaponCount;
 
+	
 }

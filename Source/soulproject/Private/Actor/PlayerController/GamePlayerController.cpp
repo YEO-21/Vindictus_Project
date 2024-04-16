@@ -3,8 +3,10 @@
 #include "Actor/EnemyCharacter/EnemyCharacter.h"
 #include "Widget/GameWidget/GameWidget.h"
 #include "Widget/PlayerStateWidget/PlayerStateWidget.h"
+#include "Widget/PlayerWeaponStateWidget/PlayerWeaponStateWidget.h"
 #include "Structure/PlayerCharacterData/PlayerCharacterData.h"
 #include "Component/PlayerCharacterMovementComponent/PlayerCharacterMovementComponent.h"
+
 
 AGamePlayerController::AGamePlayerController()
 {
@@ -270,11 +272,19 @@ void AGamePlayerController::OnWeaponChangePressed()
 {
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
 	playerCharacter->OnWeaponChanged();
+	
+	//if (!IsValid(PlayerWeaponWidget)) return;
+	//PlayerWeaponWidget->ExchangeWeaponWidget();
 }
 
 UGameWidget* AGamePlayerController::GetGameWidget() const
 {
 	return GameWidget;
+}
+
+UPlayerWeaponStateWidget* AGamePlayerController::GetWeaponWidget() const
+{
+	return PlayerWeaponWidget;
 }
 
 void AGamePlayerController::SetCameraViewTarget(AActor* target)
