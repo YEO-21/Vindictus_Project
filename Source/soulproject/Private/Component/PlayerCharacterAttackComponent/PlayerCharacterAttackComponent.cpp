@@ -55,7 +55,9 @@ void UPlayerCharacterAttackComponent::AttackProcedure()
 	FAttackData* requestedAttack;
 	RequestAttackQueue.Dequeue(requestedAttack);
 
+	AttackDetectedActors.Empty();
 	AttackDetectedEnemies.Empty();
+
 
 	// 현재 공격을 요청된 공격으로 설정합니다.
 	CurrentAttackData = requestedAttack;
@@ -119,7 +121,10 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 
 	for (FHitResult& hit : hitResults)
 	{
+
 		AEnemyCharacter* enemyCharacter = Cast<AEnemyCharacter>(hit.GetActor());
+		
+
 		if (IsValid(enemyCharacter))
 		{
 			if (!AttackDetectedEnemies.Contains(enemyCharacter))
@@ -148,6 +153,18 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 					UDamageType::StaticClass());
 			}
 
+		}
+		else
+		{
+			if (!AttackDetectedActors.Contains(hit.GetActor()))
+			{
+				AttackDetectedActors.Add(hit.GetActor());
+
+				// 적 캐릭터 공격을 하는것이 아닐 때, 공격 막힘 애니메이션 재생
+				Cast<AGameCharacter>(GetOwner())->PlayAttackBlockAnim();
+				UE_LOG(LogTemp, Warning, TEXT("It is not EnemyCharacter"));
+			}
+			
 		}
 
 	}

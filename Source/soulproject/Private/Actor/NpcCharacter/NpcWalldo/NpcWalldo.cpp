@@ -18,6 +18,7 @@ ANpcWalldo::ANpcWalldo()
 		GetMesh()->SetAnimClass(ANIMBP_NPC.Class);
 	}
 
+	NpcCode = TEXT("000001");
 
 }
 

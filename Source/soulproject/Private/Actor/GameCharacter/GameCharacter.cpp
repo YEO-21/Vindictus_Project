@@ -105,13 +105,14 @@ AGameCharacter::AGameCharacter()
 	if (SM_SABER.Succeeded())
 	{
 		WeaponMesh->SetStaticMesh(SM_SABER.Object);
-		WeaponMesh->SetCollisionProfileName(TEXT("NoCollision"));
+		WeaponMesh->SetCollisionProfileName(TEXT("OverlapAll"));
 	}
 
 	if (SK_AXE.Succeeded())
 	{
 		SubWeaponMesh->SetSkeletalMesh(SK_AXE.Object);
 		SubWeaponMesh->SetVisibility(false);
+		SubWeaponMesh->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 	}
 
 	// 플레이어 캐릭터의 팀을 설정합니다.
@@ -182,7 +183,7 @@ void AGameCharacter::OnDamaged(
 
 
 	// 맞는 애니메이션 재생
-	PlayAnimMontage(HitAnimMontage);
+	PlayAnimMontage(HitAnimMontage, 1.0f, TEXT("Default"));
 
 	// 피해를 입는 상태로 설정
 	IsHit = true;
@@ -368,4 +369,9 @@ void AGameCharacter::OnWeaponChanged()
 	}
 
 	
+}
+
+void AGameCharacter::PlayAttackBlockAnim()
+{
+	PlayAnimMontage(HitAnimMontage, 1.0f, TEXT("AttackBlock"));
 }

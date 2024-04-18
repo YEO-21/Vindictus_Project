@@ -49,6 +49,9 @@ private :
 	// 공격 시 감지된 적 객체를 잠시 저장해둘 배열
 	TArray<class AEnemyCharacter*> AttackDetectedEnemies;
 
+	// 공격 시 감지된 액터들을 잠시 저장해둘 배열
+	TArray<class AActor*> AttackDetectedActors;
+
 
 
 	// 입력된 콤보 카운트

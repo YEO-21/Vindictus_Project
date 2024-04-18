@@ -103,6 +103,8 @@ public:
 
 	void OnWeaponChanged();
 
+	void PlayAttackBlockAnim();
+
 
 	FORCEINLINE class UPlayerCharacterMovementComponent* GetPlayerCharacterMovementComponent() const
 	{
