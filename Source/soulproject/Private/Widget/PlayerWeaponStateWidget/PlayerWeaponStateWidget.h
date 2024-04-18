@@ -22,7 +22,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UImage* SubWeapon;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	bool IsExChangeWeapon;
 
 

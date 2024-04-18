@@ -355,6 +355,7 @@ void AGameCharacter::OnHitFinished()
 
 void AGameCharacter::OnWeaponChanged()
 {
+	++WeaponCount;
 	if ((WeaponCount %2) != 0)
 	{
 		WeaponMesh->SetVisibility(false);
@@ -365,7 +366,6 @@ void AGameCharacter::OnWeaponChanged()
 		WeaponMesh->SetVisibility(true);
 		SubWeaponMesh->SetVisibility(false);
 	}
-	++WeaponCount;
 
 	
 }
