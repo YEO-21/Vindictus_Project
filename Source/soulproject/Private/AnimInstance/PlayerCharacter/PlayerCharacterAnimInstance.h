@@ -40,6 +40,8 @@ public :
 	void SetGroundedState(bool isGrounded);
 	void SetBlockState(bool isBlocking);
 
+	
+
 
 private:
 	UFUNCTION()

@@ -3,6 +3,7 @@
 #include "Actor/EnemyCharacter/EnemyCharacter.h"
 #include "Actor/PlayerController/GamePlayerController.h"
 #include "../../Structure/AttackData/AttackData.h"
+#include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 
 #include "Components/StaticMeshComponent.h"
 
@@ -115,12 +116,13 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 		TEXT("AttackArea"),
 		false,
 		actorsToIgnore,
-		EDrawDebugTrace::Type::ForOneFrame,
+		EDrawDebugTrace::Type::ForDuration,
 		hitResults,
-		true);
-
+		true, FLinearColor(0.0f, 0.0f, 0.0f, 0.0f), FLinearColor(), 0.0f);
+	
 	for (FHitResult& hit : hitResults)
 	{
+
 
 		AEnemyCharacter* enemyCharacter = Cast<AEnemyCharacter>(hit.GetActor());
 		
@@ -156,12 +158,14 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 		}
 		else
 		{
-			if (!AttackDetectedActors.Contains(hit.GetActor()))
+			if (!AttackDetectedActors.Contains(hit.GetActor()) && IsValid(hit.GetActor()))
 			{
 				AttackDetectedActors.Add(hit.GetActor());
 
 				// 적 캐릭터 공격을 하는것이 아닐 때, 공격 막힘 애니메이션 재생
 				Cast<AGameCharacter>(GetOwner())->PlayAttackBlockAnim();
+
+
 				UE_LOG(LogTemp, Warning, TEXT("It is not EnemyCharacter"));
 			}
 			

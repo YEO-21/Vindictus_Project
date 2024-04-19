@@ -45,6 +45,12 @@ private :
 	UPROPERTY()
 	class UAnimMontage* HitAnimMontage;
 
+	// 죽었을 때 재생할 애니메이션
+	UPROPERTY()
+	class UAnimMontage* DeadAnimMontage;
+
+
+
 	// 현재 피해를 입는중임을 나타냅니다.
 	UPROPERTY()
 	bool IsHit;
@@ -104,6 +110,8 @@ public:
 	void OnWeaponChanged();
 
 	void PlayAttackBlockAnim();
+
+	void PlayDeadAnim();
 
 
 	FORCEINLINE class UPlayerCharacterMovementComponent* GetPlayerCharacterMovementComponent() const

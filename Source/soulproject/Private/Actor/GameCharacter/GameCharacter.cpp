@@ -29,6 +29,9 @@ AGameCharacter::AGameCharacter()
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> ANIMMONTAGE_HIT(
 		TEXT("/Script/Engine.AnimMontage'/Game/Resources/GirlKnight1/Animations/AnimMontage_Hit.AnimMontage_Hit'"));
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ANIMMONTAGE_DEAD(
+		TEXT("/Script/Engine.AnimMontage'/Game/Resources/GirlKnight1/Animations/AnimMontage_Dead.AnimMontage_Dead'"));
+
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_AXE(
 		TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWeapons/Weapons/Blade/Axes/Blade_TechAxe/SK_Blade_TechAxe.SK_Blade_TechAxe'"));
 
@@ -37,7 +40,9 @@ AGameCharacter::AGameCharacter()
 		HitAnimMontage = ANIMMONTAGE_HIT.Object;
 	}
 
-
+	if (ANIMMONTAGE_DEAD.Succeeded())
+		DeadAnimMontage = ANIMMONTAGE_DEAD.Object;
+	
 
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -374,4 +379,11 @@ void AGameCharacter::OnWeaponChanged()
 void AGameCharacter::PlayAttackBlockAnim()
 {
 	PlayAnimMontage(HitAnimMontage, 1.0f, TEXT("AttackBlock"));
+	PlayerCharacterMovementComponent->SetAllowMovementInput(false);
+}
+
+void AGameCharacter::PlayDeadAnim()
+{
+	PlayAnimMontage(DeadAnimMontage);
+	
 }

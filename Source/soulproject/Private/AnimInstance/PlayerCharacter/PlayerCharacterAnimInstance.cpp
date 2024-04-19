@@ -23,6 +23,8 @@ void UPlayerCharacterAnimInstance::SetBlockState(bool isBlocking)
 	bIsBlock = isBlocking;
 }
 
+
+
 void UPlayerCharacterAnimInstance::AnimNotify_AttackEnd()
 {
 	AnimController->OnAttackEnded();

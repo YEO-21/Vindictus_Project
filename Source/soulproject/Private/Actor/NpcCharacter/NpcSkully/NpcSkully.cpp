@@ -1,5 +1,7 @@
 #include "Actor/NpcCharacter/NpcSkully/NpcSkully.h"
 
+#include "AnimInstance/Npc/NpcAnimInstance.h"
+
 ANpcSkully::ANpcSkully()
 {
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_SKULLY(
@@ -23,7 +25,8 @@ bool ANpcSkully::OnInteractionStarted(FOnInteractionFinishSignature onInteractio
 
 	if (!result) return false;
 
-
+	// 상호작용 애니메이션 재생
+	Cast<UNpcAnimInstance>(GetMesh()->GetAnimInstance())->SetTalkState(true);
 
 	return true;
 }

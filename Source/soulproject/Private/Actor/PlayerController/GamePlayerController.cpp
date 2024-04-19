@@ -273,8 +273,6 @@ void AGamePlayerController::OnWeaponChangePressed()
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
 	playerCharacter->OnWeaponChanged();
 	
-	//if (!IsValid(PlayerWeaponWidget)) return;
-	//PlayerWeaponWidget->ExchangeWeaponWidget();
 }
 
 UGameWidget* AGamePlayerController::GetGameWidget() const
@@ -321,11 +319,15 @@ void AGamePlayerController::OnDamaged(float damage)
 	// HP 수치 갱신
 	CurrentHp -= hitDamage;
 	playerStateWidget->UpdateHp(CurrentHp);
+	UE_LOG(LogTemp, Warning, TEXT("CurrentHp is %.2f"), CurrentHp);
 
 	// 사망 처리
 	if (CurrentHp <= 0.0f)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Player is Dead"));
+
 		CurrentHp = 0.0f;
+		Cast<AGameCharacter>(GetPawn())->PlayDeadAnim();
 		// 사망 처리
 	}
 }
