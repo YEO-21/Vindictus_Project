@@ -101,5 +101,7 @@ void UPlayerCharacterInteractComponent::OnInteractionFinished()
 	playerCharacter->GetMesh()->SetRelativeRotation(BeforeInteractionRotation);
 
 	Cast<AGamePlayerController>(playerCharacter->GetController())->ClearCameraViewTarget();
+
+
 }
 

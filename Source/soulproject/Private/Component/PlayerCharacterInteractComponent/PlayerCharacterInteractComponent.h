@@ -18,6 +18,7 @@ private :
 	FVector BeforeInteractionLocation;
 	FRotator BeforeInteractionRotation;
 
+
 public:	
 	UPlayerCharacterInteractComponent();
 
@@ -40,7 +41,7 @@ private :
 	void OnInteractionStarted(FVector interactionLocation, FRotator interactionRotation);
 	void OnInteractionFinished();
 
-
+	
 
 		
 };

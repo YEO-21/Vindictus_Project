@@ -10,6 +10,8 @@
 
 #include "Component/InteractableAreaComponent/InteractableAreaComponent.h"
 
+#include "AnimInstance/Npc/NpcAnimInstance.h"
+
 #include "Widget/GameWidget/GameWidget.h"
 #include "Widget/NpcWidget/NpcWidget.h"
 #include "Widget/NpcDialogWidget/NpcDialogWidget.h"
@@ -101,6 +103,11 @@ void ANpcCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 }
 
+void ANpcCharacter::FinishTalkAnimation()
+{
+	Cast<UNpcAnimInstance>(GetMesh()->GetAnimInstance())->SetTalkState(false);
+}
+
 bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishEventSignature onInteractionFinished)
 {
 	// 첫 번째 플레이어 컨트롤러 (플레이어의 컨트롤러)를 얻습니다.
@@ -131,6 +138,9 @@ bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishEventSignature onIn
 
 			// 커서를 숨깁니다.
 			playerController->bShowMouseCursor = false;
+
+			// 대화 애니메이션을 종료합니다.
+			SetBackAnimation();
 
 			// 상호작용 종료
 			if (OnInteractionFinished.IsBound()) 

@@ -66,6 +66,8 @@ public:
 
 	virtual bool OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished);
 
+	virtual void FinishTalkAnimation();
+
 	FORCEINLINE class UNpcDialogWidget* GetNpcDialogWidget() const
 	{
 		return NpcDialogWidget;
