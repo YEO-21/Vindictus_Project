@@ -119,6 +119,8 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 		EDrawDebugTrace::Type::ForDuration,
 		hitResults,
 		true, FLinearColor(0.0f, 0.0f, 0.0f, 0.0f), FLinearColor(), 0.0f);
+
+	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetOwner());
 	
 	for (FHitResult& hit : hitResults)
 	{

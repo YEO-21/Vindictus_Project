@@ -140,7 +140,7 @@ bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishEventSignature onIn
 			playerController->bShowMouseCursor = false;
 
 			// 대화 애니메이션을 종료합니다.
-			SetBackAnimation();
+			FinishTalkAnimation();
 
 			// 상호작용 종료
 			if (OnInteractionFinished.IsBound()) 

@@ -312,6 +312,9 @@ void AGamePlayerController::OnDamaged(float damage)
 
 	UPlayerStateWidget* playerStateWidget = GameWidget->GetPlayerStateWidget();
 
+	// Get PlayerCharacter
+	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
+
 	// 입힐 피해량 계산
 	float hitDamage = (damage - (PlayerCharacterData->Def / 2));
 	if (hitDamage < 0.0f) hitDamage = 1;
@@ -322,13 +325,18 @@ void AGamePlayerController::OnDamaged(float damage)
 	UE_LOG(LogTemp, Warning, TEXT("CurrentHp is %.2f"), CurrentHp);
 
 	// 사망 처리
-	if (CurrentHp <= 0.0f)
+	if (CurrentHp <= 0.0f && !playerCharacter->GetDeadState())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player is Dead"));
+		playerCharacter->SetDeadState(true);
 
 		CurrentHp = 0.0f;
-		Cast<AGameCharacter>(GetPawn())->PlayDeadAnim();
-		// 사망 처리
+
+		// 사망시 튕겨져 나감 처리
+		playerCharacter->DeadBounce();
+
+		// 사망 처리 애니메이션 재생
+		 playerCharacter->PlayDeadAnim();
+
 	}
 }
 

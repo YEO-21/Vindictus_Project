@@ -49,8 +49,6 @@ private :
 	UPROPERTY()
 	class UAnimMontage* DeadAnimMontage;
 
-
-
 	// 현재 피해를 입는중임을 나타냅니다.
 	UPROPERTY()
 	bool IsHit;
@@ -58,6 +56,10 @@ private :
 	// 무기 교체 확인을 위한 변수입니다.
 	UPROPERTY()
 	int32 WeaponCount;
+
+	// 현재 죽었는지 상태를 나타냅니다.
+	UPROPERTY()
+	bool IsDead;
 
 
 
@@ -112,6 +114,7 @@ public:
 	void PlayAttackBlockAnim();
 
 	void PlayDeadAnim();
+	void DeadBounce();
 
 
 	FORCEINLINE class UPlayerCharacterMovementComponent* GetPlayerCharacterMovementComponent() const
@@ -144,5 +147,14 @@ public:
 		return IsHit;
 	}
 
+	FORCEINLINE void SetDeadState(bool isdead)
+	{
+		IsDead = isdead;
+	}
+
+	FORCEINLINE bool GetDeadState()
+	{
+		return IsDead;
+	}
 
 };

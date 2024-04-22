@@ -180,6 +180,7 @@ void AGameCharacter::OnDamaged(
 	AActor* damageCauser)
 {
 	if (PlayerCharacterMovementComponent->GetRollingState()) return;
+	if (IsDead) return;
 
 	// 컨트롤러에게 피해입음 알림
 	AGamePlayerController* playerController = Cast<AGamePlayerController>(GetController());
@@ -188,6 +189,7 @@ void AGameCharacter::OnDamaged(
 
 
 	// 맞는 애니메이션 재생
+	if(!IsDead)
 	PlayAnimMontage(HitAnimMontage, 1.0f, TEXT("Default"));
 
 	// 피해를 입는 상태로 설정
@@ -384,6 +386,17 @@ void AGameCharacter::PlayAttackBlockAnim()
 
 void AGameCharacter::PlayDeadAnim()
 {
-	PlayAnimMontage(DeadAnimMontage);
+	PlayAnimMontage(DeadAnimMontage, 1.0f, TEXT("Default"));
 	
+}
+
+void AGameCharacter::DeadBounce()
+{
+	FVector forwardVector = GetActorForwardVector();
+	forwardVector.Z = 100.0f;
+
+
+	GetCharacterMovement()->AddImpulse(forwardVector* -10000.0f);
+	//SetActorLocation(GetActorLocation() + FVector(-2000.0f, 0.0f, 0.0f));
+
 }
