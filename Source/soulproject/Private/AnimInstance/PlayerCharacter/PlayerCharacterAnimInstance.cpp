@@ -23,6 +23,11 @@ void UPlayerCharacterAnimInstance::SetBlockState(bool isBlocking)
 	bIsBlock = isBlocking;
 }
 
+void UPlayerCharacterAnimInstance::SetPlayerDeadState(bool isdead)
+{
+	bIsPlayerDead = isdead;
+}
+
 
 
 void UPlayerCharacterAnimInstance::AnimNotify_AttackEnd()
@@ -75,3 +80,6 @@ void UPlayerCharacterAnimInstance::AnimNotify_RollStart()
 {
 	AnimController->OnRollStart();
 }
+
+
+

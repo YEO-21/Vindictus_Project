@@ -13,6 +13,8 @@ UBTTask_KnightAttack::UBTTask_KnightAttack()
 EBTNodeResult::Type UBTTask_KnightAttack::ExecuteTask(
 	UBehaviorTreeComponent& ownerComponent, uint8* newMemory)
 {
+
+
 	// Get BlackboardComponent
 	UBlackboardComponent* blackboardComponent = ownerComponent.GetBlackboardComponent();
 
@@ -22,6 +24,8 @@ EBTNodeResult::Type UBTTask_KnightAttack::ExecuteTask(
 	// 공격중 상태로 전환
 	blackboardComponent->SetValueAsBool(IsAttackingKey.SelectedKeyName, true);
 
+	
+
 	// Get KnightController
 	AKnightController* controller = Cast<AKnightController>(ownerComponent.GetOwner());
 
@@ -30,6 +34,7 @@ EBTNodeResult::Type UBTTask_KnightAttack::ExecuteTask(
 	{
 		return  EBTNodeResult::Failed;
 	}
+
 
 	// 공격 실행
 	controller->Attack();

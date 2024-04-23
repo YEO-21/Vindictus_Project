@@ -2,6 +2,7 @@
 #include "Actor/GameCharacter/GameCharacter.h"
 
 #include "Structure/EnemyData/EnemyData.h"
+#include "Structure/PlayerCharacterData/PlayerCharacterData.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -10,6 +11,8 @@
 
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
+
+#include "../soulproject.h"
 
 void AEnemyController::OnPossess(APawn* inPawn)
 {
@@ -73,4 +76,12 @@ void AEnemyController::OnDead()
 	BlackBoardComponent->SetValueAsBool(BLACKBOARDKEY_ISDEAD, true);
 
 	BlackBoardComponent->GetBrainComponent()->StopLogic(FString());
+}
+
+void AEnemyController::OnPlayerDead()
+{
+	BlackBoardComponent->SetValueAsBool(BLACKBOARDKEY_ISPLAYERDEAD, true);
+
+	BlackBoardComponent->SetValueAsBool(BLACKBOARDKEY_ISAGGRESSIVESTATE, false);
+
 }

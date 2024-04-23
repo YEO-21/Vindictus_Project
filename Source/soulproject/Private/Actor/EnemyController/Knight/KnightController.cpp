@@ -70,11 +70,14 @@ AKnightController::AKnightController()
 
 void AKnightController::Attack()
 {
+	
+
 	// Get KnightCharacter
 	AKnightCharacter* controlledCharacter = Cast<AKnightCharacter>(GetPawn());
 
 	// 유효성 검사
 	if (!IsValid(controlledCharacter)) return;
+
 
 	// 공격
 	controlledCharacter->GetAttackComponent()->Attack();

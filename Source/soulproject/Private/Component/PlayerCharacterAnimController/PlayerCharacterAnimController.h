@@ -92,5 +92,8 @@ public:
 	// 구르기 애니메이션 시작
 	void OnRollStart();
 
+	void OnPlayerDead();
+
+
 
 };

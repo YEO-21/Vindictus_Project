@@ -8,6 +8,7 @@
 
 #define PLAYERCHARACTER_DATA_NORMAL		TEXT("Normal")
 
+
 /**
  * 
  */
@@ -44,6 +45,11 @@ private :
 
 	// 스태미너를 계산하기 위한 이전 캐릭터 위치
 	FVector PrevCharacterLocation;
+
+protected:
+	UPROPERTY()
+	class UBlackboardComponent* BlackboardComponent;
+
 
 
 
@@ -119,6 +125,12 @@ public :
 	// 적 공격 시 호출됩니다.
 	// newTargetEnemy : 공격한 적 객체를 전달합니다.
 	void OnEnemyAttack(class AEnemyCharacter * newTargetEnemy);
+
+	
+	FORCEINLINE float GetCurrentHp()
+	{
+		return CurrentHp;
+	}
 
 	
 };

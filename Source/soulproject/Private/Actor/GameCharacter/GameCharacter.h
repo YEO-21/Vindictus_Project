@@ -39,6 +39,8 @@ private :
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class USkeletalMeshComponent* SubWeaponMesh;
 
+
+
 	FGenericTeamId Team;
 
 	// 피해를 입었을 경우 재생시킬 애님 몽타주
@@ -60,6 +62,8 @@ private :
 	// 현재 죽었는지 상태를 나타냅니다.
 	UPROPERTY()
 	bool IsDead;
+
+	float CurrentHp;
 
 
 
@@ -113,7 +117,7 @@ public:
 
 	void PlayAttackBlockAnim();
 
-	void PlayDeadAnim();
+
 	void DeadBounce();
 
 
@@ -157,4 +161,10 @@ public:
 		return IsDead;
 	}
 
+	FORCEINLINE float GetCurrentHp()
+	{
+		return CurrentHp;
+	}
+
+	void SetCurrentHp(float currenthp);
 };

@@ -9,9 +9,9 @@
 #include "Component/PlayerCharacterInteractComponent/PlayerCharacterInteractComponent.h"
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 
-
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "../soulproject.h"
 
 #include "Structure/PlayerCharacterData/PlayerCharacterData.h"
 
@@ -35,6 +35,8 @@ AGameCharacter::AGameCharacter()
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_AXE(
 		TEXT("/Script/Engine.SkeletalMesh'/Game/InfinityBladeWeapons/Weapons/Blade/Axes/Blade_TechAxe/SK_Blade_TechAxe.SK_Blade_TechAxe'"));
 
+
+
 	if (ANIMMONTAGE_HIT.Succeeded())
 	{
 		HitAnimMontage = ANIMMONTAGE_HIT.Object;
@@ -43,6 +45,8 @@ AGameCharacter::AGameCharacter()
 	if (ANIMMONTAGE_DEAD.Succeeded())
 		DeadAnimMontage = ANIMMONTAGE_DEAD.Object;
 	
+
+
 
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -170,6 +174,8 @@ void AGameCharacter::Tick(float DeltaTime)
 
 	// 무기 소켓 위치 갱신
 	AttackComponent->UpdateWeaponSocketLocation(WeaponMesh);
+
+	
 }
 
 void AGameCharacter::OnDamaged(
@@ -186,6 +192,7 @@ void AGameCharacter::OnDamaged(
 	AGamePlayerController* playerController = Cast<AGamePlayerController>(GetController());
 	playerController->OnDamaged(damage);
 
+	//CurrentHp = playerController->GetCurrentHp();
 
 
 	// 맞는 애니메이션 재생
@@ -384,19 +391,29 @@ void AGameCharacter::PlayAttackBlockAnim()
 	PlayerCharacterMovementComponent->SetAllowMovementInput(false);
 }
 
-void AGameCharacter::PlayDeadAnim()
-{
-	PlayAnimMontage(DeadAnimMontage, 1.0f, TEXT("Default"));
-	
-}
 
 void AGameCharacter::DeadBounce()
 {
+	GetMesh()->SetCollisionProfileName(TEXT("PhysicsActor"));
+	GetMesh()->SetSimulatePhysics(true);
+	
 	FVector forwardVector = GetActorForwardVector();
+
+
+	forwardVector.X = 10.0f;
+	forwardVector.Y = 10.0f;
 	forwardVector.Z = 100.0f;
 
+	//LaunchCharacter(forwardVector, true, true);
 
-	GetCharacterMovement()->AddImpulse(forwardVector* -10000.0f);
+	GetMesh()->AddImpulse(forwardVector);
+	
+	
 	//SetActorLocation(GetActorLocation() + FVector(-2000.0f, 0.0f, 0.0f));
 
+}
+
+void AGameCharacter::SetCurrentHp(float currenthp)
+{
+	CurrentHp = currenthp;
 }

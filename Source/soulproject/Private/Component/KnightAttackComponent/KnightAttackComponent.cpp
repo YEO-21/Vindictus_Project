@@ -1,7 +1,9 @@
 #include "Component/KnightAttackComponent/KnightAttackComponent.h"
 #include "Component/PlayerCharacterAttackComponent/PlayerCharacterAttackComponent.h"
 #include "Actor/EnemyCharacter/Knight/KnightCharacter.h"
+#include"Actor/EnemyController/EnemyController.h"
 #include "Actor/GameCharacter/GameCharacter.h"
+#include "Actor/PlayerController/GamePlayerController.h"
 #include "Structure/EnemyData/EnemyData.h"
 
 
@@ -94,10 +96,29 @@ void UKnightAttackComponent::CheckAttackArea()
 		// 감지된 객체 중, GameCharacter 형태의 객체를 얻습니다.
 		AGameCharacter* gameCharacter = Cast<AGameCharacter>(hitResult.GetActor());
 
+		if (!IsValid(gameCharacter)) return;
+
+		float PlayerCurrentHp = gameCharacter->GetCurrentHp();
+
+		
+		AKnightCharacter* knightCharacter = Cast<AKnightCharacter>(GetOwner());
+
+		if (!IsValid(knightCharacter)) return;
+
+
+		UE_LOG(LogTemp, Warning, TEXT("PlayerCurrentHp = [%f]"), PlayerCurrentHp);
+
+		// 플레이어 체력이 0보다 작으면 사망 처리
+		if (PlayerCurrentHp < 0.0f)
+		{
+			knightCharacter->PlayerDead();
+			return;
+		}
+
 		// 만약 GameCharacter 객체를 감지한 경우
 		if (IsValid(gameCharacter))
 		{
-			AKnightCharacter* knightCharacter = Cast<AKnightCharacter>(GetOwner());
+			//AKnightCharacter* knightCharacter = Cast<AKnightCharacter>(GetOwner());
 
 			// 방어되었음을 확인합니다.
 			bool isBlocked = IsBlocked(gameCharacter, knightCharacter);

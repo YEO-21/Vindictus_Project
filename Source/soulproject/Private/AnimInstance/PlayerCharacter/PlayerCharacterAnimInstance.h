@@ -31,6 +31,10 @@ protected :
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsBlock;
 
+	// 플레이어가 사망했음을 나타냅니다.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsPlayerDead;
+
 
 public :
 	// 애님 컨트롤러를 설정합니다.
@@ -39,6 +43,7 @@ public :
 	void SetCurrentSpeed(float currentSpeed);
 	void SetGroundedState(bool isGrounded);
 	void SetBlockState(bool isBlocking);
+	void SetPlayerDeadState(bool isdead);
 
 	
 
@@ -74,6 +79,7 @@ private:
 
 	UFUNCTION()
 	void AnimNotify_RollStart();
+
 
 
 };

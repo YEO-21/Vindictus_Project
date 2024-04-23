@@ -13,6 +13,7 @@
 #define BLACKBOARDKEY_ISDEAD				TEXT("IsDead")
 #define BLACKBOARDKEY_MAXMOVEDISTANCE		TEXT("MaxMoveDistance")
 #define BLACKBOARDKEY_DAMAGEACTOR			TEXT("DamageActor")
+#define BLACKBOARDKEY_ISPLAYERDEAD			TEXT("IsPlayerDead")
 
 /**
  * 적 캐릭터에서 기본적으로 사용하는 컨트롤러입니다.
@@ -26,6 +27,10 @@ protected :
 	// 사용되는 BlackboardComponent 를 나타냅니다.
 	UPROPERTY()
 	class UBlackboardComponent * BlackBoardComponent;
+
+private:
+	// 플레이어 캐릭터 데이터
+	struct FPlayerCharacterData* PlayerCharacterData;
 
 protected :
 	// 컨트롤러가 Pawn 에 빙의되었을 경우 호출되는 함수입니다.
@@ -43,4 +48,6 @@ public :
 	// 조종하는 적이 사망한 경우 호출되는 메서드입니다.
 	virtual void OnDead();
 	
+	// 플레이어 캐릭터가 사망한 경우 호출되는 메서드입니다.
+	virtual void OnPlayerDead();
 };

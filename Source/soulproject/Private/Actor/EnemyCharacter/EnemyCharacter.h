@@ -66,6 +66,8 @@ public:
 
 	void LaunchCharacter(FVector direction, float power);
 
+	void PlayerDead();
+
 private :
 	// 적 정보를 초기화합니다.
 	void InitializeEnemyData();
@@ -109,6 +111,8 @@ protected :
 	// damage : 입은 피해량이 전달됩니다.
 	// return : 가공된 대미지 수치를 반환합니다.
 	virtual float CalculateDamage(float damage);
+
+	
 
 public :
 

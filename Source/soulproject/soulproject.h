@@ -4,3 +4,4 @@
 
 #include "CoreMinimal.h"
 
+#define WLOG(log)			UE_LOG(LogTemp, Warning, TEXT(log))

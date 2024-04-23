@@ -1,11 +1,17 @@
 #include "Actor/PlayerController/GamePlayerController.h"
 #include "Actor/GameCharacter/GameCharacter.h"
 #include "Actor/EnemyCharacter/EnemyCharacter.h"
+#include "Actor/EnemyController/EnemyController.h"
+#include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 #include "Widget/GameWidget/GameWidget.h"
 #include "Widget/PlayerStateWidget/PlayerStateWidget.h"
 #include "Widget/PlayerWeaponStateWidget/PlayerWeaponStateWidget.h"
 #include "Structure/PlayerCharacterData/PlayerCharacterData.h"
 #include "Component/PlayerCharacterMovementComponent/PlayerCharacterMovementComponent.h"
+
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "../soulproject.h"
 
 
 AGamePlayerController::AGamePlayerController()
@@ -26,6 +32,7 @@ AGamePlayerController::AGamePlayerController()
 		PlayerCharacterDataTable = DT_PLAYERCHARACTERDATA.Object;
 	}
 	PlayerCharacterData = nullptr;
+
 }
 
 void AGamePlayerController::PlayerTick(float DeltaTime)
@@ -122,6 +129,8 @@ void AGamePlayerController::OnPossess(APawn* pawn)
 
 	// 플레이어 캐릭터 상태 위젯 초기화
 	InitializePlayerStateWidget(PlayerCharacterData->MaxHp, PlayerCharacterData->MaxStamina);
+
+
 	
 }
 
@@ -310,6 +319,7 @@ void AGamePlayerController::OnDamaged(float damage)
 {
 	if (!IsValid(GameWidget)) return;
 
+
 	UPlayerStateWidget* playerStateWidget = GameWidget->GetPlayerStateWidget();
 
 	// Get PlayerCharacter
@@ -322,11 +332,12 @@ void AGamePlayerController::OnDamaged(float damage)
 	// HP 수치 갱신
 	CurrentHp -= hitDamage;
 	playerStateWidget->UpdateHp(CurrentHp);
-	UE_LOG(LogTemp, Warning, TEXT("CurrentHp is %.2f"), CurrentHp);
+	Cast<AGameCharacter>(GetPawn())->SetCurrentHp(CurrentHp);
 
 	// 사망 처리
 	if (CurrentHp <= 0.0f && !playerCharacter->GetDeadState())
 	{
+		WLOG("Player is dead");
 		playerCharacter->SetDeadState(true);
 
 		CurrentHp = 0.0f;
@@ -334,8 +345,13 @@ void AGamePlayerController::OnDamaged(float damage)
 		// 사망시 튕겨져 나감 처리
 		playerCharacter->DeadBounce();
 
+		UPlayerCharacterAnimInstance* animInst =
+			Cast<UPlayerCharacterAnimInstance>(playerCharacter->GetMesh()->GetAnimInstance());
+
+		if (!IsValid(animInst)) return;
+
 		// 사망 처리 애니메이션 재생
-		 playerCharacter->PlayDeadAnim();
+		animInst->SetPlayerDeadState(true);
 
 	}
 }
@@ -344,3 +360,4 @@ void AGamePlayerController::OnEnemyAttack(AEnemyCharacter* newTargetEnemy)
 {
 	GameWidget->ShowEnemyState(newTargetEnemy);
 }
+
