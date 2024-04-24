@@ -138,6 +138,11 @@ void AGameCharacter::BeginPlay()
 
 	// 시작 위치를 저장합니다.
 	StartLocation = GetActorLocation();
+	
+	// 시작 카메라 위치, 회전을 저장합니다.
+	CameraStartLocation = CameraComponent->GetRelativeLocation();
+	CameraStartRotation = CameraComponent->GetRelativeRotation();
+
 
 	UPlayerCharacterAnimInstance* animInst = Cast<UPlayerCharacterAnimInstance>(
 		GetMesh()->GetAnimInstance());
@@ -176,6 +181,8 @@ void AGameCharacter::Tick(float DeltaTime)
 
 	// 무기 소켓 위치 갱신
 	AttackComponent->UpdateWeaponSocketLocation(WeaponMesh);
+
+	if (IsDead) Respawn(StartLocation, TIMETOWAITRESPAWN);
 
 	
 }
@@ -220,6 +227,32 @@ void AGameCharacter::OnDamaged(
 
 	
 
+
+}
+
+void AGameCharacter::SetPlayerRespawn()
+{
+	UPlayerCharacterAnimInstance* animInst =
+		Cast<UPlayerCharacterAnimInstance>(GetMesh()->GetAnimInstance());
+
+	UPlayerCharacterAnimController* animController = 
+		animInst->GetAnimController();
+
+	AGamePlayerController* controller = Cast<AGamePlayerController>(GetController());
+
+	// 플레이어 사망 상태 갱신
+	animInst->SetPlayerDeadState(false);
+
+	// 플레이어 이동 입력 허용
+	animController->AllowMovementInput(true);
+	
+	// 플레이어 상태 위젯 초기화
+	controller->ResetPlayerCharacterWidget();
+
+	// 플레이어 피격 상태 갱신
+	IsHit = false;
+
+	
 
 }
 
@@ -420,13 +453,65 @@ void AGameCharacter::DeadBounce()
 
 	// 사망 시 넉백
 	Knockback(forwardVector, 100000.0f);
-	UE_LOG(LogTemp, Warning, TEXT("DeadBounce is Called!"));
+	UE_LOG(LogTemp, Warning, TEXT("StartLocation.X = %.2f"), StartLocation.X);
+	UE_LOG(LogTemp, Warning, TEXT("StartLocation.Y = %.2f"), StartLocation.Y);
+	UE_LOG(LogTemp, Warning, TEXT("StartLocation.Z = %.2f"), StartLocation.Z);
 
 	
 
 }
 
+void AGameCharacter::Respawn(FVector respawnlocation, float respawntime)
+{
+	float currentTime = GetWorld()->GetTimeSeconds();
+
+	if ((PlayerDeadTime + respawntime) < currentTime)
+	{
+		IsDead = false;
+		SetActorLocation(respawnlocation);
+
+		// 플레이어 리스폰 세팅 설정
+		SetPlayerRespawn();
+
+		// 카메라 리스폰 설정
+		RespawnCameraView();
+	}
+
+}
+
+void AGameCharacter::SetPlayerDeadTime(float time)
+{
+	PlayerDeadTime = time;
+}
+
 void AGameCharacter::SetCurrentHp(float currenthp)
 {
 	CurrentHp = currenthp;
+}
+
+void AGameCharacter::SetCameraDeadView()
+{
+	
+	FVector newLocation = CameraStartLocation + FVector(-200.0f, 0.0f, 100.0f);
+	FRotator newRotation = CameraStartRotation + FRotator(-20.0f, 0.0f,0.0f);
+
+	while (newLocation.X < 270.0f && newLocation.Z < 300.0f && newRotation.Pitch > -90.0f)
+	{
+		CameraComponent->SetRelativeLocation(newLocation);
+		CameraComponent->SetRelativeRotation(newRotation);
+
+		newLocation.X += 2.0f;
+		newLocation.Z += 2.0f;
+		newRotation.Pitch -= 0.1f;
+	}
+
+	
+}
+
+void AGameCharacter::RespawnCameraView()
+{
+	CameraComponent->SetRelativeLocation(CameraStartLocation);
+	CameraComponent->SetRelativeRotation(CameraStartRotation);
+
+
 }

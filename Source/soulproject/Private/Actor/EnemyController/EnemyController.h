@@ -50,4 +50,7 @@ public :
 	
 	// 플레이어 캐릭터가 사망한 경우 호출되는 메서드입니다.
 	virtual void OnPlayerDead();
+
+	// 플레이어 캐릭터가 리스폰한 경우 호출되는 메서드입니다.
+	virtual void OnPlayerRespawn();
 };

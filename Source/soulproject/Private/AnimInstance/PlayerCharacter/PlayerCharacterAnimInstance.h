@@ -40,6 +40,11 @@ public :
 	// 애님 컨트롤러를 설정합니다.
 	void SetAnimController(class UPlayerCharacterAnimController* animController);
 
+	FORCEINLINE UPlayerCharacterAnimController* GetAnimController() const
+	{
+		return AnimController;
+	}
+
 	void SetCurrentSpeed(float currentSpeed);
 	void SetGroundedState(bool isGrounded);
 	void SetBlockState(bool isBlocking);

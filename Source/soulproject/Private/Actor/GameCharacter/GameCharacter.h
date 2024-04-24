@@ -67,8 +67,19 @@ private :
 	UPROPERTY()
 	FVector StartLocation;
 
+	// 플레이어 죽은 시간
+	UPROPERTY()
+	float PlayerDeadTime;
+
 	float CurrentHp;
 
+	// 카메라 시작 위치
+	UPROPERTY()
+	FVector CameraStartLocation;
+
+	// 카메라 시작 회전
+	UPROPERTY()
+	FRotator CameraStartRotation;
 
 
 
@@ -89,6 +100,8 @@ private :
 		const class UDamageType* damageType,
 		class AController* instigatedBy,
 		AActor* damageCauser);
+
+	void SetPlayerRespawn();
 
 public:	
 	virtual void SetupPlayerInputComponent(
@@ -124,6 +137,8 @@ public:
 
 	void Knockback(FVector direction, float power);
 	void DeadBounce();
+
+	void Respawn(FVector respawnlocation, float respawntime);
 
 
 	FORCEINLINE class UPlayerCharacterMovementComponent* GetPlayerCharacterMovementComponent() const
@@ -176,5 +191,10 @@ public:
 		return StartLocation;
 	}
 
+	
+	void SetPlayerDeadTime(float time);
 	void SetCurrentHp(float currenthp);
+	void SetCameraDeadView();
+	void RespawnCameraView();
+
 };

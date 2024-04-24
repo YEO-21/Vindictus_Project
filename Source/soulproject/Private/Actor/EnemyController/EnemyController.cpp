@@ -85,3 +85,8 @@ void AEnemyController::OnPlayerDead()
 	BlackBoardComponent->SetValueAsBool(BLACKBOARDKEY_ISAGGRESSIVESTATE, false);
 
 }
+
+void AEnemyController::OnPlayerRespawn()
+{
+	BlackBoardComponent->SetValueAsBool(BLACKBOARDKEY_ISPLAYERDEAD, false);
+}

@@ -11,6 +11,9 @@
 
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
+
+#include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
 #include "../soulproject.h"
 
 
@@ -317,8 +320,9 @@ void AGamePlayerController::InitializePlayerStateWidget(float maxHp, float maxSt
 
 void AGamePlayerController::OnDamaged(float damage)
 {
-	if (!IsValid(GameWidget)) return;
+	
 
+	if (!IsValid(GameWidget)) return;
 
 	UPlayerStateWidget* playerStateWidget = GameWidget->GetPlayerStateWidget();
 
@@ -337,7 +341,9 @@ void AGamePlayerController::OnDamaged(float damage)
 	// 사망 처리
 	if (CurrentHp <= 0.0f && !playerCharacter->GetDeadState())
 	{
-		WLOG("Player is dead");
+		// 플레이어 사망 시간 기록
+		playerCharacter->SetPlayerDeadTime(GetWorld()->GetTimeSeconds());
+
 		playerCharacter->SetDeadState(true);
 
 		CurrentHp = 0.0f;
@@ -353,8 +359,8 @@ void AGamePlayerController::OnDamaged(float damage)
 		// 사망 처리 애니메이션 재생
 		animInst->SetPlayerDeadState(true);
 
-		playerCharacter->SetActorLocation()
-		
+		// 사망 시 카메라 전환
+		playerCharacter->SetCameraDeadView();
 		
 	}
 }
@@ -362,5 +368,16 @@ void AGamePlayerController::OnDamaged(float damage)
 void AGamePlayerController::OnEnemyAttack(AEnemyCharacter* newTargetEnemy)
 {
 	GameWidget->ShowEnemyState(newTargetEnemy);
+}
+
+void AGamePlayerController::ResetPlayerCharacterWidget()
+{
+	// 플레이어 캐릭터 정보를 얻습니다.
+	FString contextString;
+	PlayerCharacterData = PlayerCharacterDataTable->FindRow<FPlayerCharacterData>(
+		PLAYERCHARACTER_DATA_NORMAL, contextString);
+
+	// 플레이어 캐릭터 상태 위젯 초기화
+	InitializePlayerStateWidget(PlayerCharacterData->MaxHp, PlayerCharacterData->MaxStamina);
 }
 

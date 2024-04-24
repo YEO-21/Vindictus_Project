@@ -67,6 +67,7 @@ public:
 	void LaunchCharacter(FVector direction, float power);
 
 	void PlayerDead();
+	void PlayerRespawn();
 
 private :
 	// 적 정보를 초기화합니다.

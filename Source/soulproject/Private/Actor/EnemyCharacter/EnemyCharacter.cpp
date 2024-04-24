@@ -236,3 +236,8 @@ void AEnemyCharacter::PlayerDead()
 
 }
 
+void AEnemyCharacter::PlayerRespawn()
+{
+	Cast<AEnemyController>(GetController())->OnPlayerRespawn();
+}
+
