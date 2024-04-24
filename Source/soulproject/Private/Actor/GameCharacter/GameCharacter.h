@@ -117,7 +117,7 @@ public:
 
 	void PlayAttackBlockAnim();
 
-
+	void Knockback(FVector direction, float power);
 	void DeadBounce();
 
 

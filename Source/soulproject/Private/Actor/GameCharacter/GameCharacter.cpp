@@ -210,8 +210,19 @@ void AGameCharacter::OnDamaged(
 	knockBackDirection.Z = 5.0f;
 	knockBackDirection.GetSafeNormal();
 
+	UE_LOG(LogTemp, Warning, TEXT("IsDead is [%d]"), IsDead);
+
 	// ³Ë¹é½ÃÅµ´Ï´Ù.
-	PlayerCharacterMovementComponent->AddImpulse(knockBackDirection, damage);
+	if (!IsDead)
+		Knockback(knockBackDirection * 10.0f, damage);
+	//PlayerCharacterMovementComponent->AddImpulse(knockBackDirection * 10.0f, damage);
+	else
+	{
+		Knockback(knockBackDirection * 20.0f, damage);
+		//PlayerCharacterMovementComponent->AddImpulse(knockBackDirection * 10.0f, damage);
+	}
+	
+
 
 }
 
@@ -392,24 +403,26 @@ void AGameCharacter::PlayAttackBlockAnim()
 }
 
 
+void AGameCharacter::Knockback(FVector direction, float power)
+{
+	PlayerCharacterMovementComponent->AddImpulse(direction, power);
+}
+
 void AGameCharacter::DeadBounce()
 {
 	GetMesh()->SetCollisionProfileName(TEXT("PhysicsActor"));
 	GetMesh()->SetSimulatePhysics(true);
-	
+
 	FVector forwardVector = GetActorForwardVector();
+	forwardVector.Z = 10.0f;
+	forwardVector.Normalize();
 
+	// »ç¸Á ½Ã ³Ë¹é
+	PlayerCharacterMovementComponent->AddImpulse(forwardVector * 20.0f, -1000.0f);
+	UE_LOG(LogTemp, Warning, TEXT("DeadBounce is Called!"));
 
-	forwardVector.X = 10.0f;
-	forwardVector.Y = 10.0f;
-	forwardVector.Z = 100.0f;
+	//GetCharacterMovement()->AddImpulse(forwardVector * -1000.0f);
 
-	//LaunchCharacter(forwardVector, true, true);
-
-	GetMesh()->AddImpulse(forwardVector);
-	
-	
-	//SetActorLocation(GetActorLocation() + FVector(-2000.0f, 0.0f, 0.0f));
 
 }
 
