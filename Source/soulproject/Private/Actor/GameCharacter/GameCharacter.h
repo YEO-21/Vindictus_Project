@@ -63,7 +63,12 @@ private :
 	UPROPERTY()
 	bool IsDead;
 
+	// 게임 시작 시 플레이어의 위치를 나타냅니다.
+	UPROPERTY()
+	FVector StartLocation;
+
 	float CurrentHp;
+
 
 
 
@@ -164,6 +169,11 @@ public:
 	FORCEINLINE float GetCurrentHp()
 	{
 		return CurrentHp;
+	}
+
+	FORCEINLINE FVector GetStartLocation()
+	{
+		return StartLocation;
 	}
 
 	void SetCurrentHp(float currenthp);

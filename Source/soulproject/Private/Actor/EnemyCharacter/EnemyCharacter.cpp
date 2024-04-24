@@ -233,5 +233,6 @@ float AEnemyCharacter::CalculateDamage(float damage)
 void AEnemyCharacter::PlayerDead()
 {
 	Cast<AEnemyController>(GetController())->OnPlayerDead();
+
 }
 

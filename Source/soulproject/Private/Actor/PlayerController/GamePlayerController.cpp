@@ -353,6 +353,9 @@ void AGamePlayerController::OnDamaged(float damage)
 		// 사망 처리 애니메이션 재생
 		animInst->SetPlayerDeadState(true);
 
+		playerCharacter->SetActorLocation()
+		
+		
 	}
 }
 

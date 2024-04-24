@@ -136,6 +136,8 @@ void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// 시작 위치를 저장합니다.
+	StartLocation = GetActorLocation();
 
 	UPlayerCharacterAnimInstance* animInst = Cast<UPlayerCharacterAnimInstance>(
 		GetMesh()->GetAnimInstance());
@@ -215,12 +217,7 @@ void AGameCharacter::OnDamaged(
 	// 넉백시킵니다.
 	if (!IsDead)
 		Knockback(knockBackDirection * 10.0f, damage);
-	//PlayerCharacterMovementComponent->AddImpulse(knockBackDirection * 10.0f, damage);
-	else
-	{
-		Knockback(knockBackDirection * 20.0f, damage);
-		//PlayerCharacterMovementComponent->AddImpulse(knockBackDirection * 10.0f, damage);
-	}
+
 	
 
 
@@ -410,19 +407,22 @@ void AGameCharacter::Knockback(FVector direction, float power)
 
 void AGameCharacter::DeadBounce()
 {
-	GetMesh()->SetCollisionProfileName(TEXT("PhysicsActor"));
+	GetCharacterMovement()->Velocity = FVector::ZeroVector;
+
+	GetMesh()->SetCollisionProfileName(TEXT("AttackBlock"));
 	GetMesh()->SetSimulatePhysics(true);
 
-	FVector forwardVector = GetActorForwardVector();
-	forwardVector.Z = 10.0f;
+	FVector forwardVector = (GetActorForwardVector()*-1.0f) + GetActorUpVector()*1.0f;
 	forwardVector.Normalize();
+	
+	SetActorLocation((GetActorLocation() + GetActorUpVector() * 10.0f));
+
 
 	// 사망 시 넉백
-	PlayerCharacterMovementComponent->AddImpulse(forwardVector * 20.0f, -1000.0f);
+	Knockback(forwardVector, 100000.0f);
 	UE_LOG(LogTemp, Warning, TEXT("DeadBounce is Called!"));
 
-	//GetCharacterMovement()->AddImpulse(forwardVector * -1000.0f);
-
+	
 
 }
 
