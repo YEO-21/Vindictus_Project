@@ -52,16 +52,22 @@ void UPlayerCharacterAttackComponent::AttackProcedure()
 	// 요청된 공격이 있는가
 	if (RequestAttackQueue.IsEmpty()) return;
 
+	AttackCode = Cast<AGameCharacter>(GetOwner())->GetCurrentWeaponCode();
+
 	// 요청된 공격을 얻습니다.
 	FAttackData* requestedAttack;
 	RequestAttackQueue.Dequeue(requestedAttack);
+	//CurrentAttackData = GetAttackData();
+	//RequestAttackQueue.Dequeue(CurrentAttackData);
 
 	AttackDetectedActors.Empty();
 	AttackDetectedEnemies.Empty();
 
 
 	// 현재 공격을 요청된 공격으로 설정합니다.
-	CurrentAttackData = requestedAttack;
+	//requestedAttack = GetAttackData();
+	CurrentAttackData = GetAttackData();
+	UE_LOG(LogTemp, Warning, TEXT("CurrentAttackData AttackDamage = %.2f"), CurrentAttackData->AttackDamage);
 	ApplyDamage = CurrentAttackData->AttackDamage;
 	IsAttacking = true;
 
@@ -92,12 +98,15 @@ void UPlayerCharacterAttackComponent::AttackProcedure()
 
 		int32 sectionNameIndex = CurrentCombo - 1;
 		FName sectionName = CurrentAttackData->LinkableAttackSectionNames[sectionNameIndex];
+		UE_LOG(LogTemp, Warning, TEXT("Atk is %.2f"), CurrentAttackData->AttackDamage);
+
 		PlayerCharacter->PlayAnimMontage(CurrentAttackData->UseAnimMontage, 1.0f, sectionName);
 	}
 	else
 	{
 		// 공격을 시작합니다.
 		PlayerCharacter->PlayAnimMontage(CurrentAttackData->UseAnimMontage);
+		UE_LOG(LogTemp, Warning, TEXT("Atk is %.2f"), CurrentAttackData->AttackDamage);
 	}
 }
 
@@ -290,5 +299,26 @@ void UPlayerCharacterAttackComponent::OnBlockStarted()
 void UPlayerCharacterAttackComponent::OnBlockFinished()
 {
 	IsBlocking = false;
+}
+
+FAttackData* UPlayerCharacterAttackComponent::GetAttackData()
+{
+	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetOwner());
+
+	if (AttackCode.IsNone())
+	{
+		CurrentAttackData = nullptr;
+		UE_LOG(LogTemp, Warning, TEXT("AttackCode is not valid! "));
+		return nullptr;
+	}
+
+	FAttackData* requestedAttack;
+	FString contextstring;
+
+	requestedAttack = DT_AttackData->FindRow<FAttackData>(AttackCode, contextstring);
+
+	//UE_LOG(LogTemp, Warning, TEXT("requestedAttack AttackDamage = %.2f"), requestedAttack->AttackDamage);
+
+	return requestedAttack;
 }
 

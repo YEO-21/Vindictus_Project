@@ -24,6 +24,12 @@ struct FPlayerWeaponData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float Atk;
 
+	// ¾Ö´Ô ¸ùÅ¸ÁÖ
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UAnimMontage* AnimMontage;
+
+
+
 	// Æ¯¼ö ´É·Â
 	//UPROPERTY(EditAnywhere, BlueprintReadOnly)
 

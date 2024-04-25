@@ -21,6 +21,12 @@ private :
 	UPROPERTY()
 	class UOverlay * Overlay_Additive;
 
+	UPROPERTY()
+	class UTextBlock* TextBlock_Dead;
+
+	UPROPERTY(Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* TextBlock_Dead_Animation;
+
 	// »óÅÂ À§Á¬À» ³ªÅ¸³À´Ï´Ù.
 	UPROPERTY()
 	class UPlayerStateWidget * PlayerStateWidget;
@@ -52,4 +58,6 @@ public :
 	void ShowEnemyState(class AEnemyCharacter* newTargetEnemy);
 	void HideEnemyState();
 	
+	void ShowDeadWidget();
+	void HideDeadWidget();
 };

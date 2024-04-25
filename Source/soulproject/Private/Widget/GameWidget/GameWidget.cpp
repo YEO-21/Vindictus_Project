@@ -6,6 +6,7 @@
 
 #include "Components/Overlay.h"
 #include "Components/OverlaySlot.h"
+#include "Components/TextBlock.h"
 
 void UGameWidget::NativeConstruct()
 {
@@ -15,9 +16,13 @@ void UGameWidget::NativeConstruct()
 	Overlay_Additive = Cast<UOverlay>(GetWidgetFromName(TEXT("Overlay_Additive")));
 	PlayerStateWidget = Cast<UPlayerStateWidget>(GetWidgetFromName(TEXT("PlayerStateWidget")));
 	EnemyStateWidget = Cast<UEnemyStateWidget>(GetWidgetFromName(TEXT("EnemyStateWidget")));
+	TextBlock_Dead = Cast<UTextBlock>(GetWidgetFromName(TEXT("TextBlock_Dead")));
 
 	// Àû »óÅÂ À§Á¬À» ¼û±é´Ï´Ù.
 	HideEnemyState();
+
+	// »ç¸Á »óÅÂ À§Á¬À» ¼û±é´Ï´Ù.
+	HideDeadWidget();
 }
 
 void UGameWidget::NativeTick(const FGeometry& myGeometry, float dt)
@@ -78,4 +83,18 @@ void UGameWidget::HideEnemyState()
 	// À§Á¬À» Ç¥½ÃÇÏÁö ¾Ê½À´Ï´Ù.
 	EnemyStateWidget->SetVisibility(ESlateVisibility::Collapsed);
 
+	
+
+}
+
+void UGameWidget::ShowDeadWidget()
+{
+	TextBlock_Dead->SetVisibility(ESlateVisibility::Visible);
+
+	PlayAnimation(TextBlock_Dead_Animation);
+}
+
+void UGameWidget::HideDeadWidget()
+{
+	TextBlock_Dead->SetVisibility(ESlateVisibility::Collapsed);
 }

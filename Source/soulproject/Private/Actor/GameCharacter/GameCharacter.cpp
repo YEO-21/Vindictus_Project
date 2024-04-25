@@ -8,6 +8,7 @@
 #include "Component/PlayerCharacterAttackComponent/PlayerCharacterAttackComponent.h"
 #include "Component/PlayerCharacterInteractComponent/PlayerCharacterInteractComponent.h"
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
+#include "Widget/GameWidget/GameWidget.h"
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -66,6 +67,9 @@ AGameCharacter::AGameCharacter()
 
 	InteractComponent =
 		CreateDefaultSubobject<UPlayerCharacterInteractComponent>(TEXT("PLAYER_INTERACT_COMPONENT"));
+
+	EquipWeaponComponent =
+		CreateDefaultSubobject<UPlayerEquipWeaponComponent>(TEXT("PLAYER_EQUIPWEAPON_COMPONENT"));
 
 	WeaponMesh =
 		CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WEAPON_MESH"));
@@ -135,6 +139,9 @@ AGameCharacter::AGameCharacter()
 void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// 시작 메인 무기를 샤프너로 설정합니다.
+	CurrentWeaponCode = WEAPON_SHARPNER;
 
 	// 시작 위치를 저장합니다.
 	StartLocation = GetActorLocation();
@@ -252,7 +259,9 @@ void AGameCharacter::SetPlayerRespawn()
 	// 플레이어 피격 상태 갱신
 	IsHit = false;
 
-	
+	// 사망 위젯 숨김 처리
+	controller->GetGameWidget()->HideDeadWidget();
+
 
 }
 
@@ -313,8 +322,7 @@ void AGameCharacter::OnAttackInput()
 
 	// 피해를 입는 중이라면 함수 호출 종료
 	if (GetHitState()) return;
-
-	AttackComponent->RequestAttack(DEFAULT_ATTACK_KEYWORD);
+	AttackComponent->RequestAttack(CurrentWeaponCode);
 }
 
 void AGameCharacter::OnInteractInput()
@@ -414,13 +422,19 @@ void AGameCharacter::OnWeaponChanged()
 	++WeaponCount;
 	if ((WeaponCount %2) != 0)
 	{
+		// 스톰 브레이커(서브 무기) 선택
 		WeaponMesh->SetVisibility(false);
 		SubWeaponMesh->SetVisibility(true);
+		Tags.Add(WEAPON_STORMBREAKER);
+		CurrentWeaponCode = WEAPON_STORMBREAKER;
 	}
 	else
 	{
+		// 샤프너(메인 무기) 선택
 		WeaponMesh->SetVisibility(true);
 		SubWeaponMesh->SetVisibility(false);
+		Tags.Add(WEAPON_SHARPNER);
+		CurrentWeaponCode = WEAPON_SHARPNER;
 	}
 
 	

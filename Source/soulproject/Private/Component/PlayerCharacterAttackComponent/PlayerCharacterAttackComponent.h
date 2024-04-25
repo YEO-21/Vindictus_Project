@@ -79,6 +79,9 @@ private :
 	FVector CurrentSaberStartSocketLocation;
 	FVector CurrentSaberEndSocketLocation;
 
+	// 공격 모션 코드
+	FName AttackCode;
+
 
 
 
@@ -131,6 +134,8 @@ public :
 
 	// 방어 끝
 	void OnBlockFinished();
+
+	FAttackData* GetAttackData();
 
 	FORCEINLINE bool GetAttackState() const
 	{

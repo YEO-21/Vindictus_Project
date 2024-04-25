@@ -361,6 +361,9 @@ void AGamePlayerController::OnDamaged(float damage)
 
 		// 사망 시 카메라 전환
 		playerCharacter->SetCameraDeadView();
+
+		// 사망 시 게임 오버 위젯 표시 
+		GameWidget->ShowDeadWidget();
 		
 	}
 }

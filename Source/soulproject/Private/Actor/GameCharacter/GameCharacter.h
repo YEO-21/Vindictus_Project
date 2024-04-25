@@ -8,6 +8,11 @@
 
 #include "GameCharacter.generated.h"
 
+// 무기 태그
+#define WEAPON_SHARPNER			TEXT("DefaultAttack")
+#define WEAPON_STORMBREAKER		TEXT("AxeAttack")
+
+
 UCLASS()
 class AGameCharacter : public ACharacter, 
 	public IGenericTeamAgentInterface
@@ -34,11 +39,13 @@ private :
 	class UPlayerCharacterInteractComponent* InteractComponent;
 
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class UPlayerEquipWeaponComponent* EquipWeaponComponent;
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* WeaponMesh;
 
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class USkeletalMeshComponent* SubWeaponMesh;
-
 
 
 	FGenericTeamId Team;
@@ -81,6 +88,12 @@ private :
 	UPROPERTY()
 	FRotator CameraStartRotation;
 
+	// 장착된 무기 코드
+	UPROPERTY()
+	FName EquippedWeaponCode;
+
+	FName CurrentWeaponCode;
+
 
 
 public:
@@ -102,6 +115,8 @@ private :
 		AActor* damageCauser);
 
 	void SetPlayerRespawn();
+
+	
 
 public:	
 	virtual void SetupPlayerInputComponent(
@@ -189,6 +204,11 @@ public:
 	FORCEINLINE FVector GetStartLocation()
 	{
 		return StartLocation;
+	}
+
+	FORCEINLINE FName GetCurrentWeaponCode()
+	{
+		return CurrentWeaponCode;
 	}
 
 	
