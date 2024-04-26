@@ -37,6 +37,10 @@ protected :
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent * InteractionViewTargetCamera;
 
+	// 무기 교환 컴포넌트
+	UPROPERTY(VisibleAnywhere)
+	class UNpcWeaponExchangeComponent* WeaponExchangeComponent;
+
 	
 	// NPC 코드
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -48,6 +52,9 @@ protected :
 	// 생성된 Npc Dialog Widget 객체
 	UPROPERTY()
 	class UNpcDialogWidget* NpcDialogWidget;
+
+	UPROPERTY()
+	bool isfullfill;
 
 
 public:
@@ -77,6 +84,14 @@ public:
 	{
 		return InteractionViewTargetCamera;
 	}
+
+	FORCEINLINE bool GetIsFullfill() const
+	{
+		return isfullfill;
+	}
+
+	void SetIsFullfill(bool full);
+
 
 	// 상호작용 시 배치될 월드 위치를 얻습니다.
 	FVector GetInteractionLocation() const;

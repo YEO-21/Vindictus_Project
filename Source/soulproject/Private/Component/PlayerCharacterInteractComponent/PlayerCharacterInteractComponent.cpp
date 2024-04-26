@@ -2,6 +2,7 @@
 #include "Component/InteractableAreaComponent/InteractableAreaComponent.h"
 #include "Component/PlayerCharacterAttackComponent/PlayerCharacterAttackComponent.h"
 #include "Component/PlayerCharacterMovementComponent/PlayerCharacterMovementComponent.h"
+#include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 #include "Actor/PlayerController/GamePlayerController.h"
@@ -67,6 +68,11 @@ void UPlayerCharacterInteractComponent::TryInteraction()
 			npc->GetInteractionRotation());
 
 		Cast<AGamePlayerController>(playerCharacter->GetController())->SetCameraViewTarget(npc);
+
+		// 무기 교환 가능으로 설정합니다.
+		//npc->SetIsFullfill(true);
+
+		(playerCharacter->GetEquipWeaponComponent())->EquipWeapon();
 	}
 }
 

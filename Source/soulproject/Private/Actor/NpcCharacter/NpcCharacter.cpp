@@ -9,6 +9,7 @@
 #include "Camera/CameraComponent.h"
 
 #include "Component/InteractableAreaComponent/InteractableAreaComponent.h"
+#include "Component/NpcWeaponExchangeComponent/NpcWeaponExchangeComponent.h"
 
 #include "AnimInstance/Npc/NpcAnimInstance.h"
 
@@ -52,6 +53,9 @@ ANpcCharacter::ANpcCharacter()
 	NpcWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 	NpcWidgetComponent->SetRelativeLocation(
 		FVector::UpVector * GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+
+	// 무기 교환 컴포넌트 추가
+	WeaponExchangeComponent = CreateDefaultSubobject<UNpcWeaponExchangeComponent>(TEXT("WEAPON_EXCHANGE_COMPONENT"));
 
 	if (WIDGETBP_NPC.Succeeded())
 	{
@@ -156,6 +160,11 @@ bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishEventSignature onIn
 	playerController->bShowMouseCursor = true;
 
 	return true;
+}
+
+void ANpcCharacter::SetIsFullfill(bool full)
+{
+	isfullfill = full;
 }
 
 FVector ANpcCharacter::GetInteractionLocation() const

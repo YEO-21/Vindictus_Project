@@ -35,6 +35,9 @@ protected :
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsPlayerDead;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsOneHandedWeapon;
+
 
 public :
 	// 애님 컨트롤러를 설정합니다.
@@ -49,7 +52,7 @@ public :
 	void SetGroundedState(bool isGrounded);
 	void SetBlockState(bool isBlocking);
 	void SetPlayerDeadState(bool isdead);
-
+	void SetOneHandedWeapon(bool onehand);
 	
 
 

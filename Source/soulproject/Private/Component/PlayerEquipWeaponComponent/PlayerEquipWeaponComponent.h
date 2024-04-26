@@ -30,7 +30,7 @@ public:
 
 	void InitializeEquippedWeapon();
 
-	void CheckCurrentMainWeapon(AActor* actor, FName weaponCode);
+	void CheckCurrentMainWeapon();
 
 protected:
 	virtual void BeginPlay() override;
@@ -38,5 +38,8 @@ protected:
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+public:
+	void EquipWeapon();
+
+
 };

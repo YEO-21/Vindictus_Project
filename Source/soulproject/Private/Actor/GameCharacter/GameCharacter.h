@@ -88,12 +88,14 @@ private :
 	UPROPERTY()
 	FRotator CameraStartRotation;
 
+	
+	// 공격 애니메이션 재생용 현재 무기 코드입니다.
+	FName CurrentWeaponCode;
+
+public:
 	// 장착된 무기 코드
 	UPROPERTY()
 	FName EquippedWeaponCode;
-
-	FName CurrentWeaponCode;
-
 
 
 public:
@@ -171,6 +173,11 @@ public:
 		return InteractComponent;
 	}
 
+	FORCEINLINE class UPlayerEquipWeaponComponent* GetEquipWeaponComponent() const
+	{
+		return EquipWeaponComponent;
+	}
+
 	FORCEINLINE virtual void SetGenericTeamId(const FGenericTeamId& TeamID) override
 	{
 		Team = TeamID;
@@ -211,6 +218,15 @@ public:
 		return CurrentWeaponCode;
 	}
 
+	FORCEINLINE UStaticMeshComponent* GetWeaponMesh()
+	{
+		return	WeaponMesh;
+	}
+
+	FORCEINLINE USkeletalMeshComponent* GetSubWeaponMesh()
+	{
+		return	SubWeaponMesh;
+	}
 	
 	void SetPlayerDeadTime(float time);
 	void SetCurrentHp(float currenthp);

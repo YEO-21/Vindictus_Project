@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "Enum/Weapon/WeaponType.h"
 #include "PlayerWeaponData.generated.h"
 
 /**
@@ -28,8 +29,15 @@ struct FPlayerWeaponData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UAnimMontage* AnimMontage;
 
+	// 무기 타입
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	EWeaponType WeaponType;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UStaticMesh* WeaponStaticMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class USkeletalMesh* WeaponSkeletalMesh;
 	// 특수 능력
 	//UPROPERTY(EditAnywhere, BlueprintReadOnly)
 

@@ -1,6 +1,7 @@
 #include "Actor/GameCharacter/GameCharacter.h"
 
 #include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
+#include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 
 #include "Structure/PlayerWeaponData/PlayerWeaponData.h"
 
@@ -16,10 +17,14 @@ UPlayerEquipWeaponComponent::UPlayerEquipWeaponComponent()
 
 	if (DT_WEAPON.Succeeded()) DT_WeaponData = DT_WEAPON.Object;
 
+	
+
 }
 
 void UPlayerEquipWeaponComponent::InitializeEquippedWeapon()
 {
+	WeaponCode = Cast<AGameCharacter>(GetOwner())->EquippedWeaponCode;
+	UE_LOG(LogTemp, Warning, TEXT("WeaponCode = %s"), *WeaponCode.ToString());
 	if (WeaponCode.IsNone())
 	{
 		PlayerWeaponData = nullptr;
@@ -30,15 +35,12 @@ void UPlayerEquipWeaponComponent::InitializeEquippedWeapon()
 	FString contextstring;
 	PlayerWeaponData = DT_WeaponData->FindRow<FPlayerWeaponData>(WeaponCode, contextstring);
 
+
 }
 
-void UPlayerEquipWeaponComponent::CheckCurrentMainWeapon(AActor* actor, FName weaponCode)
+void UPlayerEquipWeaponComponent::CheckCurrentMainWeapon()
 {
-	if (actor->ActorHasTag(weaponCode))
-	{
-		WeaponCode = weaponCode;
-		InitializeEquippedWeapon();
-	}
+	InitializeEquippedWeapon();
 	
 }
 
@@ -56,4 +58,33 @@ void UPlayerEquipWeaponComponent::TickComponent(float DeltaTime, ELevelTick Tick
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 }
+
+void UPlayerEquipWeaponComponent::EquipWeapon()
+{
+	CheckCurrentMainWeapon();
+
+	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetOwner());
+
+	UPlayerCharacterAnimInstance* animInst = 
+		Cast<UPlayerCharacterAnimInstance>(playerCharacter->GetMesh()->GetAnimInstance());
+
+
+	switch (PlayerWeaponData->WeaponType)
+	{
+	case EWeaponType::SHARPNER:
+		playerCharacter->GetWeaponMesh()->SetStaticMesh(PlayerWeaponData->WeaponStaticMesh);
+		animInst->SetOneHandedWeapon(false);
+		break;
+	case EWeaponType::STORM_BREAKER:
+		playerCharacter->GetSubWeaponMesh()->SetSkeletalMesh(PlayerWeaponData->WeaponSkeletalMesh);
+		animInst->SetOneHandedWeapon(false);
+		break;
+	case EWeaponType::TWIN_DRAGON_SWORD:
+		playerCharacter->GetSubWeaponMesh()->SetSkeletalMesh(PlayerWeaponData->WeaponSkeletalMesh);
+		animInst->SetOneHandedWeapon(true);
+		break;
+		
+	}
+}
+
 

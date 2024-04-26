@@ -115,12 +115,14 @@ AGameCharacter::AGameCharacter()
 	WeaponMesh->SetupAttachment(GetMesh(), TEXT("Socket_Weapon"));
 	SubWeaponMesh->SetupAttachment(GetMesh(), TEXT("Socket_SubWeapon"));
 
+	// 메인 무기 붙이기(샤프너)
 	if (SM_SABER.Succeeded())
 	{
 		WeaponMesh->SetStaticMesh(SM_SABER.Object);
 		WeaponMesh->SetCollisionProfileName(TEXT("OverlapAll"));
 	}
 
+	// 서브 무기 붙이기(스톰 브레이커)
 	if (SK_AXE.Succeeded())
 	{
 		SubWeaponMesh->SetSkeletalMesh(SK_AXE.Object);
@@ -425,7 +427,6 @@ void AGameCharacter::OnWeaponChanged()
 		// 스톰 브레이커(서브 무기) 선택
 		WeaponMesh->SetVisibility(false);
 		SubWeaponMesh->SetVisibility(true);
-		Tags.Add(WEAPON_STORMBREAKER);
 		CurrentWeaponCode = WEAPON_STORMBREAKER;
 	}
 	else
@@ -433,7 +434,6 @@ void AGameCharacter::OnWeaponChanged()
 		// 샤프너(메인 무기) 선택
 		WeaponMesh->SetVisibility(true);
 		SubWeaponMesh->SetVisibility(false);
-		Tags.Add(WEAPON_SHARPNER);
 		CurrentWeaponCode = WEAPON_SHARPNER;
 	}
 
