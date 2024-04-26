@@ -71,7 +71,7 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual bool OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished);
+	virtual bool OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished, class UInteractionParamBase* interactionParam);
 
 	virtual void FinishTalkAnimation();
 
@@ -91,6 +91,7 @@ public:
 	}
 
 	void SetIsFullfill(bool full);
+	
 
 
 	// 상호작용 시 배치될 월드 위치를 얻습니다.

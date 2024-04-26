@@ -16,6 +16,7 @@
 #include "Widget/GameWidget/GameWidget.h"
 #include "Widget/NpcWidget/NpcWidget.h"
 #include "Widget/NpcDialogWidget/NpcDialogWidget.h"
+#include "Widget/WeaponStoreWidget/WeaponStoreWidget.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -80,6 +81,10 @@ void ANpcCharacter::BeginPlay()
 	// 플레이어 캐릭터 액터
 	AActor* gameCharacter = UGameplayStatics::GetActorOfClass(GetWorld(), AGameCharacter::StaticClass());
 	npcWidget->InitializeNpcWidget(this, gameCharacter, NpcData->Name);
+
+	WeaponBuyButtonClickSignature weaponbuysignature;
+	weaponbuysignature.AddLambda([this]() 
+		{SetIsFullfill(true);});
 }
 
 void ANpcCharacter::InitializeNpcData()
@@ -112,7 +117,7 @@ void ANpcCharacter::FinishTalkAnimation()
 	Cast<UNpcAnimInstance>(GetMesh()->GetAnimInstance())->SetTalkState(false);
 }
 
-bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishEventSignature onInteractionFinished)
+bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishEventSignature onInteractionFinished, UInteractionParamBase* interactionParam)
 {
 	// 첫 번째 플레이어 컨트롤러 (플레이어의 컨트롤러)를 얻습니다.
 	AGamePlayerController* playerController = Cast<AGamePlayerController>(
@@ -160,6 +165,8 @@ bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishEventSignature onIn
 	playerController->bShowMouseCursor = true;
 
 	return true;
+
+	//Cast<UWeaponNpcInteractParam>(interactionParam)->
 }
 
 void ANpcCharacter::SetIsFullfill(bool full)
@@ -176,3 +183,11 @@ FRotator ANpcCharacter::GetInteractionRotation() const
 {
 	return InteractionLocation->GetComponentRotation();
 }
+
+
+
+
+//class UWeaponNpcInteractParam : public UInteractionParamBase
+//{
+//
+//};

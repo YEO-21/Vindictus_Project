@@ -68,6 +68,7 @@ void UPlayerEquipWeaponComponent::EquipWeapon()
 	UPlayerCharacterAnimInstance* animInst = 
 		Cast<UPlayerCharacterAnimInstance>(playerCharacter->GetMesh()->GetAnimInstance());
 
+	if (PlayerWeaponData == nullptr) return;
 
 	switch (PlayerWeaponData->WeaponType)
 	{

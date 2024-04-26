@@ -62,6 +62,12 @@ void UPlayerCharacterInteractComponent::TryInteraction()
 		// 상호작용 대상(NPC)
 		ANpcCharacter* npc = Cast<ANpcCharacter>(interactableArea->GetOwner());
 
+		//NewObject<UObject>(this, TEXT("TEST"), EObjectFlags::RF_Dynamic)
+		// if (npc->GetNpcType() == IS_WEAPON_SHOP)
+		// {
+		//		NewObject<UWeaponNpcInteractParam>(this);
+		// }
+
 		// 상호작용 시작
 		OnInteractionStarted(
 			npc->GetInteractionLocation(),
@@ -70,7 +76,7 @@ void UPlayerCharacterInteractComponent::TryInteraction()
 		Cast<AGamePlayerController>(playerCharacter->GetController())->SetCameraViewTarget(npc);
 
 		// 무기 교환 가능으로 설정합니다.
-		//npc->SetIsFullfill(true);
+		npc->SetIsFullfill(true);
 
 		(playerCharacter->GetEquipWeaponComponent())->EquipWeapon();
 	}

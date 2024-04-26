@@ -33,8 +33,6 @@ void UPlayerCharacterAnimInstance::SetOneHandedWeapon(bool onehand)
 	bIsOneHandedWeapon = onehand;
 }
 
-
-
 void UPlayerCharacterAnimInstance::AnimNotify_AttackEnd()
 {
 	AnimController->OnAttackEnded();

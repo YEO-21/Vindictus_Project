@@ -23,6 +23,8 @@ public :
 	//  상호작용을 시작합니다.
 	bool StartInteraction(FOnInteractionFinishEventSignature onInteractionFinished);
 
+	void SetIsFullFill();
+
 private :
 	UFUNCTION()
 	void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent,
@@ -37,5 +39,7 @@ private :
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex);
+
+
 
 };
