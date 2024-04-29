@@ -9,6 +9,8 @@
 #include "Actor/GameCharacter/GameCharacter.h"
 #include "Actor/NpcCharacter/NpcCharacter.h"
 
+#include "Object/InteractionParam/InteractionParamBase.h"
+
 UPlayerCharacterInteractComponent::UPlayerCharacterInteractComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -55,7 +57,8 @@ void UPlayerCharacterInteractComponent::TryInteraction()
 	UInteractableAreaComponent* interactableArea = InteractableAreas[0];
 
 	// 상호작용 성공 여부를 얻습니다.
-	bool isSucceeded = interactableArea->StartInteraction(onInteractionFinished);
+	UInteractionParamBase* interactionParam;
+	bool isSucceeded = interactableArea->StartInteraction(onInteractionFinished, interactionParam);
 
 	if (isSucceeded)
 	{

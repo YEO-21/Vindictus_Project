@@ -1,5 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Object/InteractionParam/InteractionParamBase.h"
 
+UInteractionParamBase::UInteractionParamBase()
+{
+}
+
+void UInteractionParamBase::InteractNpcParam(ENpcType npcType)
+{
+}

@@ -117,7 +117,7 @@ void ANpcCharacter::FinishTalkAnimation()
 	Cast<UNpcAnimInstance>(GetMesh()->GetAnimInstance())->SetTalkState(false);
 }
 
-bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishEventSignature onInteractionFinished, UInteractionParamBase* interactionParam)
+bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished, UInteractionParamBase* interactionParam)
 {
 	// 첫 번째 플레이어 컨트롤러 (플레이어의 컨트롤러)를 얻습니다.
 	AGamePlayerController* playerController = Cast<AGamePlayerController>(

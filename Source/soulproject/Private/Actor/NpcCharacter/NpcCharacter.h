@@ -56,6 +56,9 @@ protected :
 	UPROPERTY()
 	bool isfullfill;
 
+	UPROPERTY()
+	ENpcType NpcType;
+
 
 public:
 	ANpcCharacter();

@@ -10,9 +10,10 @@ UInteractableAreaComponent::UInteractableAreaComponent()
 
 }
 
-bool UInteractableAreaComponent::StartInteraction(FOnInteractionFinishEventSignature onInteractionFinished)
+bool UInteractableAreaComponent::StartInteraction(FOnInteractionFinishEventSignature onInteractionFinished
+	, class UInteractionParamBase* interactionParam)
 {
-	return Cast<ANpcCharacter>(GetOwner())->OnInteractionStarted(onInteractionFinished);
+	return Cast<ANpcCharacter>(GetOwner())->OnInteractionStarted(onInteractionFinished, interactionParam);
 }
 
 void UInteractableAreaComponent::SetIsFullFill()

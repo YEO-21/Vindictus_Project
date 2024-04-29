@@ -1,5 +1,5 @@
 #include "Actor/NpcCharacter/NpcSkully/NpcSkully.h"
-
+#include "Enum/Npc/NpcType.h"
 #include "AnimInstance/Npc/NpcAnimInstance.h"
 
 ANpcSkully::ANpcSkully()
@@ -15,13 +15,15 @@ ANpcSkully::ANpcSkully()
 	if (ANIMBP_NPC.Succeeded()) GetMesh()->SetAnimClass(ANIMBP_NPC.Class);
 
 	NpcCode = TEXT("000002");
+	NpcType = ENpcType::SupplyBase;
 
 
 }
 
-bool ANpcSkully::OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished)
+bool ANpcSkully::OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished,
+	class UInteractionParamBase* interactionParam)
 {
-	bool result = Super::OnInteractionStarted(onInteractionFinished);
+	bool result = Super::OnInteractionStarted(onInteractionFinished, interactionParam);
 
 	if (!result) return false;
 

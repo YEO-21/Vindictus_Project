@@ -15,6 +15,7 @@ class ANpcSkully : public ANpcCharacter
 public:
 	ANpcSkully();
 	
-	virtual bool OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished) override;
+	virtual bool OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished,
+		class UInteractionParamBase* interactionParam) override;
 
 };

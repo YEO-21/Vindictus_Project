@@ -1,5 +1,6 @@
 #include "Actor/NpcCharacter/NpcWalldo/NpcWalldo.h"
 #include "AnimInstance/Npc/NpcAnimInstance.h"
+#include "Enum/Npc/NpcType.h"
 
 ANpcWalldo::ANpcWalldo()
 {
@@ -18,13 +19,17 @@ ANpcWalldo::ANpcWalldo()
 		GetMesh()->SetAnimClass(ANIMBP_NPC.Class);
 	}
 
+	// Npc 코드 설정
 	NpcCode = TEXT("000001");
+	// Npc 타입 설정
+	NpcType = ENpcType::WeaponBase;
 
 }
 
-bool ANpcWalldo::OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished)
+bool ANpcWalldo::OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished
+	, class UInteractionParamBase* interactionParam)
 {
-	bool result = Super::OnInteractionStarted(onInteractionFinished);
+	bool result = Super::OnInteractionStarted(onInteractionFinished, interactionParam);
 
 	if (!result) return false;
 

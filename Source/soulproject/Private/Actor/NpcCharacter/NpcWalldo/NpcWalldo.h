@@ -12,6 +12,7 @@ class ANpcWalldo : public ANpcCharacter
 public :
 	ANpcWalldo();
 
-	virtual bool OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished) override;
+	virtual bool OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished,
+		class UInteractionParamBase* interactionParam) override;
 	
 };
