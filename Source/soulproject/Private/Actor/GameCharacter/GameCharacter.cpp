@@ -493,6 +493,8 @@ void AGameCharacter::Respawn(FVector respawnlocation, float respawntime)
 
 }
 
+
+
 void AGameCharacter::SetPlayerDeadTime(float time)
 {
 	PlayerDeadTime = time;

@@ -38,6 +38,11 @@ struct FPlayerWeaponData : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class USkeletalMesh* WeaponSkeletalMesh;
+
+	// 무기 가격
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float Price;
+
 	// 특수 능력
 	//UPROPERTY(EditAnywhere, BlueprintReadOnly)
 

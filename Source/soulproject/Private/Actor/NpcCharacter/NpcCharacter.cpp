@@ -17,8 +17,13 @@
 #include "Widget/NpcWidget/NpcWidget.h"
 #include "Widget/NpcDialogWidget/NpcDialogWidget.h"
 #include "Widget/WeaponStoreWidget/WeaponStoreWidget.h"
+#include "Widget/NpcDialogWidget/WalldoNpcWeaponWidget/WalldoNpcWeaponWidget.h"
+
+#include "Object/InteractionParam/InteractionParamBase.h"
+#include "Object/InteractionParam/WeaponNpcInteractParam/WeaponNpcInteractParam.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
 
 
 
@@ -33,6 +38,9 @@ ANpcCharacter::ANpcCharacter()
 
 	static ConstructorHelpers::FClassFinder<UNpcWidget> WIDGETBP_NPC(
 		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/NpcWidget/WidgetBP_Npc.WidgetBP_Npc_C'"));
+
+	static ConstructorHelpers::FClassFinder<UWalldoNpcWeaponWidget> WIDGETBP_WALLDO(
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/WeaponStoreWidget/WidgetBP_WeaponStore.WidgetBP_WeaponStore_C'"));
 
 	// 상호작용 뷰 타깃 카메라 컴포넌트
 	InteractionViewTargetCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("VIEWTARGET_CAM_COMP"));
@@ -63,6 +71,11 @@ ANpcCharacter::ANpcCharacter()
 		NpcWidgetComponent->SetWidgetClass(WIDGETBP_NPC.Class);
 	}
 
+	if (WIDGETBP_WALLDO.Succeeded())
+	{
+		BP_WallWeaponWidget = WIDGETBP_WALLDO.Class;
+	}
+
 
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -82,9 +95,19 @@ void ANpcCharacter::BeginPlay()
 	AActor* gameCharacter = UGameplayStatics::GetActorOfClass(GetWorld(), AGameCharacter::StaticClass());
 	npcWidget->InitializeNpcWidget(this, gameCharacter, NpcData->Name);
 
-	WeaponBuyButtonClickSignature weaponbuysignature;
-	weaponbuysignature.AddLambda([this]() 
-		{SetIsFullfill(true);});
+	
+		WeaponBuyButtonClickSignature weaponbuysignature;
+		weaponbuysignature.AddLambda([this]() {isfullfill = true;});
+
+
+
+		//UWeaponStoreWidget* npcWeaponWidget = Cast<UWeaponStoreWidget>(NpcWidgetComponent->GetUserWidgetObject());
+		if (!IsValid(npcWeaponWidget)) return;
+		npcWeaponWidget->InitializeWeaponStoreWidget(weaponbuysignature);
+	
+
+	
+
 }
 
 void ANpcCharacter::InitializeNpcData()
@@ -117,7 +140,7 @@ void ANpcCharacter::FinishTalkAnimation()
 	Cast<UNpcAnimInstance>(GetMesh()->GetAnimInstance())->SetTalkState(false);
 }
 
-bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished, UInteractionParamBase* interactionParam)
+bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished)
 {
 	// 첫 번째 플레이어 컨트롤러 (플레이어의 컨트롤러)를 얻습니다.
 	AGamePlayerController* playerController = Cast<AGamePlayerController>(
@@ -131,10 +154,15 @@ bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishSignature onInterac
 
 	// 표시할 위젯을 생성합니다.
 	NpcDialogWidget = CreateWidget<UNpcDialogWidget>(playerController, NpcData->DialogWidetClass);
-
+	UWalldoNpcWeaponWidget* npcWeaponWidget = CreateWidget<UWalldoNpcWeaponWidget>(playerController);
+	
 	// Npc Dialog 위젯을 띄웁니다.
 	UGameWidget* gameWidget = playerController->GetGameWidget();
 	gameWidget->FloatingWidgetAdditive(NpcDialogWidget);
+
+	
+
+
 
 	// 위젯 초기화
 	FOnDialogCloseEventSignature onDialogClosed;
@@ -156,7 +184,7 @@ bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishSignature onInterac
 				OnInteractionFinished.Broadcast();
 		});
 
-	NpcDialogWidget->InitializeNpcDialogWidget(NpcData, onDialogClosed);
+	NpcDialogWidget->InitializeNpcDialogWidget(NpcData, onDialogClosed, GetInteractionParam());
 
 	// 입력 모드를 UI 모드로 전환합니다.
 	playerController->SetInputMode(FInputModeUIOnly());
@@ -164,9 +192,10 @@ bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishSignature onInterac
 	// 커서를 표시합니다.
 	playerController->bShowMouseCursor = true;
 
-	return true;
+	//if(NpcType == ENpcType::WeaponBase)
+	//Cast<UWeaponNpcInteractParam>(interactionParam)->InteractNpcParam();
 
-	//Cast<UWeaponNpcInteractParam>(interactionParam)->
+	return true;
 }
 
 void ANpcCharacter::SetIsFullfill(bool full)
@@ -184,10 +213,14 @@ FRotator ANpcCharacter::GetInteractionRotation() const
 	return InteractionLocation->GetComponentRotation();
 }
 
+UInteractionParamBase* ANpcCharacter::GetInteractionParam()
+{
+	UInteractionParamBase* interactionParam = NewObject<UInteractionParamBase>(this);
+	interactionParam->NpcType = NpcType;
+
+	return interactionParam;
+}
 
 
 
-//class UWeaponNpcInteractParam : public UInteractionParamBase
-//{
-//
-//};
+

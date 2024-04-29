@@ -30,6 +30,14 @@ private :
 	UPROPERTY()
 	class UGameWidget * GameWidget;
 
+	// 대화 위젯
+	UPROPERTY()
+	class UNpcDialogWidget* DialogWidget;
+
+	UPROPERTY()
+	TSubclassOf<class UNpcDialogWidget> DialogWidgetClass;
+
+
 	// 플레이어 무기 위젯
 	UPROPERTY()
 	class UPlayerWeaponStateWidget* PlayerWeaponWidget;
@@ -107,6 +115,9 @@ private :
 
 	// 무기 교체 입력 시 호출됩니다.
 	void OnWeaponChangePressed();
+
+	// 대화 진행 시 호출됩니다.
+	void ProgressDialog();
 
 
 		

@@ -10,10 +10,9 @@ UInteractableAreaComponent::UInteractableAreaComponent()
 
 }
 
-bool UInteractableAreaComponent::StartInteraction(FOnInteractionFinishEventSignature onInteractionFinished
-	, class UInteractionParamBase* interactionParam)
+bool UInteractableAreaComponent::StartInteraction(FOnInteractionFinishEventSignature onInteractionFinished)
 {
-	return Cast<ANpcCharacter>(GetOwner())->OnInteractionStarted(onInteractionFinished, interactionParam);
+	return Cast<ANpcCharacter>(GetOwner())->OnInteractionStarted(onInteractionFinished);
 }
 
 void UInteractableAreaComponent::SetIsFullFill()
@@ -38,7 +37,7 @@ void UInteractableAreaComponent::OnBeginOverlap(
 		gameCharacter->GetInteractComponent()->AddInteractableArea(this);
 
 		// 무기 교환 가능으로 설정합니다.
-		SetIsFullFill();
+		//SetIsFullFill();
 
 		// 교환이 가능한지 확인합니다.
 		bool exchangeWeapon = Cast<ANpcCharacter>(GetOwner())->GetIsFullfill();

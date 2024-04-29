@@ -9,7 +9,7 @@ class UWeaponNpcInteractParam : public UInteractionParamBase
 {
 	GENERATED_BODY()
 
-protected:
-	virtual void InteractNpcParam(ENpcType npcType) override;
-	
+public :
+	TSubclassOf<class UWeaponStoreWidget> BP_WeaponStoreWidgetClass;
+
 };

@@ -21,8 +21,7 @@ public :
 	UInteractableAreaComponent();
 
 	//  상호작용을 시작합니다.
-	bool StartInteraction(FOnInteractionFinishEventSignature onInteractionFinished
-		, class UInteractionParamBase* interactionParam);
+	bool StartInteraction(FOnInteractionFinishEventSignature onInteractionFinished);
 
 	void SetIsFullFill();
 

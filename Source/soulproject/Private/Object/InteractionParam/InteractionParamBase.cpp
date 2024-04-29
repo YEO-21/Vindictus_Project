@@ -1,9 +1,2 @@
 #include "Object/InteractionParam/InteractionParamBase.h"
-
-UInteractionParamBase::UInteractionParamBase()
-{
-}
-
-void UInteractionParamBase::InteractNpcParam(ENpcType npcType)
-{
-}
+#include "Enum/Npc/NpcType.h"

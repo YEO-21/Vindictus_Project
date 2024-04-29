@@ -9,10 +9,15 @@ class ANpcWalldo : public ANpcCharacter
 {
 	GENERATED_BODY()
 
+private:
+	TSubclassOf<class UWeaponStoreWidget> BP_WeaponStoreWidgetClass;
+
+
 public :
 	ANpcWalldo();
 
-	virtual bool OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished,
-		class UInteractionParamBase* interactionParam) override;
+	virtual bool OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished) override;
 	
+	virtual class UInteractionParamBase* GetInteractionParam() override;
+
 };

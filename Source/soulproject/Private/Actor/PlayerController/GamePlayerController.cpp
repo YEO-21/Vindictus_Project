@@ -6,6 +6,7 @@
 #include "Widget/GameWidget/GameWidget.h"
 #include "Widget/PlayerStateWidget/PlayerStateWidget.h"
 #include "Widget/PlayerWeaponStateWidget/PlayerWeaponStateWidget.h"
+#include "Widget/NpcDialogWidget/NpcDialogWidget.h"
 #include "Structure/PlayerCharacterData/PlayerCharacterData.h"
 #include "Component/PlayerCharacterMovementComponent/PlayerCharacterMovementComponent.h"
 
@@ -22,12 +23,20 @@ AGamePlayerController::AGamePlayerController()
 	static ConstructorHelpers::FClassFinder<UGameWidget> WIDGETBP_GAME(
 		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/GameWidget/WidgetBP_Game.WidgetBP_Game_C'"));
 
+	static ConstructorHelpers::FClassFinder<UNpcDialogWidget> WIDGETBP_DIALOG(
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/NpcDialogWidget/WidgetBP_NpcDIalog.WidgetBP_NpcDialog_C'"));
+
 	static ConstructorHelpers::FObjectFinder<UDataTable> DT_PLAYERCHARACTERDATA(
 		TEXT("/Script/Engine.DataTable'/Game/Resources/DataTable/DT_PlayerCharacterData.DT_PlayerCharacterData'"));
 
 	if (WIDGETBP_GAME.Succeeded())
 	{
 		GameWidgetClass = WIDGETBP_GAME.Class;
+	}
+
+	if (WIDGETBP_DIALOG.Succeeded())
+	{
+		DialogWidgetClass = WIDGETBP_DIALOG.Class;
 	}
 
 	if (DT_PLAYERCHARACTERDATA.Succeeded())
@@ -97,6 +106,9 @@ void AGamePlayerController::SetupInputComponent()
 	InputComponent->BindAction(TEXT("WeaponChange"), EInputEvent::IE_Pressed, this,
 		&ThisClass::OnWeaponChangePressed);
 
+	InputComponent->BindAction(TEXT("Next"), EInputEvent::IE_Pressed, this,
+		&ThisClass::ProgressDialog);
+
 }
 
 void AGamePlayerController::OnPossess(APawn* pawn)
@@ -121,7 +133,8 @@ void AGamePlayerController::OnPossess(APawn* pawn)
 	// GameCharacter 에서 사용되는 캐릭터 데이터 갱신
 	gameCharacter->OnPlayerCharacterDataUpdated(PlayerCharacterData);
 
-	
+	// DialogWidget 생성
+	DialogWidget = CreateWidget<UNpcDialogWidget>(this, DialogWidgetClass);
 
 
 	// GameWidget 생성
@@ -285,6 +298,12 @@ void AGamePlayerController::OnWeaponChangePressed()
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
 	playerCharacter->OnWeaponChanged();
 	
+}
+
+void AGamePlayerController::ProgressDialog()
+{
+	UE_LOG(LogTemp, Warning, TEXT("DialogNumber is %d"), DialogWidget->DialogNumber);
+	++(DialogWidget->DialogNumber);
 }
 
 UGameWidget* AGamePlayerController::GetGameWidget() const

@@ -18,6 +18,11 @@ private :
 	FVector BeforeInteractionLocation;
 	FRotator BeforeInteractionRotation;
 
+public:
+	// 상호작용 시간
+	UPROPERTY()
+	float InteractTime;
+
 
 public:	
 	UPlayerCharacterInteractComponent();
@@ -41,7 +46,7 @@ private :
 	void OnInteractionStarted(FVector interactionLocation, FRotator interactionRotation);
 	void OnInteractionFinished();
 
-	
+	void RequestWeaponChange();
 
 		
 };

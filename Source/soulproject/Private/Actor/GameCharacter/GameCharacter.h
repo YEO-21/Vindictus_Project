@@ -155,7 +155,10 @@ public:
 	void Knockback(FVector direction, float power);
 	void DeadBounce();
 
+	// 플레이어 리스폰 시 호출됩니다.
 	void Respawn(FVector respawnlocation, float respawntime);
+
+
 
 
 	FORCEINLINE class UPlayerCharacterMovementComponent* GetPlayerCharacterMovementComponent() const

@@ -10,6 +10,7 @@
 #include "Actor/NpcCharacter/NpcCharacter.h"
 
 #include "Object/InteractionParam/InteractionParamBase.h"
+#include "Object/InteractionParam/WeaponNpcInteractParam/WeaponNpcInteractParam.h"
 
 UPlayerCharacterInteractComponent::UPlayerCharacterInteractComponent()
 {
@@ -56,20 +57,22 @@ void UPlayerCharacterInteractComponent::TryInteraction()
 	// 첫 번째 상호작용 영역 컴포넌트를 얻습니다.
 	UInteractableAreaComponent* interactableArea = InteractableAreas[0];
 
+	NewObject<UObject>(this, TEXT("NpcWeaponBase"), EObjectFlags::RF_Dynamic);
+	
+	
+
 	// 상호작용 성공 여부를 얻습니다.
-	UInteractionParamBase* interactionParam;
-	bool isSucceeded = interactableArea->StartInteraction(onInteractionFinished, interactionParam);
+	//UInteractionParamBase* interactionParam;
+	bool isSucceeded = interactableArea->StartInteraction(onInteractionFinished);
 
 	if (isSucceeded)
 	{
+		// 상호작용 시간 기록
+		InteractTime = GetWorld()->GetTimeSeconds();
+
 		// 상호작용 대상(NPC)
 		ANpcCharacter* npc = Cast<ANpcCharacter>(interactableArea->GetOwner());
 
-		//NewObject<UObject>(this, TEXT("TEST"), EObjectFlags::RF_Dynamic)
-		// if (npc->GetNpcType() == IS_WEAPON_SHOP)
-		// {
-		//		NewObject<UWeaponNpcInteractParam>(this);
-		// }
 
 		// 상호작용 시작
 		OnInteractionStarted(
@@ -78,9 +81,20 @@ void UPlayerCharacterInteractComponent::TryInteraction()
 
 		Cast<AGamePlayerController>(playerCharacter->GetController())->SetCameraViewTarget(npc);
 
-		// 무기 교환 가능으로 설정합니다.
-		npc->SetIsFullfill(true);
 
+		NewObject<UObject>(this, TEXT("NpcWeaponBase"), EObjectFlags::RF_Dynamic);
+		 if (npc->GetNpcType() == ENpcType::WeaponBase)
+		 {
+			 UWeaponNpcInteractParam* weaponNpcInteractParam = 
+				 NewObject<UWeaponNpcInteractParam>(this);
+		 }
+
+
+		// 무기 교환 가능으로 설정합니다.
+		//RequestWeaponChange();
+		//npc->SetIsFullfill(true);
+
+		// Test용 코드
 		(playerCharacter->GetEquipWeaponComponent())->EquipWeapon();
 	}
 }
@@ -118,5 +132,11 @@ void UPlayerCharacterInteractComponent::OnInteractionFinished()
 	Cast<AGamePlayerController>(playerCharacter->GetController())->ClearCameraViewTarget();
 
 
+}
+
+void UPlayerCharacterInteractComponent::RequestWeaponChange()
+{
+	ANpcCharacter* npc = Cast<ANpcCharacter>(InteractableAreas[0]->GetOwner());
+	npc->SetIsFullfill(true);
 }
 

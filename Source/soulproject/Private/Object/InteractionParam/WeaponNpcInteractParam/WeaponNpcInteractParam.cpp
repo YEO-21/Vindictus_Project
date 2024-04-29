@@ -1,7 +1,2 @@
 #include "Object/InteractionParam/WeaponNpcInteractParam/WeaponNpcInteractParam.h"
-
-void UWeaponNpcInteractParam::InteractNpcParam(ENpcType npcType)
-{
-	Super::InteractNpcParam(npcType);
-
-}
+#include "Widget/WeaponStoreWidget/WeaponStoreWidget.h"

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Enum/Npc/NpcType.h"
 #include "NpcCharacter.generated.h"
 
 
@@ -19,9 +20,13 @@ private :
 	FOnInteractionFinishSignature OnInteractionFinished;
 
 	UPROPERTY()
+	TSubclassOf<class UWalldoNpcWeaponWidget> BP_WallWeaponWidget;
+
+	UPROPERTY()
 	class UDataTable* DT_NpcData;
 
 protected :
+
 	UPROPERTY(VisibleAnywhere)
 	class UWidgetComponent* NpcWidgetComponent;
 
@@ -60,6 +65,7 @@ protected :
 	ENpcType NpcType;
 
 
+
 public:
 	ANpcCharacter();
 
@@ -74,7 +80,7 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual bool OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished, class UInteractionParamBase* interactionParam);
+	virtual bool OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished);
 
 	virtual void FinishTalkAnimation();
 
@@ -93,6 +99,11 @@ public:
 		return isfullfill;
 	}
 
+	FORCEINLINE ENpcType GetNpcType() const
+	{
+		return NpcType;
+	}
+
 	void SetIsFullfill(bool full);
 	
 
@@ -102,5 +113,8 @@ public:
 
 	// 상호작용 시 배치될 월드 회전을 얻습니다.
 	FRotator GetInteractionRotation() const;
+
+
+	virtual class UInteractionParamBase* GetInteractionParam();
 
 };

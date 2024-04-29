@@ -41,5 +41,7 @@ public:
 public:
 	void EquipWeapon();
 
+	
+
 
 };

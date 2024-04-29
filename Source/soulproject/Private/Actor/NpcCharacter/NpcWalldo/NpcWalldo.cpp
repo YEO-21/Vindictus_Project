@@ -1,9 +1,17 @@
 #include "Actor/NpcCharacter/NpcWalldo/NpcWalldo.h"
 #include "AnimInstance/Npc/NpcAnimInstance.h"
+#include "Object/InteractionParam/WeaponNpcInteractParam/WeaponNpcInteractParam.h"
+#include "Widget/WeaponStoreWidget/WeaponStoreWidget.h"
+#include "Structure/NpcData/NpcData.h"
+
 #include "Enum/Npc/NpcType.h"
 
 ANpcWalldo::ANpcWalldo()
 {
+	static ConstructorHelpers::FClassFinder<UWeaponStoreWidget> BP_WEAPONSTORECLASS(
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/WeaponStoreWidget/WidgetBP_WeaponStore.WidgetBP_WeaponStore_C'"));
+	if (BP_WEAPONSTORECLASS.Succeeded()) BP_WeaponStoreWidgetClass = BP_WEAPONSTORECLASS.Class;
+
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SM_BODY(
 		TEXT("/Script/Engine.SkeletalMesh'/Game/Resources/NPC/Walldo/Brute.Brute'"));
 
@@ -26,10 +34,17 @@ ANpcWalldo::ANpcWalldo()
 
 }
 
-bool ANpcWalldo::OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished
-	, class UInteractionParamBase* interactionParam)
+UInteractionParamBase* ANpcWalldo::GetInteractionParam()
 {
-	bool result = Super::OnInteractionStarted(onInteractionFinished, interactionParam);
+	UWeaponNpcInteractParam* interactionParam = NewObject<UWeaponNpcInteractParam>(this);
+	interactionParam->BP_WeaponStoreWidgetClass = BP_WeaponStoreWidgetClass;
+
+	return interactionParam;
+}
+
+bool ANpcWalldo::OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished)
+{
+	bool result = Super::OnInteractionStarted(onInteractionFinished);
 
 	if (!result) return false;
 

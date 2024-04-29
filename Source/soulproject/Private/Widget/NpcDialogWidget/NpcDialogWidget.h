@@ -8,6 +8,7 @@
 
 DECLARE_EVENT(UNpcDialogWidget, FOnDialogCloseEventSignature)
 
+
 /**
  * 
  */
@@ -19,7 +20,14 @@ class UNpcDialogWidget : public UUserWidget
 private :
 	FOnDialogCloseEventSignature OnDialogClosed;
 
+
 protected :
+	UPROPERTY()
+	class UOverlay* Overlay_Parent;
+
+	UPROPERTY()
+	class UInteractionParamBase* UIInteractionParam;
+
 	UPROPERTY(BlueprintReadOnly, Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* FadeInAnimation;
 
@@ -33,17 +41,26 @@ protected :
 	UPROPERTY()
 	class UButton* Button_Close;
 
+public:
+	UPROPERTY()
+	int32 DialogNumber;
+
+	
+
 
 
 protected:
 	virtual void NativeConstruct() override;
 
 public :
-	void InitializeNpcDialogWidget(struct FNpcData* npcData, FOnDialogCloseEventSignature onDialogClosed);
+	void InitializeNpcDialogWidget(struct FNpcData* npcData, FOnDialogCloseEventSignature onDialogClosed, class UInteractionParamBase* interactionParam);
 
 private :
 	UFUNCTION()
 	void OnCloseButtonClicked();
+
+protected:
+	void HideDialogWidget();
 
 	
 };

@@ -6,8 +6,13 @@ void UWeaponStoreWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	Button_Buy->OnClicked.AddDynamic(this, &ThisClass::OnButtonBuyClicked);
+	Button_Buy->OnClicked.AddUniqueDynamic(this, &ThisClass::OnButtonBuyClicked);
 
+}
+
+void UWeaponStoreWidget::InitializeWeaponStoreWidget(WeaponBuyButtonClickSignature weaponStoreWidgetEvent)
+{
+	WeaponBuyEvent = weaponStoreWidgetEvent;
 }
 
 void UWeaponStoreWidget::OnButtonBuyClicked()

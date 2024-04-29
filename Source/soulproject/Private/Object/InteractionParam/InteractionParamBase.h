@@ -14,14 +14,17 @@ UCLASS()
 class UInteractionParamBase : public UObject
 {
 	GENERATED_BODY()
+public :
+	ENpcType NpcType;
 
-public:
-	UInteractionParamBase();
-
-protected:
-	virtual void InteractNpcParam(ENpcType npcType);
-
-
+	// 판매 아이템 목록
+	//UDataTable*;
+	//TArray<FString/*itemCode*/>;
 
 
 };
+
+
+
+// UNpcDialogWidget 클래스를 상속받는 클래스
+// - 상점 창 띄우기 메서드()

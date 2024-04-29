@@ -20,10 +20,9 @@ ANpcSkully::ANpcSkully()
 
 }
 
-bool ANpcSkully::OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished,
-	class UInteractionParamBase* interactionParam)
+bool ANpcSkully::OnInteractionStarted(FOnInteractionFinishSignature onInteractionFinished)
 {
-	bool result = Super::OnInteractionStarted(onInteractionFinished, interactionParam);
+	bool result = Super::OnInteractionStarted(onInteractionFinished);
 
 	if (!result) return false;
 

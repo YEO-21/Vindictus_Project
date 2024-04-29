@@ -30,6 +30,9 @@ protected:
 protected:
 	virtual void NativeConstruct() override;
 
+public:
+	void InitializeWeaponStoreWidget(WeaponBuyButtonClickSignature weaponStoreWidgetEvent);
+
 private:
 	UFUNCTION()
 	void OnButtonBuyClicked();
