@@ -57,6 +57,7 @@ protected :
 	// 积己等 Npc Dialog Widget 按眉
 	UPROPERTY()
 	class UNpcDialogWidget* NpcDialogWidget;
+	
 
 	UPROPERTY()
 	bool isfullfill;
@@ -116,5 +117,7 @@ public:
 
 
 	virtual class UInteractionParamBase* GetInteractionParam();
+
+	virtual void CheckTradable();
 
 };

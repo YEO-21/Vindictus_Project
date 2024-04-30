@@ -9,6 +9,8 @@
 
 DECLARE_MULTICAST_DELEGATE(FOnInteractionFinishEventSignature)
 
+
+
 /**
  * 
  */
@@ -16,6 +18,11 @@ UCLASS()
 class UInteractableAreaComponent : public USphereComponent
 {
 	GENERATED_BODY()
+
+public:
+	UPROPERTY()
+	class AGameCharacter* PlayerCharacter;
+
 	
 public :
 	UInteractableAreaComponent();
@@ -23,7 +30,9 @@ public :
 	//  상호작용을 시작합니다.
 	bool StartInteraction(FOnInteractionFinishEventSignature onInteractionFinished);
 
-	void SetIsFullFill();
+	UFUNCTION()
+	void SetTradable(FName equipItemCode);
+
 
 private :
 	UFUNCTION()

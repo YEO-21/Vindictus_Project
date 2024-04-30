@@ -95,18 +95,6 @@ void ANpcCharacter::BeginPlay()
 	AActor* gameCharacter = UGameplayStatics::GetActorOfClass(GetWorld(), AGameCharacter::StaticClass());
 	npcWidget->InitializeNpcWidget(this, gameCharacter, NpcData->Name);
 
-	
-		WeaponBuyButtonClickSignature weaponbuysignature;
-		weaponbuysignature.AddLambda([this]() {isfullfill = true;});
-
-
-
-		//UWeaponStoreWidget* npcWeaponWidget = Cast<UWeaponStoreWidget>(NpcWidgetComponent->GetUserWidgetObject());
-		if (!IsValid(npcWeaponWidget)) return;
-		npcWeaponWidget->InitializeWeaponStoreWidget(weaponbuysignature);
-	
-
-	
 
 }
 
@@ -154,7 +142,6 @@ bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishSignature onInterac
 
 	// 표시할 위젯을 생성합니다.
 	NpcDialogWidget = CreateWidget<UNpcDialogWidget>(playerController, NpcData->DialogWidetClass);
-	UWalldoNpcWeaponWidget* npcWeaponWidget = CreateWidget<UWalldoNpcWeaponWidget>(playerController);
 	
 	// Npc Dialog 위젯을 띄웁니다.
 	UGameWidget* gameWidget = playerController->GetGameWidget();
@@ -219,6 +206,17 @@ UInteractionParamBase* ANpcCharacter::GetInteractionParam()
 	interactionParam->NpcType = NpcType;
 
 	return interactionParam;
+}
+
+void ANpcCharacter::CheckTradable()
+{
+	// 교환이 가능한지 확인합니다.
+	bool exchangeWeapon = GetIsFullfill();
+
+	if (exchangeWeapon) isfullfill = true;
+
+
+	
 }
 
 

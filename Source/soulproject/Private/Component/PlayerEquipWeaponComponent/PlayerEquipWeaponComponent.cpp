@@ -3,6 +3,8 @@
 #include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 
+#include "Widget/StoreItemWidget/StoreItemWidget.h"
+
 #include "Structure/PlayerWeaponData/PlayerWeaponData.h"
 
 
@@ -49,7 +51,8 @@ void UPlayerEquipWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
+
+
 }
 
 

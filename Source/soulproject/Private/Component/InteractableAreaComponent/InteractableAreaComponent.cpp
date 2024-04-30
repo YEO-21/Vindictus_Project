@@ -2,6 +2,8 @@
 #include "Actor/GameCharacter/GameCharacter.h"
 #include "Actor/NpcCharacter/NpcCharacter.h"
 #include "Component/PlayerCharacterInteractComponent/PlayerCharacterInteractComponent.h"
+#include "Actor/GameCharacter/GameCharacter.h"
+#include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
 
 UInteractableAreaComponent::UInteractableAreaComponent()
 {
@@ -15,11 +17,21 @@ bool UInteractableAreaComponent::StartInteraction(FOnInteractionFinishEventSigna
 	return Cast<ANpcCharacter>(GetOwner())->OnInteractionStarted(onInteractionFinished);
 }
 
-void UInteractableAreaComponent::SetIsFullFill()
+void UInteractableAreaComponent::SetTradable(FName equipItemCode)
 {
-	// 무기 교환 가능으로 설정합니다.
-	Cast<ANpcCharacter>(GetOwner())->SetIsFullfill(true);
+
+	// 교환이 가능한지 확인합니다.
+	bool exchangeWeapon = Cast<ANpcCharacter>(GetOwner())->GetIsFullfill();
+
+	// 교환이 가능하면 플레이어의 장착 무기 코드를 설정합니다.
+	if (exchangeWeapon) PlayerCharacter->EquippedWeaponCode = equipItemCode;//TEXT("000003");
+
+	PlayerCharacter->GetEquipWeaponComponent()->InitializeEquippedWeapon();
+	PlayerCharacter->GetEquipWeaponComponent()->EquipWeapon();
+	UE_LOG(LogTemp, Warning, TEXT("SetTradable is Called"));
 }
+
+
 
 void UInteractableAreaComponent::OnBeginOverlap(
 	UPrimitiveComponent* OverlappedComponent, 
@@ -31,21 +43,18 @@ void UInteractableAreaComponent::OnBeginOverlap(
 {
 	if (OtherActor->IsA<AGameCharacter>())
 	{
-		AGameCharacter* gameCharacter = Cast<AGameCharacter>(OtherActor);
+		PlayerCharacter = Cast<AGameCharacter>(OtherActor);
 
 		// 상호작용 컴포넌트를 얻습니다.
-		gameCharacter->GetInteractComponent()->AddInteractableArea(this);
-
-		// 무기 교환 가능으로 설정합니다.
-		//SetIsFullFill();
+		PlayerCharacter->GetInteractComponent()->AddInteractableArea(this);
 
 		// 교환이 가능한지 확인합니다.
 		bool exchangeWeapon = Cast<ANpcCharacter>(GetOwner())->GetIsFullfill();
 
 		// 교환이 가능하면 플레이어의 장착 무기 코드를 설정합니다.
-		if (exchangeWeapon) gameCharacter->EquippedWeaponCode = TEXT("000003");
+		if (exchangeWeapon) PlayerCharacter->EquippedWeaponCode = TEXT("000003");
 
-		UE_LOG(LogTemp, Warning, TEXT("EquippedWeaponCode is %s"), *gameCharacter->EquippedWeaponCode.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("EquippedWeaponCode is %s"), *PlayerCharacter->EquippedWeaponCode.ToString());
 	}
 }
 
