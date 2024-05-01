@@ -101,6 +101,9 @@ private :
 	// 공격 영역을 확인합니다.
 	void CheckAttackArea();
 
+	// 창 무기로 공격을 하는지 확인합니다.
+	void CheckSpearAttack();
+
 public :
 	void UpdateAtk(float atk);
 

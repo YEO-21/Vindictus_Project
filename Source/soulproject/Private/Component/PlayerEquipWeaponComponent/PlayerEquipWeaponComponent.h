@@ -21,6 +21,11 @@ protected:
 	UPROPERTY()
 	class UDataTable* DT_WeaponData;
 
+	UPROPERTY()
+	TSubclassOf<UWeaponStoreWidget> BP_WeaponStoreWidget;
+
+	UPROPERTY()
+	class UWeaponStoreWidget* WeaponStoreWidget;
 
 
 
@@ -28,9 +33,8 @@ protected:
 public:	
 	UPlayerEquipWeaponComponent();
 
-	void InitializeEquippedWeapon();
+	void InitializeEquippedWeapon(FName weaponCode);
 
-	void CheckCurrentMainWeapon();
 
 protected:
 	virtual void BeginPlay() override;
@@ -39,9 +43,15 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
+	UFUNCTION()
 	void EquipWeapon();
 
-	
+	UDataTable* GetWeaponData() const
+	{
+		return DT_WeaponData;
+	}
 
+private:
+	void TransitionToSpear();
 
 };

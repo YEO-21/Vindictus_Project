@@ -27,8 +27,9 @@ ANpcWalldo::ANpcWalldo()
 	static ConstructorHelpers::FClassFinder<UNpcAnimInstance> ANIMBP_NPC(
 		TEXT("/Script/Engine.AnimBlueprint'/Game/Blueprints/AnimInstance/AnimBP_Walldo.AnimBP_Walldo_C'"));
 
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_SALEITEM(
+		TEXT("/Script/Engine.DataTable'/Game/Resources/DataTable/DT_PlayerWeaponData.DT_PlayerWeaponData'"));
 
-	
 
 	if (SM_BODY.Succeeded())
 	{
@@ -38,6 +39,8 @@ ANpcWalldo::ANpcWalldo()
 	{
 		GetMesh()->SetAnimClass(ANIMBP_NPC.Class);
 	}
+
+	if (DT_SALEITEM.Succeeded()) DT_SaleItem = DT_SALEITEM.Object;
 
 	// Npc 코드 설정
 	NpcCode = TEXT("000001");
@@ -49,6 +52,9 @@ ANpcWalldo::ANpcWalldo()
 UInteractionParamBase* ANpcWalldo::GetInteractionParam()
 {
 	UWeaponNpcInteractParam* interactionParam = NewObject<UWeaponNpcInteractParam>(this);
+	
+	FString contextString;
+	interactionParam->SaleItemCodes = DT_SaleItem->GetRowNames();
 	interactionParam->BP_WeaponStoreWidgetClass = BP_WeaponStoreWidgetClass;
 
 	return interactionParam;
@@ -69,22 +75,17 @@ void ANpcWalldo::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CheckTradable();
+	//CheckTradable();
 }
 
 void ANpcWalldo::CheckTradable()
 {
-	//GetWeaponCode();
-
-	GetItemNameSignature getItemsignature;
 	WeaponBuyButtonClickSignature buyWeaponEvent;
 
 	// 거래가 가능한지를 확인하기 위해 대리자에 바인딩을 합니다.
 	buyWeaponEvent.AddUObject(InteractableAreaComponent,
 		&UInteractableAreaComponent::SetTradable);
 
-	// 거래가 가능한 아이템의 코드를 얻어오기 위해 대리자에 바인딩을 합니다.
-	getItemsignature.BindUObject(this, &ThisClass::GetWeaponCode);
 
 	UWeaponNpcInteractParam* interactionParam = Cast<UWeaponNpcInteractParam>(GetInteractionParam());
 
@@ -93,16 +94,13 @@ void ANpcWalldo::CheckTradable()
 		GetWorld()->GetFirstPlayerController(),
 		interactionParam->BP_WeaponStoreWidgetClass);
 
-	// 대리자를 초기화합니다.
-	//weaponstoreWidget->InitializeWeaponStoreWidget(buyWeaponEvent);
-	TArray<FName> items;
-	items.Add(TEXT("000001"));
-	items.Add(TEXT("000002"));
-	items.Add(TEXT("000003"));
-	items.Add(TEXT("000004"));
-	items.Add(TEXT("000005"));
-	weaponstoreWidget->InitializeWeaponStoreWidget(items)
-	//weaponstoreWidget->InitializeItemNameWidget(getItemsignature);
+	// Get ItemWidget
+	UStoreItemWidget* storeItemWidget =
+		CreateWidget<UStoreItemWidget>(GetWorld()->GetFirstPlayerController(),
+			ItemWidgetClass);
+
+	storeItemWidget->InitializeStoreWidget(buyWeaponEvent);
+
 }
 
 

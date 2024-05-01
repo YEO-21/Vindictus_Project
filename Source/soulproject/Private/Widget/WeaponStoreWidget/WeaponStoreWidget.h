@@ -1,8 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
-DECLARE_EVENT_OneParam(UWeaponStoreWidget, WeaponBuyButtonClickSignature, FName /*equipItemCode*/)
+DECLARE_EVENT(UWeaponStoreWidget, PassWeaponWidgetSignature)
 DECLARE_DELEGATE_RetVal(FName, GetItemNameSignature)
 
 #include "CoreMinimal.h"
@@ -20,7 +19,7 @@ class UWeaponStoreWidget : public UUserWidget
 	TSubclassOf<class UStoreItemWidget> WidgetBP_StoreItemClass;
 
 public:
-	WeaponBuyButtonClickSignature WeaponBuyEvent;
+	PassWeaponWidgetSignature PassWeaponWidget;
 	GetItemNameSignature GetItemName;
 
 	UPROPERTY()
@@ -29,17 +28,6 @@ public:
 	UPROPERTY()
 	bool isTradable;
 	
-protected:
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* Button_Weapon;
-
-	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* Button_Buy;
-
-	//UPROPERTY()
-	//TArray<class UButton*> Buttons;
-	//TMap<class UButton* /*Button Instance*/, FName /*Item Code*/> BuyButtons;
-
 	
 public:
 	UWeaponStoreWidget(const FObjectInitializer& ObjectInitializer);
@@ -49,15 +37,12 @@ protected:
 	virtual void NativeConstruct() override;
 
 public:
-	void InitializeWeaponStoreWidget(WeaponBuyButtonClickSignature weaponStoreWidgetEvent);
 	void InitializeWeaponStoreWidget(TArray<FName> itemCodes);
 	void InitializeItemNameWidget(GetItemNameSignature itemName);
+	void InitializePassItemNameWidget(PassWeaponWidgetSignature passWeaponWidget);
 
-private:
 	UFUNCTION()
-	void OnButtonBuyClicked();
-
-
+	void OnBuyButtonClicked();
 
 
 };

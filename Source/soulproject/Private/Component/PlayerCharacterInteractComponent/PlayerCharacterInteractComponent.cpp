@@ -95,7 +95,7 @@ void UPlayerCharacterInteractComponent::TryInteraction()
 		//npc->SetIsFullfill(true);
 
 		// Test¿ë ÄÚµå
-		(playerCharacter->GetEquipWeaponComponent())->EquipWeapon();
+		//(playerCharacter->GetEquipWeaponComponent())->EquipWeapon();
 	}
 }
 

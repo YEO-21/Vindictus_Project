@@ -33,6 +33,11 @@ void UPlayerCharacterAnimInstance::SetOneHandedWeapon(bool onehand)
 	bIsOneHandedWeapon = onehand;
 }
 
+void UPlayerCharacterAnimInstance::SetSpear(bool spear)
+{
+	bIsSpear = spear;
+}
+
 void UPlayerCharacterAnimInstance::AnimNotify_AttackEnd()
 {
 	AnimController->OnAttackEnded();

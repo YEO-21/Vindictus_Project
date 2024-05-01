@@ -43,6 +43,10 @@ struct FPlayerWeaponData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float Price;
 
+	// UI용 무기 이미지
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UTexture2D* WeaponImage;
+
 	// 특수 능력
 	//UPROPERTY(EditAnywhere, BlueprintReadOnly)
 

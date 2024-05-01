@@ -18,6 +18,8 @@ class UWalldoNpcWeaponWidget : public UNpcDialogWidget
 private:
 	FTimerHandle WeaponStoreShowTimerHandle;
 
+	
+
 
 protected:
 	virtual void NativeConstruct() override;
@@ -26,8 +28,6 @@ public:
 	UFUNCTION()
 	void CreateWeaponWidget();
 
-private:
-	void HideDialogGameWidget();
-	
+
 	
 };

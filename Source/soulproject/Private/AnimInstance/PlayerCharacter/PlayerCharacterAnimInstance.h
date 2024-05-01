@@ -34,9 +34,14 @@ protected :
 	// 플레이어가 사망했음을 나타냅니다.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsPlayerDead;
-
+	
+	// 플레이어의 장착 무기가 한손 무기인지를 나타냅니다.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsOneHandedWeapon;
+
+	// 플레이어의 장착 무기가 창 인지를 나타냅니다.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsSpear;
 
 
 public :
@@ -53,7 +58,7 @@ public :
 	void SetBlockState(bool isBlocking);
 	void SetPlayerDeadState(bool isdead);
 	void SetOneHandedWeapon(bool onehand);
-	
+	void SetSpear(bool spear);
 
 
 private:

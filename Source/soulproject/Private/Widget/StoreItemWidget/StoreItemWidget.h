@@ -4,6 +4,8 @@
 #include "Blueprint/UserWidget.h"
 #include "StoreItemWidget.generated.h"
 
+DECLARE_EVENT_OneParam(UStoreItemWidget, WeaponBuyButtonClickSignature, FName /*equipItemCode*/)
+
 
 UCLASS()
 class UStoreItemWidget : public UUserWidget
@@ -17,18 +19,24 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	class UButton* Button_Buy;
 
-	// 구매 버튼 클릭 시 호출되는 이벤트
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UImage* Image_Weapon;
 
+	// 구매 버튼 클릭 시 호출되는 이벤트
+	WeaponBuyButtonClickSignature WeaponBuyEvent;
 
 
 protected:
 	virtual void NativeConstruct() override;
 
 
+public:
+	void InitializeStoreWidget(WeaponBuyButtonClickSignature weaponBuyEvent);
+	
+
 
 private:
-	void InitializeWeaponCode(FName weaponCode);
-
-
+	UFUNCTION()
+	void OnButtonBuyClicked();
 	
 };

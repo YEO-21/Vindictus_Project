@@ -6,14 +6,19 @@ void UStoreItemWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	Button_Buy->OnClicked.AddUniqueDynamic(this, &ThisClass::OnButtonBuyClicked);
+	//Image_Weapon = 
+}
 
+void UStoreItemWidget::InitializeStoreWidget(WeaponBuyButtonClickSignature weaponBuyEvent)
+{
+	WeaponBuyEvent = weaponBuyEvent;
 }
 
 
-
-void UStoreItemWidget::InitializeWeaponCode(FName weaponCode)
+void UStoreItemWidget::OnButtonBuyClicked()
 {
-	WeaponCode = weaponCode;
+	WeaponBuyEvent.Broadcast(WeaponCode);
 
 }
 

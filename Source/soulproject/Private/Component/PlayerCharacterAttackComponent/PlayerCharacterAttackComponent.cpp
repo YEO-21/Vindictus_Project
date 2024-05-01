@@ -52,6 +52,9 @@ void UPlayerCharacterAttackComponent::AttackProcedure()
 	// 요청된 공격이 있는가
 	if (RequestAttackQueue.IsEmpty()) return;
 
+	// 창 무기인지 먼저 확인합니다.
+	CheckSpearAttack();
+
 	AttackCode = Cast<AGameCharacter>(GetOwner())->GetCurrentWeaponCode();
 
 	// 요청된 공격을 얻습니다.
@@ -183,6 +186,22 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 		}
 
 	}
+
+}
+
+void UPlayerCharacterAttackComponent::CheckSpearAttack()
+{
+	AGameCharacter* gameCharacter = Cast<AGameCharacter>(GetOwner());
+	FName equippedweapon = gameCharacter->EquippedWeaponCode;
+
+	if (equippedweapon == TEXT("000004") || equippedweapon == TEXT("000005"))
+	{
+		gameCharacter->SetCurrentWeaponCode(WEAPON_SPEAR);
+	}
+
+
+
+
 
 }
 

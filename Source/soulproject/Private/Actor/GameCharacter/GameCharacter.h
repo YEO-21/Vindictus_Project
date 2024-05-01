@@ -11,6 +11,7 @@
 // 무기 태그
 #define WEAPON_SHARPNER			TEXT("DefaultAttack")
 #define WEAPON_STORMBREAKER		TEXT("AxeAttack")
+#define WEAPON_SPEAR			TEXT("SpearAttack")
 
 
 UCLASS()
@@ -234,6 +235,7 @@ public:
 	void SetPlayerDeadTime(float time);
 	void SetCurrentHp(float currenthp);
 	void SetCameraDeadView();
+	void SetCurrentWeaponCode(FName weaponCode);
 	void RespawnCameraView();
 
 };

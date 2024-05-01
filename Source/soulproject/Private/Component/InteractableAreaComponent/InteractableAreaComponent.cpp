@@ -26,9 +26,9 @@ void UInteractableAreaComponent::SetTradable(FName equipItemCode)
 	// 교환이 가능하면 플레이어의 장착 무기 코드를 설정합니다.
 	if (exchangeWeapon) PlayerCharacter->EquippedWeaponCode = equipItemCode;//TEXT("000003");
 
-	PlayerCharacter->GetEquipWeaponComponent()->InitializeEquippedWeapon();
+	PlayerCharacter->GetEquipWeaponComponent()->InitializeEquippedWeapon(equipItemCode);
 	PlayerCharacter->GetEquipWeaponComponent()->EquipWeapon();
-	UE_LOG(LogTemp, Warning, TEXT("SetTradable is Called"));
+	UE_LOG(LogTemp, Warning, TEXT("equipItemCode = [%s]"), *equipItemCode.ToString());
 }
 
 

@@ -524,6 +524,11 @@ void AGameCharacter::SetCameraDeadView()
 	
 }
 
+void AGameCharacter::SetCurrentWeaponCode(FName weaponCode)
+{
+	CurrentWeaponCode = weaponCode;
+}
+
 void AGameCharacter::RespawnCameraView()
 {
 	CameraComponent->SetRelativeLocation(CameraStartLocation);
