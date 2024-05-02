@@ -38,6 +38,7 @@ protected :
 	virtual void OnBlackboardKeyInitialize(class UBlackboardComponent* blackboardComponent, class APawn* inPawn);
 
 public :
+
 	virtual void InitializeEnemyController(struct FEnemyData* enemyData);
 
 	// 조종하는 폰이 피해를 입었을 경우 호출되는 함수입니다.
