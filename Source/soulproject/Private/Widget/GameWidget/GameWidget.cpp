@@ -98,3 +98,13 @@ void UGameWidget::HideDeadWidget()
 {
 	TextBlock_Dead->SetVisibility(ESlateVisibility::Collapsed);
 }
+
+void UGameWidget::ShowWeaponWidget()
+{
+	Overlay_Weapon->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UGameWidget::HideWeaponWidget()
+{
+	Overlay_Weapon->SetVisibility(ESlateVisibility::Hidden);
+}

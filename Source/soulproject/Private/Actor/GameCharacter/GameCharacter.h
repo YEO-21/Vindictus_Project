@@ -42,9 +42,21 @@ private :
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UPlayerEquipWeaponComponent* EquipWeaponComponent;
 
+	// 무기 스태틱메시 컴포넌트
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* WeaponMesh;
 
+	// 한손 무기 스켈레탈메시 컴포넌트
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class USkeletalMeshComponent* WeaponMesh_Onehanded;
+
+	// 창 무기 스켈레탈메시 컴포넌트
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class USkeletalMeshComponent* WeaponMesh_Spear;
+
+
+
+	// 추후에 삭제해야함
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class USkeletalMeshComponent* SubWeaponMesh;
 
@@ -156,6 +168,7 @@ public:
 	void Knockback(FVector direction, float power);
 	void DeadBounce();
 
+
 	// 플레이어 리스폰 시 호출됩니다.
 	void Respawn(FVector respawnlocation, float respawntime);
 
@@ -231,11 +244,36 @@ public:
 	{
 		return	SubWeaponMesh;
 	}
+
+	FORCEINLINE USkeletalMeshComponent* GetWeaponMeshOneHanded()
+	{
+		return	WeaponMesh_Onehanded;
+	}
+
+	FORCEINLINE USkeletalMeshComponent* GetWeaponMeshSpear()
+	{
+		return	WeaponMesh_Spear;
+	}
+
+
 	
 	void SetPlayerDeadTime(float time);
 	void SetCurrentHp(float currenthp);
 	void SetCameraDeadView();
 	void SetCurrentWeaponCode(FName weaponCode);
 	void RespawnCameraView();
+
+	// 모든 무기를 숨깁니다.
+	void HideAllWeaponMesh();
+
+	// 지정한 무기메시를 보이도록 설정합니다.
+	void ShowWeaponMesh(int32 weaponNumber);
+
+
+	// 스태틱 메시(메인 무기) 무기 숨김
+	void HideStaticMeshWeapon();
+
+	// 스켈레탈 메시 무기 숨김
+	void HideSkeletalMeshWeapon();
 
 };

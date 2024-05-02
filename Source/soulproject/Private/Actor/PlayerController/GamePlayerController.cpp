@@ -7,6 +7,7 @@
 #include "Widget/PlayerStateWidget/PlayerStateWidget.h"
 #include "Widget/PlayerWeaponStateWidget/PlayerWeaponStateWidget.h"
 #include "Widget/NpcDialogWidget/NpcDialogWidget.h"
+#include "Widget/PlayerWeaponStateWidget/PlayerWeaponStateWidget.h"
 #include "Structure/PlayerCharacterData/PlayerCharacterData.h"
 #include "Component/PlayerCharacterMovementComponent/PlayerCharacterMovementComponent.h"
 
@@ -29,6 +30,9 @@ AGamePlayerController::AGamePlayerController()
 	static ConstructorHelpers::FObjectFinder<UDataTable> DT_PLAYERCHARACTERDATA(
 		TEXT("/Script/Engine.DataTable'/Game/Resources/DataTable/DT_PlayerCharacterData.DT_PlayerCharacterData'"));
 
+	static ConstructorHelpers::FClassFinder<UPlayerWeaponStateWidget> WIDGETBP_WEAPONSTATE(
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/PlayerWeaponStateWiddget/WidgetBP_PlayerWeaponState.WidgetBP_PlayerWeaponState_C'"));
+
 	if (WIDGETBP_GAME.Succeeded())
 	{
 		GameWidgetClass = WIDGETBP_GAME.Class;
@@ -43,6 +47,13 @@ AGamePlayerController::AGamePlayerController()
 	{
 		PlayerCharacterDataTable = DT_PLAYERCHARACTERDATA.Object;
 	}
+
+	if (WIDGETBP_WEAPONSTATE.Succeeded())
+	{
+		WeaponStateWidgetClass = WIDGETBP_WEAPONSTATE.Class;
+	}
+
+
 	PlayerCharacterData = nullptr;
 
 }
@@ -103,8 +114,8 @@ void AGamePlayerController::SetupInputComponent()
 	InputComponent->BindAction(TEXT("Run"), EInputEvent::IE_Released, this,
 		&ThisClass::OnRunReleased);
 
-	InputComponent->BindAction(TEXT("WeaponChange"), EInputEvent::IE_Pressed, this,
-		&ThisClass::OnWeaponChangePressed);
+	//InputComponent->BindAction(TEXT("WeaponChange"), EInputEvent::IE_Pressed, this,
+	//	&ThisClass::OnWeaponChangePressed);
 
 	InputComponent->BindAction(TEXT("Next"), EInputEvent::IE_Pressed, this,
 		&ThisClass::ProgressDialog);
@@ -136,9 +147,10 @@ void AGamePlayerController::OnPossess(APawn* pawn)
 	// DialogWidget 생성
 	DialogWidget = CreateWidget<UNpcDialogWidget>(this, DialogWidgetClass);
 
-
 	// GameWidget 생성
 	GameWidget = CreateWidget<UGameWidget>(this, GameWidgetClass);
+
+	WeaponStateWidget = CreateWidget<UPlayerWeaponStateWidget>(this, WeaponStateWidgetClass);
 
 	// 생성된 위젯을 화면에 표시합니다.
 	GameWidget->AddToViewport();
@@ -311,9 +323,9 @@ UGameWidget* AGamePlayerController::GetGameWidget() const
 	return GameWidget;
 }
 
-UPlayerWeaponStateWidget* AGamePlayerController::GetWeaponWidget() const
+UPlayerWeaponStateWidget* AGamePlayerController::GetWeaponStateWidget() const
 {
-	return PlayerWeaponWidget;
+	return WeaponStateWidget;
 }
 
 void AGamePlayerController::SetCameraViewTarget(AActor* target)

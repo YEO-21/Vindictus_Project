@@ -1,6 +1,7 @@
 #include "Widget/NpcDialogWidget/WalldoNpcWeaponWidget/WalldoNpcWeaponWidget.h"
 #include "Widget/WeaponStoreWidget/WeaponStoreWidget.h"
 #include "Widget/GameWidget/GameWidget.h"
+#include "Widget/PlayerWeaponStateWidget/PlayerWeaponStateWidget.h"
 
 #include "Components/Overlay.h"
 #include "Components/OverlaySlot.h"
@@ -50,19 +51,19 @@ void UWalldoNpcWeaponWidget::CreateWeaponWidget()
 	slot->HorizontalAlignment = EHorizontalAlignment::HAlign_Fill;
 	slot->VerticalAlignment = EVerticalAlignment::VAlign_Fill;
 
-	//TArray<FName> items;
-	//
-	//// ¹«±â ÄÚµå ¹è¿­
-	//TArray<FName> ItemCodes;
-	//ItemCodes = weaponData->GetRowNames();
-	//
-	//for (int i = 0; i < ItemCodes.Num(); ++i)
-	//{
-	//	items.Add(ItemCodes[i]);
-	//}
-
+	
 	// ÆÇ¸Å ¾ÆÀÌÅÛ À§Á¬ ÃÊ±âÈ­
 	weaponStoreWidget->InitializeWeaponStoreWidget(interactionParam->SaleItemCodes);
+	
+	// Get PlayerController
+	AGamePlayerController* playerController = 
+		Cast<AGamePlayerController>(gameCharacter->GetController());
+
+	// ´ëÈ­ À§Á¬ ¼û±è
+	HideDialogWidget();
+	// ¹«±â »óÅÂ À§Á¬ ¼û±è
+	playerController->GetGameWidget()->HideWeaponWidget();
+
 	
 }
 

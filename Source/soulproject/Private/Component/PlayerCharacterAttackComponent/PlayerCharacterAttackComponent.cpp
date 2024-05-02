@@ -198,6 +198,11 @@ void UPlayerCharacterAttackComponent::CheckSpearAttack()
 	{
 		gameCharacter->SetCurrentWeaponCode(WEAPON_SPEAR);
 	}
+	else if(equippedweapon == TEXT("000002") || equippedweapon == TEXT("000003"))
+	{
+		gameCharacter->SetCurrentWeaponCode(WEAPON_STORMBREAKER);
+	}
+	else  gameCharacter->SetCurrentWeaponCode(WEAPON_SHARPNER);
 
 
 

@@ -26,9 +26,16 @@ private :
 	UPROPERTY()
 	TSubclassOf<class UGameWidget> GameWidgetClass;
 
+	UPROPERTY()
+	TSubclassOf<class UPlayerWeaponStateWidget> WeaponStateWidgetClass;
+
 	// 게임 위젯
 	UPROPERTY()
 	class UGameWidget * GameWidget;
+
+	// 무기상태 위젯
+	UPROPERTY()
+	class UPlayerWeaponStateWidget* WeaponStateWidget;
 
 	// 대화 위젯
 	UPROPERTY()
@@ -37,10 +44,6 @@ private :
 	UPROPERTY()
 	TSubclassOf<class UNpcDialogWidget> DialogWidgetClass;
 
-
-	// 플레이어 무기 위젯
-	UPROPERTY()
-	class UPlayerWeaponStateWidget* PlayerWeaponWidget;
 
 	// 플레이어 캐릭터 데이터
 	struct FPlayerCharacterData* PlayerCharacterData;
@@ -123,7 +126,7 @@ private :
 		
 public :
 	class UGameWidget* GetGameWidget() const;
-	class UPlayerWeaponStateWidget* GetWeaponWidget() const;
+	class UPlayerWeaponStateWidget* GetWeaponStateWidget() const;
 
 	void SetCameraViewTarget(class AActor* target);
 	void ClearCameraViewTarget();

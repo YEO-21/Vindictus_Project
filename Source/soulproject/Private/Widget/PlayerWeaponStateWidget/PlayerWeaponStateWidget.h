@@ -38,4 +38,6 @@ public:
 		return IsExChangeWeapon;
 	}
 
+	 void HideWeaponStateWidget();
+	 void ShowWeaponStateWidget();
 };

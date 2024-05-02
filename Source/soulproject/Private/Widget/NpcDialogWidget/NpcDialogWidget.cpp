@@ -39,5 +39,5 @@ void UNpcDialogWidget::HideDialogWidget()
 {
 	Text_Name->SetVisibility(ESlateVisibility::Hidden);
 	Text_Dialog->SetVisibility(ESlateVisibility::Hidden);
-	Button_Close->SetVisibility(ESlateVisibility::Hidden);
+	//Button_Close->SetVisibility(ESlateVisibility::Hidden);
 }

@@ -7,6 +7,7 @@
 #include "Component/PlayerCharacterAnimController/PlayerCharacterAnimController.h"
 #include "Component/PlayerCharacterAttackComponent/PlayerCharacterAttackComponent.h"
 #include "Component/PlayerCharacterInteractComponent/PlayerCharacterInteractComponent.h"
+#include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 #include "Widget/GameWidget/GameWidget.h"
 
@@ -77,7 +78,11 @@ AGameCharacter::AGameCharacter()
 	SubWeaponMesh =
 		CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SUB_WEAPON_MESH"));
 
+	WeaponMesh_Onehanded =
+		CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_WEAPON_MESH_ONEHANDED"));
 
+	WeaponMesh_Spear =
+		CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_WEAPON_MESH_SPEAR"));
 
 
 	// SpringArm 컴포넌트를 루트 컴포넌트에 추가합니다.
@@ -113,7 +118,9 @@ AGameCharacter::AGameCharacter()
 
 	// 무기 붙이기
 	WeaponMesh->SetupAttachment(GetMesh(), TEXT("Socket_Weapon"));
-	SubWeaponMesh->SetupAttachment(GetMesh(), TEXT("Socket_SubWeapon"));
+	WeaponMesh_Onehanded->SetupAttachment(GetMesh(), TEXT("Socket_Weapon_OneHanded"));
+	WeaponMesh_Spear->SetupAttachment(GetMesh(), TEXT("Socket_Spear"));
+	//SubWeaponMesh->SetupAttachment(GetMesh(), TEXT("Socket_SubWeapon"));
 
 	// 메인 무기 붙이기(샤프너)
 	if (SM_SABER.Succeeded())
@@ -475,6 +482,8 @@ void AGameCharacter::DeadBounce()
 
 }
 
+
+
 void AGameCharacter::Respawn(FVector respawnlocation, float respawntime)
 {
 	float currentTime = GetWorld()->GetTimeSeconds();
@@ -535,4 +544,47 @@ void AGameCharacter::RespawnCameraView()
 	CameraComponent->SetRelativeRotation(CameraStartRotation);
 
 
+}
+
+void AGameCharacter::HideAllWeaponMesh()
+{
+	WeaponMesh->SetVisibility(false);
+	WeaponMesh_Onehanded->SetVisibility(false);
+	WeaponMesh_Spear->SetVisibility(false);
+}
+
+void AGameCharacter::ShowWeaponMesh(int32 weaponNumber)
+{
+	HideAllWeaponMesh();
+	int32 WeaponNumber = weaponNumber;
+
+	switch (WeaponNumber)
+	{
+		// 기본무기
+	case 1:
+		WeaponMesh->SetVisibility(true);
+		break;
+
+		// 한손무기
+	case 2:
+		WeaponMesh_Onehanded->SetVisibility(true);
+		break;
+
+		// 창 무기
+	case 3:
+		WeaponMesh_Spear->SetVisibility(true);
+		break;
+	}
+}
+
+void AGameCharacter::HideStaticMeshWeapon()
+{
+	WeaponMesh->SetVisibility(false);
+	WeaponMesh_Onehanded->SetVisibility(true);
+}
+
+void AGameCharacter::HideSkeletalMeshWeapon()
+{
+	WeaponMesh_Onehanded->SetVisibility(false);
+	WeaponMesh->SetVisibility(true);
 }

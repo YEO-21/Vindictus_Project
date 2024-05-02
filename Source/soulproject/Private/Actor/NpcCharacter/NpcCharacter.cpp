@@ -163,6 +163,9 @@ bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishSignature onInterac
 			// 커서를 숨깁니다.
 			playerController->bShowMouseCursor = false;
 
+			// 무기 위젯을 나타나도록 합니다.
+			playerController->GetGameWidget()->ShowWeaponWidget();
+
 			// 대화 애니메이션을 종료합니다.
 			FinishTalkAnimation();
 

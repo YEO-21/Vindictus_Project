@@ -21,3 +21,13 @@ void UPlayerWeaponStateWidget::ExchangeWeaponWidget()
 	
 
 }
+
+void UPlayerWeaponStateWidget::HideWeaponStateWidget()
+{
+	SetVisibility(ESlateVisibility::Hidden);
+}
+
+void UPlayerWeaponStateWidget::ShowWeaponStateWidget()
+{
+	SetVisibility(ESlateVisibility::Visible);
+}

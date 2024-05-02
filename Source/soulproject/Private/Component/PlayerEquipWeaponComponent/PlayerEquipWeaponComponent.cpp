@@ -80,12 +80,14 @@ void UPlayerEquipWeaponComponent::TickComponent(float DeltaTime, ELevelTick Tick
 void UPlayerEquipWeaponComponent::EquipWeapon()
 {
 	// 무기가 창 종류라면 소켓 변경
-	TransitionToSpear();
+	//TransitionToSpear();
 
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetOwner());
 
 	InitializeEquippedWeapon(playerCharacter->EquippedWeaponCode);
 	UE_LOG(LogTemp, Warning, TEXT("playerCharacter->EquippedWeaponCode is %s"), *playerCharacter->EquippedWeaponCode.ToString());
+
+	
 
 	UPlayerCharacterAnimInstance* animInst = 
 		Cast<UPlayerCharacterAnimInstance>(playerCharacter->GetMesh()->GetAnimInstance());
@@ -97,40 +99,53 @@ void UPlayerEquipWeaponComponent::EquipWeapon()
 	case EWeaponType::SHARPNER:
 		playerCharacter->GetWeaponMesh()->SetStaticMesh(PlayerWeaponData->WeaponStaticMesh);
 		animInst->SetOneHandedWeapon(false);
+		animInst->SetSpear(false);
 		break;
 	case EWeaponType::STORM_BREAKER:
-		playerCharacter->GetSubWeaponMesh()->SetSkeletalMesh(PlayerWeaponData->WeaponSkeletalMesh);
+		playerCharacter->GetWeaponMeshOneHanded()->SetSkeletalMesh(PlayerWeaponData->WeaponSkeletalMesh);
 		animInst->SetOneHandedWeapon(false);
+		animInst->SetSpear(false);
 		break;
 	case EWeaponType::TWIN_DRAGON_SWORD:
-		playerCharacter->GetSubWeaponMesh()->SetSkeletalMesh(PlayerWeaponData->WeaponSkeletalMesh);
+		playerCharacter->GetWeaponMeshOneHanded()->SetSkeletalMesh(PlayerWeaponData->WeaponSkeletalMesh);
 		animInst->SetOneHandedWeapon(true);
+		animInst->SetSpear(false);
 		break;
 	case EWeaponType::WALLDO:
-		playerCharacter->GetSubWeaponMesh()->SetSkeletalMesh(PlayerWeaponData->WeaponSkeletalMesh);
+		playerCharacter->GetWeaponMeshSpear()->SetSkeletalMesh(PlayerWeaponData->WeaponSkeletalMesh);
 		animInst->SetSpear(true);
 		break;
 	case EWeaponType::NAMELESS_SPEAR:
-		playerCharacter->GetSubWeaponMesh()->SetSkeletalMesh(PlayerWeaponData->WeaponSkeletalMesh);
+		playerCharacter->GetWeaponMeshSpear()->SetSkeletalMesh(PlayerWeaponData->WeaponSkeletalMesh);
 		animInst->SetSpear(true);
 		break;
-
 	}
+
+	// 장착할 무기 메시를 보이도록 설정합니다.
+	playerCharacter->ShowWeaponMesh(CheckWeaponType());
 	UE_LOG(LogTemp, Warning, TEXT("EquipWeapon is Called"));
 }
 
-void UPlayerEquipWeaponComponent::TransitionToSpear()
+bool UPlayerEquipWeaponComponent::IsSpearWeapon() const
 {
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetOwner());
+	FName weaponCode = playerCharacter->EquippedWeaponCode;
 
-	FName equipeedWeaponCode = playerCharacter->EquippedWeaponCode;
-	UE_LOG(LogTemp, Warning, TEXT("equipeedWeaponCode is %s"), *equipeedWeaponCode.ToString());
+	return (weaponCode ==_WALLDO) || (weaponCode == _NAMELESSSPEAR);
+}
 
-	if (equipeedWeaponCode == TEXT("000004") || equipeedWeaponCode == (TEXT("000005")))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("TransitionToSpear is Called"));
-		playerCharacter->GetSubWeaponMesh()->
-			SetupAttachment(playerCharacter->GetMesh(), TEXT("Socket_Spear"));
-	}
+
+int32 UPlayerEquipWeaponComponent::CheckWeaponType()
+{
+	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetOwner());
+	FName weaponCode = playerCharacter->EquippedWeaponCode;
+
+	// 창 무기 : 3 / 한손 무기 : 2 / 기본 무기 : 1 을 반환합니다.
+	if (IsSpearWeapon())
+		return 3;
+	else if ((weaponCode == _STORMBREAKER) || (weaponCode == _TWINDRAGONSWORD))
+		return 2;
+	else return 1;
+
 }
 

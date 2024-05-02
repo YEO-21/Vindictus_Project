@@ -21,6 +21,9 @@ private :
 	UPROPERTY()
 	class UOverlay * Overlay_Additive;
 
+	UPROPERTY(meta = (BindWidget))
+	class UOverlay* Overlay_Weapon;
+
 	UPROPERTY()
 	class UTextBlock* TextBlock_Dead;
 
@@ -60,4 +63,7 @@ public :
 	
 	void ShowDeadWidget();
 	void HideDeadWidget();
+
+	void ShowWeaponWidget();
+	void HideWeaponWidget();
 };

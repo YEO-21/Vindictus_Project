@@ -4,6 +4,15 @@
 #include "Components/ActorComponent.h"
 #include "PlayerEquipWeaponComponent.generated.h"
 
+// 무기 코드
+#define _SHARPNER			TEXT("000001")
+#define _STORMBREAKER		TEXT("000002")
+#define _TWINDRAGONSWORD	TEXT("000003")
+#define _WALLDO				TEXT("000004")
+#define _NAMELESSSPEAR		TEXT("000005")
+
+
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UPlayerEquipWeaponComponent : public UActorComponent
@@ -22,7 +31,7 @@ protected:
 	class UDataTable* DT_WeaponData;
 
 	UPROPERTY()
-	TSubclassOf<UWeaponStoreWidget> BP_WeaponStoreWidget;
+	TSubclassOf<class UWeaponStoreWidget> BP_WeaponStoreWidget;
 
 	UPROPERTY()
 	class UWeaponStoreWidget* WeaponStoreWidget;
@@ -51,7 +60,12 @@ public:
 		return DT_WeaponData;
 	}
 
+	bool IsSpearWeapon() const;
+	
+
+	
+
 private:
-	void TransitionToSpear();
+	int32 CheckWeaponType();
 
 };
