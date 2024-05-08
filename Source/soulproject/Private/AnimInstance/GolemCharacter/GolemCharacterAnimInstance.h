@@ -20,5 +20,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsAir;
+
+private:
+	UFUNCTION()
+	void AnimNotify_GolemAttackEnd();
 	
 };

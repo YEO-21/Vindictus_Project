@@ -11,3 +11,6 @@
 #define TIMETOWEAPONSTORE  3.0f
 
 #define WLOG(log)			UE_LOG(LogTemp, Warning, TEXT(log))
+
+
+//UE_LOG(LogTemp, Warning, TEXT(""))

@@ -71,6 +71,7 @@ void UInteractableAreaComponent::OnEndOverlap(
 		// 상호작용 컴포넌트를 얻습니다.
 		gameCharacter->GetInteractComponent()->RemoveInteractableArea(this);
 
+
 	}
 
 }

@@ -28,7 +28,7 @@ void UBTService_DetectPlayerCharacter::CheckArea(UBehaviorTreeComponent& ownerCo
 	FVector currentLocation = ownerController->GetPawn()->GetActorLocation();
 
 	// 감지 반경
-	float radius = 50.0f;
+	float radius = 150.0f;
 
 	
 	TArray<TEnumAsByte<EObjectTypeQuery>> objectTypeQuery;

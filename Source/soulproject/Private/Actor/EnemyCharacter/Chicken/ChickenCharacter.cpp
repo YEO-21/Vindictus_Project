@@ -38,15 +38,10 @@ AChickenCharacter::AChickenCharacter()
 
 }
 
-void AChickenCharacter::PossessedBy(AController* NewController)
+void AChickenCharacter::PossessedBy
+(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-
-	UBlackboardComponent* blackboardComponent = 
-		Cast<AAIController>(NewController)->GetBlackboardComponent();
-
-	// Blackboard Key를 초기화합니다.
-	InitializeBlackboardKey(blackboardComponent);
 
 }
 
@@ -70,10 +65,7 @@ void AChickenCharacter::OnDamaged(AGameCharacter* gameCharacter, float damage)
 }
 
 
-void AChickenCharacter::InitializeBlackboardKey(UBlackboardComponent* blackboardComponent)
-{
 
-}
 
 void AChickenCharacter::UpdateAnimInstanceParams()
 {

@@ -57,6 +57,8 @@ AKnightCharacter::AKnightCharacter()
 	// Ä® Mesh ¼³Á¤
 	SwordMeshComponent->SetStaticMesh(SwordMesh);
 	SwordMeshComponent->SetCollisionProfileName(TEXT("NoCollision"));
+
+	UE_LOG(LogTemp, Warning, TEXT("KnightCharacter"));
 }
 
 void AKnightCharacter::BeginPlay()

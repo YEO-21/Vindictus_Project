@@ -11,19 +11,55 @@ class AGolemCharacter : public AEnemyCharacter
 
 
 private:
-	UPROPERTY()
-	class USkeletalMeshComponent* GolemSkeletalMesh;
-	
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class USkeletalMeshComponent* GolemMovingWheel;
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class USkeletalMeshComponent* GolemHead;
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* GolemAggressiveArea;
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class UGolemAttackComponent* GolemAttackComponent;
+
+
+
 
 public:
 	AGolemCharacter();
 
 
 protected:
-	virtual void BeginPlay() override;
+	virtual void PossessedBy(AController* NewController) override;
 
 public:
 	virtual void Tick(float dt) override;
+
+	FORCEINLINE class UGolemAttackComponent* GetGolemAttackComponent()
+	{
+		return GolemAttackComponent;
+	}
+
+
+// 골렘 공격 영역 오버랩 시 호출될 함수들입니다.
+private:
+	UFUNCTION()
+	void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnEndOverlap(UPrimitiveComponent* OverlappedComponent,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex);
+
+
+	
 
 
 };

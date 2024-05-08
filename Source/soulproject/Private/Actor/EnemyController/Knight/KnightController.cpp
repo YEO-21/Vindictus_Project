@@ -17,8 +17,7 @@ void AKnightController::OnBlackboardKeyInitialize(UBlackboardComponent* blackboa
 	BlackboardComponent = blackboardComponent;
 
 	// MaxMoveDistance 설정
-	blackboardComponent->SetValueAsFloat(BLACKBOARDKEY_MAXMOVEDISTANCE, 1000.0f);
-
+	blackboardComponent->SetValueAsFloat(BLACKBOARDKEY_MAXMOVEDISTANCE, 2000.0f);
 }
 
 AKnightController::AKnightController()
@@ -93,6 +92,7 @@ void AKnightController::OnAttackFinished()
 
 void AKnightController::OnSightUpdated(AActor* actor, FAIStimulus stimulus)
 {
+	
 	// 성공적으로 감지한 경우
 	if (stimulus.WasSuccessfullySensed())
 	{

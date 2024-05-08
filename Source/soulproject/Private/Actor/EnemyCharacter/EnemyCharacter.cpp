@@ -107,6 +107,7 @@ void AEnemyCharacter::LaunchCharacter(FVector direction, float power)
 
 void AEnemyCharacter::InitializeEnemyData()
 {
+	UE_LOG(LogTemp, Warning, TEXT("EnemyCode = [%s]"), *EnemyCode.ToString());
 	if (EnemyCode.IsNone()) return;
 
 	FString contextString;

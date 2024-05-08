@@ -13,7 +13,9 @@
 #define BLACKBOARDKEY_ISDEAD				TEXT("IsDead")
 #define BLACKBOARDKEY_MAXMOVEDISTANCE		TEXT("MaxMoveDistance")
 #define BLACKBOARDKEY_DAMAGEACTOR			TEXT("DamageActor")
+#define BLACKBOARDKEY_PLAYERCHARACTER		TEXT("PlayerCharacter")
 #define BLACKBOARDKEY_ISPLAYERDEAD			TEXT("IsPlayerDead")
+#define BLACKBOARDKEY_ISATTACKING			TEXT("IsAttacking")
 
 /**
  * 적 캐릭터에서 기본적으로 사용하는 컨트롤러입니다.
