@@ -12,7 +12,9 @@
 				"Engine",
 				"AIModule",
 				"UMG",
-				"CoreUObject"
+				"CoreUObject",
+				"GameplayCameras",
+				"Niagara"
 			]
 		}
 	],

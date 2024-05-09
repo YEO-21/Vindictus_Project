@@ -82,6 +82,9 @@ private :
 	// 공격 모션 코드
 	FName AttackCode;
 
+	// 공격을 가한 위치
+	FVector AttackLocation;
+
 
 
 
@@ -155,5 +158,9 @@ public :
 		return BlockStartTime;
 	}
 
+	FORCEINLINE FVector GetAttackLocation() const
+	{
+		return AttackLocation;
+	}
 
 };

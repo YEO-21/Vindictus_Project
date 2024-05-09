@@ -22,8 +22,10 @@ AGolemCharacter::AGolemCharacter()
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_GOLEM_HEAD(
 		TEXT("/Script/Engine.SkeletalMesh'/Game/Ancient_Golem/Mesh/SK_Ancient_Golem_Head_Wheel.SK_Ancient_Golem_Head_Wheel'"));
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ANIM_GOLEMHIT(
+		TEXT("/Script/Engine.AnimMontage'/Game/Ancient_Golem/Animation/AnimMontage_GolemHit.AnimMontage_GolemHit'"));
 
-	if (SK_GOLEM.Succeeded()) GetMesh()->SetSkeletalMesh(SK_GOLEM.Object);
+		if (SK_GOLEM.Succeeded()) GetMesh()->SetSkeletalMesh(SK_GOLEM.Object);
 
 	// °ñ·½ ÈÙ, ¸Ó¸® ½ºÄÌ·¹Å» ¸Þ½Ã ÄÄÆ÷³ÍÆ® Ãß°¡
 	GolemMovingWheel =
@@ -41,6 +43,9 @@ AGolemCharacter::AGolemCharacter()
 
 	if (SK_GOLEM_HEAD.Succeeded())
 		GolemHead->SetSkeletalMesh(SK_GOLEM_HEAD.Object);
+
+	if (ANIM_GOLEMHIT.Succeeded())
+		HitGolemAnim = ANIM_GOLEMHIT.Object;
 
 	
 	
@@ -79,6 +84,22 @@ AGolemCharacter::AGolemCharacter()
 void AGolemCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+
+
+}
+
+void AGolemCharacter::OnDamaged(AGameCharacter* gameCharacter, float damage)
+{
+	Super::OnDamaged(gameCharacter, damage);
+
+	// ÇÇ°Ý ¾Ö´Ï¸ÞÀÌ¼Ç ¸ùÅ¸ÁÖ Àç»ý
+	PlayAnimMontage(HitGolemAnim);
+
+	FVector direction = GetActorForwardVector() * -1.0f;
+	
+	// ³Ë¹é Àû¿ë
+	LaunchCharacter(direction, 100.0f);
+
 
 
 }

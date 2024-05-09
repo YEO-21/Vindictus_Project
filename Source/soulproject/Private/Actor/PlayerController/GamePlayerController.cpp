@@ -11,6 +11,8 @@
 #include "Structure/PlayerCharacterData/PlayerCharacterData.h"
 #include "Component/PlayerCharacterMovementComponent/PlayerCharacterMovementComponent.h"
 
+#include "Object/CameraShake/AttackCameraShake.h"
+
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
@@ -351,9 +353,12 @@ void AGamePlayerController::InitializePlayerStateWidget(float maxHp, float maxSt
 
 void AGamePlayerController::OnDamaged(float damage)
 {
-	
-
 	if (!IsValid(GameWidget)) return;
+
+	// 카메라 쉐이크 적용
+	ClientStartCameraShake(UAttackCameraShake::StaticClass());
+
+   
 
 	UPlayerStateWidget* playerStateWidget = GameWidget->GetPlayerStateWidget();
 

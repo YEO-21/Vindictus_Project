@@ -29,9 +29,6 @@ protected :
 	
 
 
-
-
-
 public :
 	AKnightCharacter();
 

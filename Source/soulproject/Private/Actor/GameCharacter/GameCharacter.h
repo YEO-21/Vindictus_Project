@@ -42,6 +42,9 @@ private :
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UPlayerEquipWeaponComponent* EquipWeaponComponent;
 
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class UAttackNiagaraSystem* AttackNiagaraSystem;
+
 	// 무기 스태틱메시 컴포넌트
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* WeaponMesh;
@@ -53,7 +56,6 @@ private :
 	// 창 무기 스켈레탈메시 컴포넌트
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class USkeletalMeshComponent* WeaponMesh_Spear;
-
 
 
 	// 추후에 삭제해야함

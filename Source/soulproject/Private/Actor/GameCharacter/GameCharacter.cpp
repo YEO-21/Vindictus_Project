@@ -8,8 +8,10 @@
 #include "Component/PlayerCharacterAttackComponent/PlayerCharacterAttackComponent.h"
 #include "Component/PlayerCharacterInteractComponent/PlayerCharacterInteractComponent.h"
 #include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
+#include "NiagaraSystem/AttackNiagaraSystem.h"
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 #include "Widget/GameWidget/GameWidget.h"
+#include "../../Engine/Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -84,6 +86,9 @@ AGameCharacter::AGameCharacter()
 	WeaponMesh_Spear =
 		CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_WEAPON_MESH_SPEAR"));
 
+	AttackNiagaraSystem =
+		CreateDefaultSubobject<UAttackNiagaraSystem>(TEXT("NS_ATTACK"));
+
 
 	// SpringArm 컴포넌트를 루트 컴포넌트에 추가합니다.
 	SpringArmComponent->SetupAttachment(GetRootComponent());
@@ -136,6 +141,8 @@ AGameCharacter::AGameCharacter()
 		SubWeaponMesh->SetVisibility(false);
 		SubWeaponMesh->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 	}
+
+
 
 	// 플레이어 캐릭터의 팀을 설정합니다.
 	SetGenericTeamId(FGenericTeamId(ECharacterTeam::Player));

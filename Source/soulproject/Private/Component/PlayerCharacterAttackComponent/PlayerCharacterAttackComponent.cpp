@@ -4,6 +4,7 @@
 #include "Actor/PlayerController/GamePlayerController.h"
 #include "../../Structure/AttackData/AttackData.h"
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
+#include "Object/CameraShake/AttackCameraShake.h"
 
 #include "Components/StaticMeshComponent.h"
 
@@ -118,6 +119,8 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 	// 공격중이 아닌 경우 함수 호출 종료.
 	if (!IsAttackAreaEnabled) return;
 
+
+
 	TArray<AActor*> actorsToIgnore;
 	TArray<FHitResult> hitResults;
 	bool isHit = UKismetSystemLibrary::SphereTraceMultiByProfile(
@@ -136,8 +139,6 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 	
 	for (FHitResult& hit : hitResults)
 	{
-
-
 		AEnemyCharacter* enemyCharacter = Cast<AEnemyCharacter>(hit.GetActor());
 		
 
@@ -147,7 +148,8 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 			{
 				AttackDetectedEnemies.Add(enemyCharacter);
 
-
+				// 공격을 가한 위치를 저장합니다.
+				AttackLocation = hit.Location;
 
 				// 적 상태 위젯 띄우기
 				AGamePlayerController* playerController =
@@ -156,7 +158,8 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 				if (IsValid(playerController))
 					playerController->OnEnemyAttack(enemyCharacter);
 
-
+				// 카메라 쉐이크 적용
+				playerController->ClientStartCameraShake(UAttackCameraShake::StaticClass());
 
 				// 적에게 가할 피해량 계산
 				float damage = (Atk * 0.5f) + ApplyDamage;
@@ -172,13 +175,11 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 		}
 		else
 		{
-			if (!AttackDetectedActors.Contains(hit.GetActor()) && IsValid(hit.GetActor()))
+			if (!AttackDetectedActors.Contains(hit.GetActor()) && !hit.GetActor()->ActorHasTag(TEXT("Floor")))
 			{
 				AttackDetectedActors.Add(hit.GetActor());
-
 				// 적 캐릭터 공격을 하는것이 아닐 때, 공격 막힘 애니메이션 재생
 				Cast<AGameCharacter>(GetOwner())->PlayAttackBlockAnim();
-
 
 				UE_LOG(LogTemp, Warning, TEXT("It is not EnemyCharacter"));
 			}
@@ -297,7 +298,7 @@ void UPlayerCharacterAttackComponent::FinishCheckingNextAttackInput()
 	if (CurrentCombo < TargetCombo)
 	{
 		// 재생중이던 애니메이션 몽타주를 정지합니다.
-		//PlayerCharacter->StopAnimMontage();
+		PlayerCharacter->StopAnimMontage();
 
 		PrevAttackData = CurrentAttackData;
 		CurrentAttackData = nullptr;

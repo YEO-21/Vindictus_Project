@@ -23,6 +23,9 @@ private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UGolemAttackComponent* GolemAttackComponent;
 
+	UPROPERTY()
+	class UAnimMontage* HitGolemAnim;
+
 
 
 
@@ -32,6 +35,8 @@ public:
 
 protected:
 	virtual void PossessedBy(AController* NewController) override;
+
+	virtual void OnDamaged(class AGameCharacter* gameCharacter, float damage) override;
 
 public:
 	virtual void Tick(float dt) override;
