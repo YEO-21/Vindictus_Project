@@ -18,6 +18,12 @@ private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UNiagaraComponent* NiagaraComponent;
 
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class UNiagaraComponent* HitNiagaraComponent;
+
+
+
+
 	UPROPERTY()
 	class AGameCharacter* OwnerCharacter;
 
@@ -27,5 +33,11 @@ public:
 
 private:
 	FVector GetAttackLocation();
+
+public:
+	void ActivateNiagaraSystem();
+
+	void SetNiagaraSystemLocation(FVector location, FVector hitLocation);
+	void SetNiagaraSystemAsset(UNiagaraSystem* effect, UNiagaraSystem* hiteffect);
 	
 };

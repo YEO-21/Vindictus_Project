@@ -5,6 +5,7 @@
 #include "../../Structure/AttackData/AttackData.h"
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 #include "Object/CameraShake/AttackCameraShake.h"
+#include "NiagaraSystem/AttackNiagaraSystem.h"
 
 #include "Components/StaticMeshComponent.h"
 
@@ -125,8 +126,8 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 	TArray<FHitResult> hitResults;
 	bool isHit = UKismetSystemLibrary::SphereTraceMultiByProfile(
 		this,
-		CurrentSaberStartSocketLocation,
-		CurrentSaberEndSocketLocation,
+		CurrentStartSocketLocation,
+		CurrentEndSocketLocation,
 		10.0f,
 		TEXT("AttackArea"),
 		false,
@@ -160,6 +161,11 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 
 				// 카메라 쉐이크 적용
 				playerController->ClientStartCameraShake(UAttackCameraShake::StaticClass());
+
+				// 나이아가라 시스템 적용
+				playerCharacter->GetAttackNiagaraSystem()->ActivateNiagaraSystem();
+				playerCharacter->GetAttackNiagaraSystem()->SetNiagaraSystemLocation(playerCharacter->GetActorLocation(), AttackLocation);
+
 
 				// 적에게 가할 피해량 계산
 				float damage = (Atk * 0.5f) + ApplyDamage;
@@ -219,8 +225,8 @@ void UPlayerCharacterAttackComponent::UpdateAtk(float atk)
 
 void UPlayerCharacterAttackComponent::UpdateWeaponSocketLocation(UStaticMeshComponent* weaponMesh)
 {
-	CurrentSaberStartSocketLocation = weaponMesh->GetSocketTransform(WEAPON_SOCKET_START).GetLocation();
-	CurrentSaberEndSocketLocation = weaponMesh->GetSocketTransform(WEAPON_SOCKET_END).GetLocation();
+	CurrentStartSocketLocation = weaponMesh->GetSocketTransform(WEAPON_SOCKET_START).GetLocation();
+	CurrentEndSocketLocation = weaponMesh->GetSocketTransform(WEAPON_SOCKET_END).GetLocation();
 }
 
 void UPlayerCharacterAttackComponent::ClearCurrentAttack()

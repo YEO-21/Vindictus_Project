@@ -12,9 +12,9 @@
 // 기본 공격을 나타내는 키워드
 #define DEFAULT_ATTACK_KEYWORD	TEXT("DefaultAttack")
 
-// 무기 Static Mesh 소켓 이름
-#define WEAPON_SOCKET_START		TEXT("Socket_SaberStart")
-#define WEAPON_SOCKET_END		TEXT("Socket_SaberEnd")
+// 무기 소켓 이름
+#define WEAPON_SOCKET_START		TEXT("Socket_WeaponStart")
+#define WEAPON_SOCKET_END		TEXT("Socket_WeaponEnd")
 
 
 
@@ -76,8 +76,8 @@ private :
 	bool IsBlocking;
 
 	// 무기의 현재 위치를 나타냅니다.
-	FVector CurrentSaberStartSocketLocation;
-	FVector CurrentSaberEndSocketLocation;
+	FVector CurrentStartSocketLocation;
+	FVector CurrentEndSocketLocation;
 
 	// 공격 모션 코드
 	FName AttackCode;

@@ -3,6 +3,8 @@
 #include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 
+#include "NiagaraSystem/AttackNiagaraSystem.h"
+
 #include "Widget/StoreItemWidget/StoreItemWidget.h"
 #include "Widget/WeaponStoreWidget/WeaponStoreWidget.h"
 
@@ -87,7 +89,6 @@ void UPlayerEquipWeaponComponent::EquipWeapon()
 	InitializeEquippedWeapon(playerCharacter->EquippedWeaponCode);
 	UE_LOG(LogTemp, Warning, TEXT("playerCharacter->EquippedWeaponCode is %s"), *playerCharacter->EquippedWeaponCode.ToString());
 
-	
 
 	UPlayerCharacterAnimInstance* animInst = 
 		Cast<UPlayerCharacterAnimInstance>(playerCharacter->GetMesh()->GetAnimInstance());
@@ -123,7 +124,10 @@ void UPlayerEquipWeaponComponent::EquipWeapon()
 
 	// 장착할 무기 메시를 보이도록 설정합니다.
 	playerCharacter->ShowWeaponMesh(CheckWeaponType());
-	UE_LOG(LogTemp, Warning, TEXT("EquipWeapon is Called"));
+
+	// 무기 타입에 따른 이펙트를 설정합니다.
+	playerCharacter->GetAttackNiagaraSystem()->SetNiagaraSystemAsset(
+		PlayerWeaponData->AttackEffect, PlayerWeaponData->AttackHitEffect);
 }
 
 bool UPlayerEquipWeaponComponent::IsSpearWeapon() const

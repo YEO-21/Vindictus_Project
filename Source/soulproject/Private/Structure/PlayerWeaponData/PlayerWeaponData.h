@@ -47,6 +47,15 @@ struct FPlayerWeaponData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UTexture2D* WeaponImage;
 
+	// 무기 이펙트
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UNiagaraSystem* AttackEffect;
+
+	// 무기 피격 이펙트
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	class UNiagaraSystem* AttackHitEffect;
+
+
 	// 특수 능력
 	//UPROPERTY(EditAnywhere, BlueprintReadOnly)
 

@@ -257,6 +257,11 @@ public:
 		return	WeaponMesh_Spear;
 	}
 
+	FORCEINLINE UAttackNiagaraSystem* GetAttackNiagaraSystem()
+	{
+		return AttackNiagaraSystem;
+	}
+
 
 	
 	void SetPlayerDeadTime(float time);
