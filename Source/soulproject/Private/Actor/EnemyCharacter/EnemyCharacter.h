@@ -47,7 +47,7 @@ protected :
 	class UMaterialInstanceDynamic* MaterialInstanceOnDead;
 
 	FTimerHandle HUDShowTimerHandle;
-
+	FTimerHandle RespawnTimerHandle;
 
 
 public:
@@ -91,6 +91,13 @@ private :
 
 	// 랙돌을 켭니다.
 	void PlayRagdoll();
+
+	// 머터리얼 투명도를 설정합니다.
+	void SetOpacity();
+
+	// 리스폰을 합니다.
+	void EnemyRespawn();
+
 
 protected :
 	// 적 컨트롤러를 설정합니다.

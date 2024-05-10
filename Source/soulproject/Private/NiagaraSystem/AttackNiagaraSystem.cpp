@@ -30,7 +30,12 @@ UAttackNiagaraSystem::UAttackNiagaraSystem()
 	if (NS_ATTACKHIT.Succeeded())
 		HitNiagaraComponent->SetAsset(NS_ATTACKHIT.Object);
 
+	// 나이아가라 시스템 크기 설정
 	NiagaraComponent->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
+
+	// 나이아가라 시스템 자동 활성화 off
+	NiagaraComponent->bAutoActivate = false;
+	HitNiagaraComponent->bAutoActivate = false;
 
 
 	// 공격한 위치를 저장합니다.
@@ -57,19 +62,26 @@ FVector UAttackNiagaraSystem::GetAttackLocation()
 
 void UAttackNiagaraSystem::ActivateNiagaraSystem()
 {
+	// 나이아가라 시스템 활성화 
 	NiagaraComponent->ActivateSystem();
 	HitNiagaraComponent->ActivateSystem();
 }
 
 void UAttackNiagaraSystem::SetNiagaraSystemLocation(FVector playerlocation, FVector hitLocation)
 {
+	// 나이아가라 시스템 월드 위치 설정
 	NiagaraComponent->SetWorldLocation(playerlocation);
-	NiagaraComponent->SetWorldLocation(hitLocation);
+	HitNiagaraComponent->SetWorldLocation(hitLocation);
 }
 
 void UAttackNiagaraSystem::SetNiagaraSystemAsset(UNiagaraSystem* effect, UNiagaraSystem* hiteffect)
 {
+	// 나이아가라 시스템 에셋 설정
 	NiagaraComponent->SetAsset(effect);
 	HitNiagaraComponent->SetAsset(hiteffect);
+
+	// 나이아가라 시스템 비활성화
+	NiagaraComponent->Deactivate();
+	HitNiagaraComponent->Deactivate();
 
 }

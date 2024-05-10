@@ -45,6 +45,7 @@ void AEnemyCharacter::BeginPlay()
 	// 적 위젯 객체 초기화
 	enemyWidget->InitializeEnemyWidget(EnemyData->Name, EnemyData->MaxHP);
 
+	
 	// 대미지 이벤트 설정
 	OnTakeAnyDamage.AddDynamic(this, &ThisClass::OnDamaged);
 }
@@ -77,6 +78,8 @@ void AEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
+
 	// 메터리얼 파라미터 설정
 	if (IsDead)
 	{
@@ -84,7 +87,7 @@ void AEnemyCharacter::Tick(float DeltaTime)
 		{
 			float alpha;
 			MaterialInstanceOnDead->GetScalarParameterValue(TEXT("_Alpha"), alpha);
-			alpha -= 1.0f;
+			alpha -= 0.6f;
 			MaterialInstanceOnDead->SetScalarParameterValue(TEXT("_Alpha"), alpha);
 
 			if (alpha <= 0.0f) OnEnemyDestroy();
@@ -140,6 +143,8 @@ void AEnemyCharacter::OnDamaged(
 
 void AEnemyCharacter::ChangeMaterialToDeadState()
 {
+	UE_LOG(LogTemp, Warning, TEXT("ChangeMaterialToDeadState"));
+
 	// 사망 후 캐릭터가 통과할 수 있도록 컬리전 프리셋 설정
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("NoCollision"));
 
@@ -148,6 +153,7 @@ void AEnemyCharacter::ChangeMaterialToDeadState()
 		EnemyData->MaterialInstanceOnDead, this);
 
 	GetMesh()->SetMaterial(0, MaterialInstanceOnDead);
+	
 }
 
 void AEnemyCharacter::PlayRagdoll()
@@ -155,6 +161,18 @@ void AEnemyCharacter::PlayRagdoll()
 	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
+}
+
+void AEnemyCharacter::SetOpacity()
+{
+	GetMesh()->GetMaterials();
+}
+
+void AEnemyCharacter::EnemyRespawn()
+{
+	//GetWorld()->SpawnActor<ThisClass>(AEnemyCharacter::StaticClass());
+
+	UE_LOG(LogTemp, Warning, TEXT("EnemyRespawn is called"));
 }
 
 void AEnemyCharacter::SetEnemyController(
@@ -209,13 +227,22 @@ void AEnemyCharacter::OnDead()
 {
 	// 사망 상태 설정
 	IsDead = true;
-
+	
 	// 위젯 객체 제거
 	WidgetComponent->SetWidget(nullptr);
 	if (HUDShowTimerHandle.IsValid())
 	{
 		GetWorld()->GetTimerManager().ClearTimer(HUDShowTimerHandle);
 	}
+
+	// 사망 시 메터리얼 상태 적용
+	ChangeMaterialToDeadState();
+
+
+
+	// 리스폰 타이머 설정(10s)
+	GetWorldTimerManager().ClearTimer(RespawnTimerHandle);
+	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ThisClass::EnemyRespawn, 5.0f, false);
 
 
 	PlayRagdoll();

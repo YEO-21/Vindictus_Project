@@ -112,7 +112,9 @@ public :
 
 	// 무기 소켓 위치를 갱신합니다.
 	// weaponMesh : 소켓 위치를 얻을 StaticMesh 에셋을 전달합니다.
-	void UpdateWeaponSocketLocation(class UStaticMeshComponent* weaponMesh);
+	void UpdateStaticWeaponSocketLocation(class UStaticMeshComponent* weaponMesh);
+
+	void UpdateSkeletalWeaponSocketLocation(class USkeletalMeshComponent* weaponMesh);
 
 	// 현재 공격을 비웁니다.
 	void ClearCurrentAttack();

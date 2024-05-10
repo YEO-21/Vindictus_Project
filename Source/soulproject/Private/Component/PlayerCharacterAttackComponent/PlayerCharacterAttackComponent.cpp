@@ -8,6 +8,7 @@
 #include "NiagaraSystem/AttackNiagaraSystem.h"
 
 #include "Components/StaticMeshComponent.h"
+#include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
 
 #include "Animation/AnimMontage.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -120,7 +121,9 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 	// 공격중이 아닌 경우 함수 호출 종료.
 	if (!IsAttackAreaEnabled) return;
 
+	float radius = 10.0f;
 
+	if (PlayerCharacter->EquippedWeaponCode == _STORMBREAKER) radius = 30.0f;
 
 	TArray<AActor*> actorsToIgnore;
 	TArray<FHitResult> hitResults;
@@ -128,7 +131,7 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 		this,
 		CurrentStartSocketLocation,
 		CurrentEndSocketLocation,
-		10.0f,
+		radius,
 		TEXT("AttackArea"),
 		false,
 		actorsToIgnore,
@@ -141,13 +144,17 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 	for (FHitResult& hit : hitResults)
 	{
 		AEnemyCharacter* enemyCharacter = Cast<AEnemyCharacter>(hit.GetActor());
+
 		
+
 
 		if (IsValid(enemyCharacter))
 		{
 			if (!AttackDetectedEnemies.Contains(enemyCharacter))
 			{
+
 				AttackDetectedEnemies.Add(enemyCharacter);
+
 
 				// 공격을 가한 위치를 저장합니다.
 				AttackLocation = hit.Location;
@@ -223,10 +230,20 @@ void UPlayerCharacterAttackComponent::UpdateAtk(float atk)
 }
 
 
-void UPlayerCharacterAttackComponent::UpdateWeaponSocketLocation(UStaticMeshComponent* weaponMesh)
+void UPlayerCharacterAttackComponent::UpdateStaticWeaponSocketLocation(UStaticMeshComponent* weaponMesh)
 {
 	CurrentStartSocketLocation = weaponMesh->GetSocketTransform(WEAPON_SOCKET_START).GetLocation();
 	CurrentEndSocketLocation = weaponMesh->GetSocketTransform(WEAPON_SOCKET_END).GetLocation();
+}
+
+void UPlayerCharacterAttackComponent::UpdateSkeletalWeaponSocketLocation(USkeletalMeshComponent* weaponMesh)
+{
+	CurrentStartSocketLocation = weaponMesh->GetSocketTransform(WEAPON_SOCKET_START).GetLocation();
+	CurrentEndSocketLocation = weaponMesh->GetSocketTransform(WEAPON_SOCKET_END).GetLocation();
+
+	//UE_LOG(LogTemp, Warning, TEXT("CurrentStartSocketLocation.X = %.2f"), CurrentStartSocketLocation.X);
+	//UE_LOG(LogTemp, Warning, TEXT("CurrentStartSocketLocation.Y = %.2f"), CurrentStartSocketLocation.Y);
+	//UE_LOG(LogTemp, Warning, TEXT("CurrentStartSocketLocation.Z = %.2f"), CurrentStartSocketLocation.Z);
 }
 
 void UPlayerCharacterAttackComponent::ClearCurrentAttack()

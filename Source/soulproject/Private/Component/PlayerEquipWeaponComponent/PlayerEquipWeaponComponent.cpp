@@ -54,6 +54,9 @@ void UPlayerEquipWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// 기본 무기 코드 설정
+	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetOwner());
+	playerCharacter->EquippedWeaponCode = _SHARPNER;
 
 	//WeaponStoreWidget = CreateWidget<UWeaponStoreWidget>(GetWorld()->GetFirstPlayerController(), BP_WeaponStoreWidget);
 

@@ -89,6 +89,7 @@ AGameCharacter::AGameCharacter()
 	AttackNiagaraSystem =
 		CreateDefaultSubobject<UAttackNiagaraSystem>(TEXT("NS_ATTACK"));
 
+	//AttackNiagaraSystem->AddToRoot();
 
 	// SpringArm 컴포넌트를 루트 컴포넌트에 추가합니다.
 	SpringArmComponent->SetupAttachment(GetRootComponent());
@@ -135,12 +136,13 @@ AGameCharacter::AGameCharacter()
 	}
 
 	// 서브 무기 붙이기(스톰 브레이커)
-	if (SK_AXE.Succeeded())
+	/*if (SK_AXE.Succeeded())
 	{
 		SubWeaponMesh->SetSkeletalMesh(SK_AXE.Object);
 		SubWeaponMesh->SetVisibility(false);
 		SubWeaponMesh->SetCollisionProfileName(TEXT("BlockAllDynamic"));
-	}
+	}*/
+
 
 
 
@@ -203,7 +205,8 @@ void AGameCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	// 무기 소켓 위치 갱신
-	AttackComponent->UpdateWeaponSocketLocation(WeaponMesh);
+	UpdateWeaponSocket();
+	//AttackComponent->UpdateStaticWeaponSocketLocation(WeaponMesh);
 
 	if (IsDead) Respawn(StartLocation, TIMETOWAITRESPAWN);
 
@@ -279,6 +282,17 @@ void AGameCharacter::SetPlayerRespawn()
 	controller->GetGameWidget()->HideDeadWidget();
 
 
+}
+
+void AGameCharacter::UpdateWeaponSocket()
+{
+
+	if(EquippedWeaponCode == _SHARPNER) 
+		AttackComponent->UpdateStaticWeaponSocketLocation(WeaponMesh);
+	else if (EquippedWeaponCode == _STORMBREAKER || EquippedWeaponCode == _TWINDRAGONSWORD)
+		AttackComponent->UpdateSkeletalWeaponSocketLocation(WeaponMesh_Onehanded);
+	else if (EquippedWeaponCode == _WALLDO || EquippedWeaponCode == _NAMELESSSPEAR)
+		AttackComponent->UpdateSkeletalWeaponSocketLocation(WeaponMesh_Spear);
 }
 
 // Called to bind functionality to input

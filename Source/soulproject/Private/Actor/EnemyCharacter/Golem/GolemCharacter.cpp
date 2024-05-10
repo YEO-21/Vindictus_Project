@@ -66,6 +66,8 @@ AGolemCharacter::AGolemCharacter()
 	GolemAggressiveArea->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnBeginOverlap);
 	GolemAggressiveArea->OnComponentEndOverlap.AddUniqueDynamic(this, &ThisClass::OnEndOverlap);
 
+	GolemAggressiveArea->SetCollisionProfileName(TEXT("NoCollision"));
+
 
 
 

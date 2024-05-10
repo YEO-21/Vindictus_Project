@@ -133,6 +133,7 @@ private :
 
 	void SetPlayerRespawn();
 
+	void UpdateWeaponSocket();
 	
 
 public:	
