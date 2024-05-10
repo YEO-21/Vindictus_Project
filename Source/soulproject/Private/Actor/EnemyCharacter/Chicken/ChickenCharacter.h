@@ -16,6 +16,8 @@ class AChickenCharacter : public AEnemyCharacter
 private :
 	class UAnimMontage* OnHitAnimMontage;
 
+	
+
 public :
 	AChickenCharacter();
 
@@ -25,6 +27,8 @@ public:
 
 protected :
 	virtual void OnDamaged(class AGameCharacter* gameCharacter, float damage) override;
+
+	virtual void EnemyRespawn() override;
 	
 
 private :

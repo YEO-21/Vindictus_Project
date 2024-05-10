@@ -64,6 +64,12 @@ void AChickenCharacter::OnDamaged(AGameCharacter* gameCharacter, float damage)
 	}
 }
 
+void AChickenCharacter::EnemyRespawn()
+{
+	Super::EnemyRespawn();
+
+}
+
 
 
 

@@ -31,7 +31,7 @@ protected :
 	float CurrentHp;
 
 	// 사망 상태
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsDead;
 
 	// 적 코드
@@ -45,6 +45,10 @@ protected :
 	// 사망 시 사용될 메터리얼
 	UPROPERTY()
 	class UMaterialInstanceDynamic* MaterialInstanceOnDead;
+
+	// 적 캐릭터 사망 위치
+	UPROPERTY()
+	FVector DeadLocation;
 
 	FTimerHandle HUDShowTimerHandle;
 	FTimerHandle RespawnTimerHandle;
@@ -92,11 +96,8 @@ private :
 	// 랙돌을 켭니다.
 	void PlayRagdoll();
 
-	// 머터리얼 투명도를 설정합니다.
-	void SetOpacity();
 
-	// 리스폰을 합니다.
-	void EnemyRespawn();
+	
 
 
 protected :
@@ -120,7 +121,8 @@ protected :
 	// return : 가공된 대미지 수치를 반환합니다.
 	virtual float CalculateDamage(float damage);
 
-	
+	// 리스폰을 합니다.
+	virtual void EnemyRespawn();
 
 public :
 

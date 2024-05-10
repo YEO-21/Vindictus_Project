@@ -1,6 +1,7 @@
 #include "Actor/EnemyCharacter/EnemyCharacter.h"
 #include "Actor/EnemyController/EnemyController.h"
 #include "Actor/GameCharacter/GameCharacter.h"
+#include "Actor/EnemyCharacter/Chicken/ChickenCharacter.h"
 
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
@@ -163,14 +164,12 @@ void AEnemyCharacter::PlayRagdoll()
 	GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
 }
 
-void AEnemyCharacter::SetOpacity()
-{
-	GetMesh()->GetMaterials();
-}
+
 
 void AEnemyCharacter::EnemyRespawn()
 {
-	//GetWorld()->SpawnActor<ThisClass>(AEnemyCharacter::StaticClass());
+	// 적을 먼저 제거합니다.
+	OnEnemyDestroy();
 
 	UE_LOG(LogTemp, Warning, TEXT("EnemyRespawn is called"));
 }
@@ -214,6 +213,9 @@ void AEnemyCharacter::OnDamaged(AGameCharacter* gameCharacter, float damage)
 	{
 		CurrentHp = 0.0f;
 
+		// 현재 사망 위치를 기록합니다.
+		DeadLocation = GetActorLocation();
+
 		// 사망 이벤트 실행
 		AEnemyController* enemyController = Cast<AEnemyController>(GetController());
 
@@ -236,15 +238,14 @@ void AEnemyCharacter::OnDead()
 	}
 
 	// 사망 시 메터리얼 상태 적용
-	ChangeMaterialToDeadState();
+	//ChangeMaterialToDeadState();
 
 
-
-	// 리스폰 타이머 설정(10s)
+	// 리스폰 타이머 설정(5s)
 	GetWorldTimerManager().ClearTimer(RespawnTimerHandle);
 	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ThisClass::EnemyRespawn, 5.0f, false);
 
-
+	// 랙돌 적용
 	PlayRagdoll();
 }
 
