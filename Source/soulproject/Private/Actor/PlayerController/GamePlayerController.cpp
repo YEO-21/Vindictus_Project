@@ -420,6 +420,10 @@ void AGamePlayerController::ResetPlayerCharacterWidget()
 	// 플레이어 캐릭터 상태 위젯 초기화
 	InitializePlayerStateWidget(PlayerCharacterData->MaxHp, PlayerCharacterData->MaxStamina);
 
+	// 최대 체력 & 스테미너 갱신
+	CurrentHp = PlayerCharacterData->MaxHp;
+	CurrentStamina = PlayerCharacterData->MaxStamina;
+
 	
 }
 
