@@ -7,6 +7,10 @@
 #include "WolfAttackComponent.generated.h"
 
 
+#define WOLF_SOCKET_START		TEXT("Socket_AttackStart")
+#define WOLF_SOCKET_END			TEXT("Socket_AttackEnd")
+
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UWolfAttackComponent : public UActorComponent
 {
@@ -14,6 +18,8 @@ class UWolfAttackComponent : public UActorComponent
 
 private :
 	class UAnimMontage* AttackAnimMontage;
+
+
 
 public:	
 	UWolfAttackComponent();
@@ -26,5 +32,8 @@ public:
 
 public :
 	void Attack();
+
+private:
+	void CheckAttackArea();
 		
 };

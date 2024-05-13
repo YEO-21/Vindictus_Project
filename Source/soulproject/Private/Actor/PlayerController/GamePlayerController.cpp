@@ -371,6 +371,7 @@ void AGamePlayerController::OnDamaged(float damage)
 
 	// HP 수치 갱신
 	CurrentHp -= hitDamage;
+	UE_LOG(LogTemp, Warning, TEXT("CurrentHp = %.2f"), CurrentHp);
 	playerStateWidget->UpdateHp(CurrentHp);
 	Cast<AGameCharacter>(GetPawn())->SetCurrentHp(CurrentHp);
 
@@ -418,5 +419,7 @@ void AGamePlayerController::ResetPlayerCharacterWidget()
 
 	// 플레이어 캐릭터 상태 위젯 초기화
 	InitializePlayerStateWidget(PlayerCharacterData->MaxHp, PlayerCharacterData->MaxStamina);
+
+	
 }
 

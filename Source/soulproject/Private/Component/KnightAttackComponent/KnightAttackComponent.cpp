@@ -77,6 +77,7 @@ void UKnightAttackComponent::CheckAttackArea()
 	actorsToIgnore.Add(GetOwner());
 	TArray<FHitResult> hitResults;
 
+	
 	UKismetSystemLibrary::SphereTraceMultiByProfile(
 		this,
 		checkStartLocation,

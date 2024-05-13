@@ -171,6 +171,22 @@ void AEnemyCharacter::EnemyRespawn()
 	// 적을 먼저 제거합니다.
 	OnEnemyDestroy();
 
+	FTimerDelegate timerDelegate;
+	timerDelegate.BindLambda([this]()
+		{
+			// 골렘의 경우, 죽을 때 마다 크기가 3배씩 커지고, 
+			// 크기가 27배가 이상이 되면 다시 처음으로 돌아갑니다.
+			if (DeadLocation.GetScale3D().X >= 27.0f)
+				DeadLocation.SetScale3D(FVector(1.0f, 1.0f, 1.0f));
+
+			// 죽은 위치에 리스폰을 합니다.
+			GetWorld()->SpawnActor<AEnemyCharacter>(EnemyData->BP_EnemyCharacter, DeadLocation);
+			IsDead = false;
+		});
+	// 3초후 리스폰이 되도록 합니다.
+	GetWorldTimerManager().SetTimer(RespawnTimerHandle, timerDelegate, 3.0f, false);
+
+
 	UE_LOG(LogTemp, Warning, TEXT("EnemyRespawn is called"));
 }
 
@@ -214,7 +230,7 @@ void AEnemyCharacter::OnDamaged(AGameCharacter* gameCharacter, float damage)
 		CurrentHp = 0.0f;
 
 		// 현재 사망 위치를 기록합니다.
-		DeadLocation = GetActorLocation();
+		DeadLocation = GetActorTransform();
 
 		// 사망 이벤트 실행
 		AEnemyController* enemyController = Cast<AEnemyController>(GetController());

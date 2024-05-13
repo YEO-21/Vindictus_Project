@@ -20,6 +20,7 @@ AChickenCharacter::AChickenCharacter()
 	static ConstructorHelpers::FClassFinder<UChickenCharacterAnimInstance> ANIMBP_CHICKEN(
 		TEXT("/Script/Engine.AnimBlueprint'/Game/Blueprints/AnimInstance/AnimBP_ChickenCharacter.AnimBP_ChickenCharacter_C'"));
 
+
 	if (SK_CHICKEN.Succeeded())
 	{
 		GetMesh()->SetSkeletalMesh(SK_CHICKEN.Object);
@@ -30,6 +31,7 @@ AChickenCharacter::AChickenCharacter()
 		// 애님 인스턴스 클래스 설정
 		GetMesh()->SetAnimInstanceClass(ANIMBP_CHICKEN.Class);
 	}
+
 
 	// 컨트롤러 설정
 	SetEnemyController(AChickenController::StaticClass());
@@ -67,6 +69,11 @@ void AChickenCharacter::OnDamaged(AGameCharacter* gameCharacter, float damage)
 void AChickenCharacter::EnemyRespawn()
 {
 	Super::EnemyRespawn();
+
+	UE_LOG(LogTemp, Warning, TEXT("ChickCharacter"));
+
+	// 죽었던 위치에 적 캐릭터를 스폰합니다.
+	GetWorld()->SpawnActor<AChickenCharacter>(BP_ChickenCharacter, DeadLocation);
 
 }
 

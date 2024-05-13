@@ -16,6 +16,10 @@ class AChickenCharacter : public AEnemyCharacter
 private :
 	class UAnimMontage* OnHitAnimMontage;
 
+	UPROPERTY()
+	TSubclassOf<class AChickenCharacter> BP_ChickenCharacter;
+
+
 	
 
 public :

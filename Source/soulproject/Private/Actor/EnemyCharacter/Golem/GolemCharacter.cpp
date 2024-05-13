@@ -124,9 +124,10 @@ void AGolemCharacter::OnBeginOverlap(
 		// 골렘 컨트롤러를 얻습니다.
 		AGolemController* golemController =
 			Cast<AGolemController>(Cast<AGolemCharacter>(OverlappedComponent->GetOwner())->GetController());
+
 		if (!IsValid(golemController)) return;
 
-
+		UE_LOG(LogTemp, Warning, TEXT("OnBeginOverlap"));
 		// 공격적 상태를 활성화 합니다.
 		golemController->SetAggressive(true, OtherActor);
 

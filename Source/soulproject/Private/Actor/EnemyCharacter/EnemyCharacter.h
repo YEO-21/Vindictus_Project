@@ -48,7 +48,7 @@ protected :
 
 	// 적 캐릭터 사망 위치
 	UPROPERTY()
-	FVector DeadLocation;
+	FTransform DeadLocation;
 
 	FTimerHandle HUDShowTimerHandle;
 	FTimerHandle RespawnTimerHandle;
@@ -96,8 +96,6 @@ private :
 	// 랙돌을 켭니다.
 	void PlayRagdoll();
 
-
-	
 
 
 protected :

@@ -27,6 +27,9 @@ public :
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float Atk;
 
+	// 리스폰시 사용될 블루프린트 클래스입니다.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<class AEnemyCharacter> BP_EnemyCharacter;
 
 	// 사용될 위젯 클래스를 나타냅니다.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
