@@ -12,7 +12,6 @@ void UWolfCharacterAnimInstance::SetCurrentSpeed(float newSpeed)
 void UWolfCharacterAnimInstance::SetWolfStateNumber(float newNumber)
 {
 	WolfStateNumber = newNumber;
-	UE_LOG(LogTemp, Warning, TEXT("WolfStateNumber = %.2f"), WolfStateNumber);
 }
 
 void UWolfCharacterAnimInstance::AnimNotify_OnAttackFinished()

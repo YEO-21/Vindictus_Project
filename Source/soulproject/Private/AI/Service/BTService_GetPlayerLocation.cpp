@@ -38,13 +38,16 @@ void UBTService_GetPlayerLocation::TickNode(
 	FVector currentLocation = enemyController->GetPawn()->GetActorLocation();
 
 	// 플레이어 위치를 얻어 목표 위치로 사용합니다.
-	FVector targetLocation = gameCharacter->GetActorLocation();
+	FVector targetLocation = gameCharacter->GetActorLocation() - FVector(1.0);
 
 	if (bUseMaxTrackingDistance)
 	{
 
 		// 최대 추적 거리
 		float maxTrackingDistance = 500.0f;
+
+		// 최소 추적 거리
+		float minTrackingDistance = 100.0f;
 
 		// 목표 위치까지의 거리가 최대 추적 거리를 초과하는지 확인합니다.
 		if (FVector::Distance(currentLocation, targetLocation) > maxTrackingDistance)
@@ -55,6 +58,14 @@ void UBTService_GetPlayerLocation::TickNode(
 			// 최대 추적 거리를 적용합니다.
 			targetLocation = currentLocation + direction * maxTrackingDistance;
 		}
+
+		
+		// 목표 위치까지의 방향을 얻습니다.
+		FVector direction = (targetLocation - currentLocation).GetSafeNormal();
+
+		// 최소 추적 거리를 적용합니다.
+		targetLocation = targetLocation - direction * minTrackingDistance;
+		
 	}
 
 	// 목표 위치를 설정합니다.

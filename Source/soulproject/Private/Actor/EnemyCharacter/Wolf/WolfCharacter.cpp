@@ -115,8 +115,6 @@ void AWolfCharacter::OnDamaged(AGameCharacter* gameCharacter, float damage)
 	// ³Ë¹é Àû¿ë
 	LaunchCharacter(direction, 1000.0f);
 
-	/*UWolfCharacterAnimInstance* animInst = Cast<UWolfCharacterAnimInstance>(GetMesh()->GetAnimInstance());
- 	animInst->SetWolfStateNumber(0.0f);*/
 
 	for (AWolfCharacter* wolfCharacter : Group)
 	{

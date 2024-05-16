@@ -41,6 +41,7 @@ void UGolemAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 void UGolemAttackComponent::Attack(FName sectionName)
 {
 	AGolemCharacter* golem = Cast<AGolemCharacter>(GetOwner());
+	//FVector direction = golem->GetActorForwardVector() * 10.0f;
 
 	// 공격 애님 몽타주 재생합니다.
 	golem->PlayAnimMontage(AttackAnimMontage, 1.0f, sectionName);
@@ -52,7 +53,7 @@ void UGolemAttackComponent::Attack(FName sectionName)
 	FVector rightHandEnd =	golem->GetMesh()->GetSocketTransform(SOCKETNAME_RIGHTHANDEND).GetLocation();
 
 	TArray<AActor*> actorsToIgnore;
-	actorsToIgnore.Add(golem);
+	//actorsToIgnore.Add(golem);
 	TArray<FHitResult> LefthitResults;
 	TArray<FHitResult> RighthitResults;
 	TArray<TArray<FHitResult>> Results;
@@ -60,16 +61,16 @@ void UGolemAttackComponent::Attack(FName sectionName)
 	// 공격 영역을 체크합니다.
 	UKismetSystemLibrary::CapsuleTraceMultiByProfile(
 		this, leftHandStart, leftHandEnd,
-		50.0f, 50.0f, TEXT("AttackArea"), false,
+		100.0f, 100.0f, TEXT("AttackArea"), false,
 		actorsToIgnore,
-		EDrawDebugTrace::ForOneFrame,
+		EDrawDebugTrace::ForDuration,
 		LefthitResults, true);
 
 	UKismetSystemLibrary::CapsuleTraceMultiByProfile(
 		this, rightHandStart, rightHandEnd,
-		50.0f, 50.0f, TEXT("AttackArea"), false,
+		100.0f, 100.0f, TEXT("AttackArea"), false,
 		actorsToIgnore,
-		EDrawDebugTrace::ForOneFrame,
+		EDrawDebugTrace::ForDuration,
 		RighthitResults, true);
 
 	Results.Add(LefthitResults);
@@ -83,7 +84,7 @@ void UGolemAttackComponent::Attack(FName sectionName)
 		{
 			// 감지된 객체 중, GameCharacter 형태의 객체를 얻습니다.
 			AGameCharacter* gameCharacter = Cast<AGameCharacter>(hitResult.GetActor());
-
+			
 			if (!IsValid(gameCharacter)) return;
 
 			float PlayerCurrentHp = gameCharacter->GetCurrentHp();

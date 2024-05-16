@@ -9,6 +9,7 @@
 #include "AnimInstance/GolemCharacter/GolemCharacterAnimInstance.h"
 
 #include "Components/SphereComponent.h"
+#include "Components/CapsuleComponent.h"
 
 AGolemCharacter::AGolemCharacter()
 {
@@ -47,7 +48,11 @@ AGolemCharacter::AGolemCharacter()
 	if (ANIM_GOLEMHIT.Succeeded())
 		HitGolemAnim = ANIM_GOLEMHIT.Object;
 
-	
+	DefaultSceneComponent =
+		CreateDefaultSubobject<USceneComponent>(TEXT("DEFAULT_SCENE"));
+
+	SetRootComponent(DefaultSceneComponent);
+	GetCapsuleComponent()->SetupAttachment(DefaultSceneComponent);
 	
 	// °ñ·½ °ø°Ý ÄÄÆ÷³ÍÆ® Ãß°¡
 	GolemAttackComponent =

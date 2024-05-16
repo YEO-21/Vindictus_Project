@@ -43,7 +43,6 @@ void AGolemController::Attack()
 	// 공격 패턴1 ,2 중 하나를 랜덤으로 선택합니다.
 	bool isAttack1 = FMath::RandBool();
 	
-	UE_LOG(LogTemp, Warning, TEXT("isAttack1 = %d"), isAttack1);
 
 	if (!isAttackStarted)
 	{
