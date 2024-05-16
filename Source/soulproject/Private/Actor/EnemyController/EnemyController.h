@@ -34,6 +34,10 @@ private:
 	// 플레이어 캐릭터 데이터
 	struct FPlayerCharacterData* PlayerCharacterData;
 
+
+public:
+	AEnemyController();
+
 protected :
 	// 컨트롤러가 Pawn 에 빙의되었을 경우 호출되는 함수입니다.
 	virtual void OnPossess(APawn* inPawn) override;

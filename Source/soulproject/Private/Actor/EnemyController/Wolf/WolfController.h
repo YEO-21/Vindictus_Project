@@ -27,4 +27,7 @@ public :
 
 	// 다른 늑대 캐릭터가 공격받았을 때 호출됩니다.
 	void OnOtherWolfDamaged(class AGameCharacter* gameCharacter);
+
+	// 현재 공격 상태인지 확인합니다.
+	bool CheckAggressiveState();
 };

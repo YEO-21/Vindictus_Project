@@ -1,4 +1,5 @@
 #include "Actor/EnemyController/EnemyController.h"
+#include "Actor/EnemyCharacter/EnemyCharacter.h"
 #include "Actor/GameCharacter/GameCharacter.h"
 
 #include "Structure/EnemyData/EnemyData.h"
@@ -13,6 +14,14 @@
 #include "BehaviorTree/BehaviorTree.h"
 
 #include "../soulproject.h"
+
+AEnemyController::AEnemyController()
+{
+	
+
+	
+
+}
 
 void AEnemyController::OnPossess(APawn* inPawn)
 {

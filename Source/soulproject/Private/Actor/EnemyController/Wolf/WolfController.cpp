@@ -32,3 +32,8 @@ void AWolfController::OnOtherWolfDamaged(AGameCharacter* gameCharacter)
 	GetBlackboardComponent()->SetValueAsBool(BLACKBOARDKEY_ISAGGRESSIVESTATE, true);
 	GetBlackboardComponent()->SetValueAsObject(BLACKBOARDKEY_DAMAGEACTOR, gameCharacter);
 }
+
+bool AWolfController::CheckAggressiveState()
+{
+	return GetBlackboardComponent()->GetValueAsBool(BLACKBOARDKEY_ISAGGRESSIVESTATE);
+}

@@ -5,6 +5,12 @@
 #include "GolemAttackComponent.generated.h"
 
 
+#define SOCKETNAME_LEFTHANDSTART		TEXT("Socket_LeftHandStart")
+#define SOCKETNAME_LEFTHANDEND			TEXT("Socket_LeftHandEnd")
+#define SOCKETNAME_RIGHTHANDSTART		TEXT("Socket_RightHandStart")
+#define SOCKETNAME_RIGHTHANDEND			TEXT("Socket_RightHandEnd")
+
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UGolemAttackComponent : public UActorComponent
 {

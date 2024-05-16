@@ -15,10 +15,14 @@
 
 AEnemyCharacter::AEnemyCharacter()
 {
+	
+
 	static ConstructorHelpers::FObjectFinder<UDataTable> DT_ENEMY_DATA(
 		TEXT("/Script/Engine.DataTable'/Game/Resources/DataTable/DT_EnemyData.DT_EnemyData'"));
+
 	if (DT_ENEMY_DATA.Succeeded())
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Success!!"));
 		EnemyDataTable = DT_ENEMY_DATA.Object;
 	}
 
@@ -31,6 +35,7 @@ AEnemyCharacter::AEnemyCharacter()
 	// 컨트롤러 설정
 	SetEnemyController(AEnemyController::StaticClass());
 
+	
 	PrimaryActorTick.bCanEverTick = true;
 }
 
@@ -38,6 +43,9 @@ AEnemyCharacter::AEnemyCharacter()
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// 적 클래스 설정
+	SetEnemyClass();
 
 	// 위젯 클래스 설정
 	WidgetComponent->SetWidgetClass(EnemyData->EnemyHUDClass);
@@ -180,7 +188,7 @@ void AEnemyCharacter::EnemyRespawn()
 				DeadLocation.SetScale3D(FVector(1.0f, 1.0f, 1.0f));
 
 			// 죽은 위치에 리스폰을 합니다.
-			GetWorld()->SpawnActor<AEnemyCharacter>(EnemyData->BP_EnemyCharacter, DeadLocation);
+			GetWorld()->SpawnActor<AEnemyCharacter>(BP_EnemyCharacter, DeadLocation);
 			IsDead = false;
 		});
 	// 3초후 리스폰이 되도록 합니다.
@@ -188,6 +196,11 @@ void AEnemyCharacter::EnemyRespawn()
 
 
 	UE_LOG(LogTemp, Warning, TEXT("EnemyRespawn is called"));
+}
+
+void AEnemyCharacter::SetEnemyClass()
+{
+	BP_EnemyCharacter = ThisClass::StaticClass();
 }
 
 void AEnemyCharacter::SetEnemyController(

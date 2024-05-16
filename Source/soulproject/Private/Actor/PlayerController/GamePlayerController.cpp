@@ -35,6 +35,8 @@ AGamePlayerController::AGamePlayerController()
 	static ConstructorHelpers::FClassFinder<UPlayerWeaponStateWidget> WIDGETBP_WEAPONSTATE(
 		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/PlayerWeaponStateWiddget/WidgetBP_PlayerWeaponState.WidgetBP_PlayerWeaponState_C'"));
 
+
+
 	if (WIDGETBP_GAME.Succeeded())
 	{
 		GameWidgetClass = WIDGETBP_GAME.Class;

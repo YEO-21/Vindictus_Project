@@ -22,6 +22,9 @@ private :
 	UPROPERTY()
 	TArray<AWolfCharacter*> Group;
 
+	UPROPERTY()
+	class UAnimMontage* HitAnimMontage;
+
 public :
 	AWolfCharacter();
 
@@ -37,6 +40,10 @@ private :
 
 	// 그룹을 찾습니다.
 	void FindGroup();
+
+	// 늑대 상태를 결정하기 위한 수를 뽑습니다.
+	UFUNCTION(BlueprintCallable)
+	void GetWolfStateNumber();
 
 protected :
 	virtual void OnDamaged(class AGameCharacter* gameCharacter, float damage) override;

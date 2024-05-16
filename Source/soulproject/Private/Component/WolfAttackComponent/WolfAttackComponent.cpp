@@ -3,6 +3,8 @@
 #include "Actor/EnemyCharacter/Wolf/WolfCharacter.h"
 #include "Actor/GameCharacter/GameCharacter.h"
 
+#include "Component/PlayerCharacterAttackComponent/PlayerCharacterAttackComponent.h"
+
 #include "Structure/EnemyData/EnemyData.h"
 
 #include "Kismet/KismetSystemLibrary.h"
@@ -75,11 +77,10 @@ void UWolfAttackComponent::CheckAttackArea()
 
 	for (FHitResult hit : hitResults)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ApplyDamage"));
 		// 플레이어 객체를 얻습니다.
 		AGameCharacter* gameCharacter = Cast<AGameCharacter>(hit.GetActor());
-			
 		if (!IsValid(gameCharacter)) return;
+
 
 		// 플레이어 체력을 얻습니다.
 		float currentPlayerHp = gameCharacter->GetCurrentHp();
@@ -91,8 +92,12 @@ void UWolfAttackComponent::CheckAttackArea()
 			wolf->PlayerDead();
 		}
 
-		// 대미지를 적용합니다.
-		UGameplayStatics::ApplyDamage(gameCharacter, wolf->GetEnemyData()->Atk, wolf->GetController(), wolf,
+		// 현재 방어중인지 확인합니다.
+		bool isBlocking = gameCharacter->GetAttackComponent()->GetBlockState();
+		float damage = wolf->GetEnemyData()->Atk;
+
+		// 대미지를 적용합니다.(방어중이라면 0.5 대미지 적용)
+		UGameplayStatics::ApplyDamage(gameCharacter, (isBlocking ? damage * 0.5f : damage), wolf->GetController(), wolf,
 			UDamageType::StaticClass());
 
 	}

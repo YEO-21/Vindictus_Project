@@ -33,6 +33,8 @@ protected :
 	virtual void OnDamaged(class AGameCharacter* gameCharacter, float damage) override;
 
 	virtual void EnemyRespawn() override;
+
+	virtual void SetEnemyClass() override;
 	
 
 private :

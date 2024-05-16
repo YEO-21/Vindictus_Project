@@ -18,13 +18,16 @@ protected :
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	class UWidgetComponent* WidgetComponent;
 
-private :
+public :
 	// 적 정보 데이터 테이블 에셋
 	class UDataTable* EnemyDataTable;
 
 protected :
 	// 적 데이터
 	struct FEnemyData* EnemyData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<AEnemyCharacter> BP_EnemyCharacter;
 
 	// 현재 체력
 	UPROPERTY()
@@ -121,6 +124,8 @@ protected :
 
 	// 리스폰을 합니다.
 	virtual void EnemyRespawn();
+
+	virtual void SetEnemyClass();
 
 public :
 

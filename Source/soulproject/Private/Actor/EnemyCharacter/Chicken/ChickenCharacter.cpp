@@ -77,6 +77,12 @@ void AChickenCharacter::EnemyRespawn()
 
 }
 
+void AChickenCharacter::SetEnemyClass()
+{
+	Super::SetEnemyClass();
+ 
+}
+
 
 
 

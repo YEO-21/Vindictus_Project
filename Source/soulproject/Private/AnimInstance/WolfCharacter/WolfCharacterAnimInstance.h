@@ -18,8 +18,13 @@ protected :
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float CurrentSpeed;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	float WolfStateNumber;
+
 public:
 	void SetCurrentSpeed(float newSpeed);
+
+	void SetWolfStateNumber(float newNumber);
 
 private :
 	UFUNCTION()

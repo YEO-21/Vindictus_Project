@@ -13,6 +13,10 @@ AWolfCharacter::AWolfCharacter()
 	static ConstructorHelpers::FClassFinder<UWolfCharacterAnimInstance> ANIMBP_WOLF(
 		TEXT("/Script/Engine.AnimBlueprint'/Game/Blueprints/AnimInstance/AnimBP_WolfCharacter.AnimBP_WolfCharacter_C'"));
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ANIMBP_WOLFHIT(
+		TEXT("/Script/Engine.AnimMontage'/Game/Resources/EnemyCharacter/AnimalVarietyPack/Wolf/Animations/AnimMontage_GetHit.AnimMontage_GetHit'"));
+
+
 	// 공격 컴포넌트 추가
 	AttackComponent = CreateDefaultSubobject<UWolfAttackComponent>(TEXT("ATTACK_COMP"));
 
@@ -25,6 +29,8 @@ AWolfCharacter::AWolfCharacter()
 	{
 		GetMesh()->SetAnimInstanceClass(ANIMBP_WOLF.Class);
 	}
+
+	if (ANIMBP_WOLFHIT.Succeeded()) HitAnimMontage = ANIMBP_WOLFHIT.Object;
 
 	// 적 코드 설정
 	EnemyCode = TEXT("000003");
@@ -82,10 +88,35 @@ void AWolfCharacter::FindGroup()
 	}
 }
 
+void AWolfCharacter::GetWolfStateNumber()
+{
+	// 공격 상태라면 상태 전환을 하지 않습니다.
+	AWolfController* wolfController = Cast<AWolfController>(GetController());
+	if (wolfController->CheckAggressiveState()) return;
+
+	// Get AnimInstance
+	UWolfCharacterAnimInstance* animInst = Cast<UWolfCharacterAnimInstance>(GetMesh()->GetAnimInstance());
+	if (!IsValid(animInst)) return;
+
+	// 0~100 사이의 랜덤값을 얻어 상태를 전환합니다.
+	int random = FMath::FRandRange(0.0f, 100.f);
+	animInst->SetWolfStateNumber(random);
+}
+
 void AWolfCharacter::OnDamaged(AGameCharacter* gameCharacter, float damage)
 {
 	Super::OnDamaged(gameCharacter, damage);
 
+	// 피격 애니메이션 재생
+	PlayAnimMontage(HitAnimMontage);
+
+	FVector direction = GetActorForwardVector() * -1.0f;
+
+	// 넉백 적용
+	LaunchCharacter(direction, 1000.0f);
+
+	/*UWolfCharacterAnimInstance* animInst = Cast<UWolfCharacterAnimInstance>(GetMesh()->GetAnimInstance());
+ 	animInst->SetWolfStateNumber(0.0f);*/
 
 	for (AWolfCharacter* wolfCharacter : Group)
 	{
@@ -93,5 +124,11 @@ void AWolfCharacter::OnDamaged(AGameCharacter* gameCharacter, float damage)
 		if (!IsValid(otherWolfController)) continue;
 
 		otherWolfController->OnOtherWolfDamaged(gameCharacter);
+
+		UWolfCharacterAnimInstance* OtherWolfanimInst = Cast<UWolfCharacterAnimInstance>(wolfCharacter->GetMesh()->GetAnimInstance());
+		if (!IsValid(OtherWolfanimInst)) continue;
+
+		// 공격 상태일 경우, 기본 자세로 전환
+		OtherWolfanimInst->SetWolfStateNumber(0.0f);
 	}
 }
