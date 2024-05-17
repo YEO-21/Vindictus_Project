@@ -8,6 +8,7 @@
 
 UBTTask_WolfAttack::UBTTask_WolfAttack()
 {
+	
 	IsAttackRequestedKey.AddBoolFilter(this, GET_MEMBER_NAME_CHECKED(ThisClass, IsAttackRequestedKey));
 	IsAttackingKey.AddBoolFilter(this, GET_MEMBER_NAME_CHECKED(ThisClass, IsAttackingKey));
 }

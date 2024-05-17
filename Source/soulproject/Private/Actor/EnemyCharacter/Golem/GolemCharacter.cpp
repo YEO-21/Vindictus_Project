@@ -48,11 +48,6 @@ AGolemCharacter::AGolemCharacter()
 	if (ANIM_GOLEMHIT.Succeeded())
 		HitGolemAnim = ANIM_GOLEMHIT.Object;
 
-	DefaultSceneComponent =
-		CreateDefaultSubobject<USceneComponent>(TEXT("DEFAULT_SCENE"));
-
-	SetRootComponent(DefaultSceneComponent);
-	GetCapsuleComponent()->SetupAttachment(DefaultSceneComponent);
 	
 	// 골렘 공격 컴포넌트 추가
 	GolemAttackComponent =
@@ -73,7 +68,7 @@ AGolemCharacter::AGolemCharacter()
 
 	GolemAggressiveArea->SetCollisionProfileName(TEXT("NoCollision"));
 
-
+	//GetMesh()->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 
 
 	// 적 코드 설정

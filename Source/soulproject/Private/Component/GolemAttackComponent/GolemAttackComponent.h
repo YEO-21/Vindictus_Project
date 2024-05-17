@@ -21,6 +21,12 @@ private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UAnimMontage* AttackAnimMontage;
 
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	bool bEnableAttack;
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class AGolemController* GolemController;
+
 
 public:	
 	UGolemAttackComponent();
@@ -32,4 +38,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void Attack(FName sectionName);
+
+	void EnableAttackArea();
+	void DisableAttackArea();
 };

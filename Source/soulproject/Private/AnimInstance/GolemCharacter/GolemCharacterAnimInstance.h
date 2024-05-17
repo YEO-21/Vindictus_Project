@@ -24,5 +24,11 @@ protected:
 private:
 	UFUNCTION()
 	void AnimNotify_GolemAttackEnd();
+
+	UFUNCTION()
+	void AnimNotify_EnableAttackArea();
 	
+	UFUNCTION()
+	void AnimNotify_DisableAttackArea();
+
 };

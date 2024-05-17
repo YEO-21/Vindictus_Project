@@ -23,9 +23,6 @@ private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UGolemAttackComponent* GolemAttackComponent;
 
-	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	class USceneComponent* DefaultSceneComponent;
-
 	UPROPERTY()
 	class UAnimMontage* HitGolemAnim;
 
