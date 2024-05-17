@@ -35,6 +35,9 @@ AGamePlayerController::AGamePlayerController()
 	static ConstructorHelpers::FClassFinder<UPlayerWeaponStateWidget> WIDGETBP_WEAPONSTATE(
 		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/PlayerWeaponStateWiddget/WidgetBP_PlayerWeaponState.WidgetBP_PlayerWeaponState_C'"));
 
+	static ConstructorHelpers::FClassFinder<UUserWidget> WIDGETBP_CRITICALATTACK(
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/CriticalAttackWidget/WidgetBP_CriticalAttack.WidgetBP_CriticalAttack_C'"));
+
 
 
 	if (WIDGETBP_GAME.Succeeded())
@@ -57,6 +60,7 @@ AGamePlayerController::AGamePlayerController()
 		WeaponStateWidgetClass = WIDGETBP_WEAPONSTATE.Class;
 	}
 
+	if (WIDGETBP_CRITICALATTACK.Succeeded()) CriticalAttackWidget = WIDGETBP_CRITICALATTACK.Class;
 
 	PlayerCharacterData = nullptr;
 
@@ -155,6 +159,9 @@ void AGamePlayerController::OnPossess(APawn* pawn)
 	GameWidget = CreateWidget<UGameWidget>(this, GameWidgetClass);
 
 	WeaponStateWidget = CreateWidget<UPlayerWeaponStateWidget>(this, WeaponStateWidgetClass);
+
+	CriticalWidget = CreateWidget<UUserWidget>(this, CriticalAttackWidget);
+	CriticalWidget->SetVisibility(ESlateVisibility::Hidden);
 
 	// 생성된 위젯을 화면에 표시합니다.
 	GameWidget->AddToViewport();
@@ -427,5 +434,11 @@ void AGamePlayerController::ResetPlayerCharacterWidget()
 	CurrentStamina = PlayerCharacterData->MaxStamina;
 
 	
+}
+
+void AGamePlayerController::ShowCriticalAttackWidget()
+{
+	CriticalWidget->SetVisibility(ESlateVisibility::Visible);
+	UE_LOG(LogTemp, Warning, TEXT("ShowCriticalAttackWidget"));
 }
 

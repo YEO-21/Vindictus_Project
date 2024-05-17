@@ -147,4 +147,10 @@ public :
 		return IsDead;
 	}
 
+	// 적 코드를 반환합니다.
+	FORCEINLINE FName GetEnemyCode() const
+	{
+		return EnemyCode;
+	}
+
 };

@@ -43,6 +43,9 @@ private :
 	class UPlayerEquipWeaponComponent* EquipWeaponComponent;
 
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class UBossCriticalAttackComponent* BossCriticalAttackComponent;
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UAttackNiagaraSystem* AttackNiagaraSystem;
 
 	// 무기 스태틱메시 컴포넌트

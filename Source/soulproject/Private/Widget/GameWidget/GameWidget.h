@@ -42,6 +42,9 @@ private :
 	UPROPERTY()
 	float EnemyStateWidgetFloatingTime;
 
+	UPROPERTY()
+	class UUserWidget* CriticalAttackWidget;
+
 
 protected : 
 	virtual void NativeConstruct() override;
@@ -66,4 +69,9 @@ public :
 
 	void ShowWeaponWidget();
 	void HideWeaponWidget();
+
+	void ShowCriticalWidget();
+	void HideCriticalWidget();
+
+
 };

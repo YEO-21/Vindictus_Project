@@ -85,7 +85,8 @@ private :
 	// 공격을 가한 위치
 	FVector AttackLocation;
 
-
+public:
+	class AEnemyCharacter* enemyCharacter;
 
 
 public:	

@@ -17,12 +17,17 @@ void UGameWidget::NativeConstruct()
 	PlayerStateWidget = Cast<UPlayerStateWidget>(GetWidgetFromName(TEXT("PlayerStateWidget")));
 	EnemyStateWidget = Cast<UEnemyStateWidget>(GetWidgetFromName(TEXT("EnemyStateWidget")));
 	TextBlock_Dead = Cast<UTextBlock>(GetWidgetFromName(TEXT("TextBlock_Dead")));
+	CriticalAttackWidget = Cast<UUserWidget>(GetWidgetFromName(TEXT("CriticalAttackWidget")));
+	
 
 	// Àû »óÅÂ À§Á¬À» ¼û±é´Ï´Ù.
 	HideEnemyState();
 
 	// »ç¸Á »óÅÂ À§Á¬À» ¼û±é´Ï´Ù.
 	HideDeadWidget();
+
+	// Å©¸®Æ¼ÄÃ À§Á¬À» ¼û±é´Ï´Ù.
+	HideCriticalWidget();
 }
 
 void UGameWidget::NativeTick(const FGeometry& myGeometry, float dt)
@@ -102,6 +107,16 @@ void UGameWidget::HideDeadWidget()
 void UGameWidget::ShowWeaponWidget()
 {
 	Overlay_Weapon->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UGameWidget::ShowCriticalWidget()
+{
+	CriticalAttackWidget->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UGameWidget::HideCriticalWidget()
+{
+	CriticalAttackWidget->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UGameWidget::HideWeaponWidget()

@@ -1,6 +1,6 @@
+#include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
 #include "Actor/GameCharacter/GameCharacter.h"
 
-#include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 
 #include "NiagaraSystem/AttackNiagaraSystem.h"

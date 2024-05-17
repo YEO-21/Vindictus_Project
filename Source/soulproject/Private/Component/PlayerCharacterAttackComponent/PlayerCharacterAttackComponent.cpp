@@ -143,7 +143,7 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 	
 	for (FHitResult& hit : hitResults)
 	{
-		AEnemyCharacter* enemyCharacter = Cast<AEnemyCharacter>(hit.GetActor());
+		enemyCharacter = Cast<AEnemyCharacter>(hit.GetActor());
 
 		
 

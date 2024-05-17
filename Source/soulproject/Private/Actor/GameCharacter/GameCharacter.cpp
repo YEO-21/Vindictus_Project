@@ -89,7 +89,8 @@ AGameCharacter::AGameCharacter()
 	AttackNiagaraSystem =
 		CreateDefaultSubobject<UAttackNiagaraSystem>(TEXT("NS_ATTACK"));
 
-	//AttackNiagaraSystem->AddToRoot();
+	BossCriticalAttackComponent =
+		CreateDefaultSubobject<UBossCriticalAttackComponent>(TEXT("PLAYER_BOSS_CRITICAL_ATTACK_COMPONENT"));
 
 	// SpringArm 컴포넌트를 루트 컴포넌트에 추가합니다.
 	SpringArmComponent->SetupAttachment(GetRootComponent());

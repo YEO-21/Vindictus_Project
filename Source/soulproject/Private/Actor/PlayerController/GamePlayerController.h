@@ -41,6 +41,14 @@ private :
 	UPROPERTY()
 	class UNpcDialogWidget* DialogWidget;
 
+	// 크리티컬 공격 위젯 클래스
+	UPROPERTY()
+	TSubclassOf<class UUserWidget> CriticalAttackWidget;
+
+	// 크리티컬 공격 위젯
+	UPROPERTY()
+	class UUserWidget* CriticalWidget;
+
 	UPROPERTY()
 	TSubclassOf<class UNpcDialogWidget> DialogWidgetClass;
 
@@ -144,7 +152,8 @@ public :
 
 	void ResetPlayerCharacterWidget();
 
-	
+	void ShowCriticalAttackWidget();
+
 	FORCEINLINE float GetCurrentHp()
 	{
 		return CurrentHp;
