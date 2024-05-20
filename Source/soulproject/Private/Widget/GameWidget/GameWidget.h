@@ -42,6 +42,7 @@ private :
 	UPROPERTY()
 	float EnemyStateWidgetFloatingTime;
 
+	// 크리티컬 공격을 나타내는 위젯입니다.
 	UPROPERTY()
 	class UUserWidget* CriticalAttackWidget;
 
