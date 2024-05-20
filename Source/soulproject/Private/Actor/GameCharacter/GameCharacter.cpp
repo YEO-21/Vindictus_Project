@@ -282,6 +282,8 @@ void AGameCharacter::SetPlayerRespawn()
 	// 荤噶 困连 见辫 贸府
 	controller->GetGameWidget()->HideDeadWidget();
 
+	CurrentHp = controller->GetCurrentHp();
+
 
 }
 

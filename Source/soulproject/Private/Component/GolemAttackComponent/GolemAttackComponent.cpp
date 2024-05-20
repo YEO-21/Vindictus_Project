@@ -68,8 +68,13 @@ void UGolemAttackComponent::Attack(FName sectionName)
 	{
 		// 감지된 객체 중, GameCharacter 형태의 객체를 얻습니다.
 		AGameCharacter* gameCharacter = Cast<AGameCharacter>(hitResult.GetActor());
-			
+		if (hitResult.GetActor()->ActorHasTag(TEXT("Floor"))) return;
+		if (hitResult.GetActor()->ActorHasTag(TEXT("Golem"))) return;
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *hitResult.ToString());
 		if (!IsValid(gameCharacter)) return;
+		
+
+			
 
 		float PlayerCurrentHp = gameCharacter->GetCurrentHp();
 
