@@ -173,6 +173,8 @@ bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishSignature onInterac
 			// 플레이어 상태 위젯을 띄웁니다.
 			gameWidget->ShowPlayerStateWidget();
 
+			UE_LOG(LogTemp, Warning, TEXT("Button"));
+
 			// 상호작용 종료
 			if (OnInteractionFinished.IsBound()) 
 				OnInteractionFinished.Broadcast();

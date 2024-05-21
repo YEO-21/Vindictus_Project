@@ -52,8 +52,11 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
+
+
 public :
 	void InitializeNpcDialogWidget(struct FNpcData* npcData, FOnDialogCloseEventSignature onDialogClosed, class UInteractionParamBase* interactionParam);
+
 
 private :
 	UFUNCTION()
