@@ -50,6 +50,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class UDragonCharacterAttackComponent* AttackComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bIsPlayed;
+
 public :
 	ADragonCharacter();
 

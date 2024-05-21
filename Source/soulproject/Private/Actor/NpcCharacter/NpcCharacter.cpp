@@ -147,7 +147,8 @@ bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishSignature onInterac
 	UGameWidget* gameWidget = playerController->GetGameWidget();
 	gameWidget->FloatingWidgetAdditive(NpcDialogWidget);
 
-	
+	// 플레이어 상태 위젯을 숨깁니다.
+	gameWidget->HidePlayerStateWidget();
 
 
 
@@ -168,6 +169,9 @@ bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishSignature onInterac
 
 			// 대화 애니메이션을 종료합니다.
 			FinishTalkAnimation();
+
+			// 플레이어 상태 위젯을 띄웁니다.
+			gameWidget->ShowPlayerStateWidget();
 
 			// 상호작용 종료
 			if (OnInteractionFinished.IsBound()) 

@@ -24,6 +24,10 @@ private :
 	UPROPERTY(meta = (BindWidget))
 	class UOverlay* Overlay_Weapon;
 
+	UPROPERTY(meta = (BindWidget))
+	class UOverlay* Overlay_PlayerState;
+	
+
 	UPROPERTY()
 	class UTextBlock* TextBlock_Dead;
 
@@ -74,5 +78,7 @@ public :
 	void ShowCriticalWidget();
 	void HideCriticalWidget();
 
+	void ShowPlayerStateWidget();
+	void HidePlayerStateWidget();
 
 };

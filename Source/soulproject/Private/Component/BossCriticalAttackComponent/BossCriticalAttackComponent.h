@@ -12,6 +12,10 @@ class UBossCriticalAttackComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+private:
+	UPROPERTY()
+	bool isDisplayWidget;
+
 public:	
 	// Sets default values for this component's properties
 	UBossCriticalAttackComponent();
@@ -28,8 +32,10 @@ private:
 	void ApplyCriticalDamage();
 
 	bool CheckBossHp();
+	bool CheckBossDead();
 
 	void ShowCriticalAttackWidget();
+	void HideCriticalAttackWidget();
 
 		
 };

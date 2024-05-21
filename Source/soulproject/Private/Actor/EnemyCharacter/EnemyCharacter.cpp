@@ -272,10 +272,10 @@ void AEnemyCharacter::OnDead()
 
 	// 리스폰 타이머 설정(5s)
 	GetWorldTimerManager().ClearTimer(RespawnTimerHandle);
-	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ThisClass::EnemyRespawn, 5.0f, false);
+	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ThisClass::EnemyRespawn, 8.0f, false);
 
 	// 랙돌 적용
-	PlayRagdoll();
+	if (!(EnemyCode == TEXT("000004")))PlayRagdoll();
 }
 
 void AEnemyCharacter::OnEnemyDestroy()

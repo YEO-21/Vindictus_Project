@@ -266,7 +266,10 @@ public:
 		return AttackNiagaraSystem;
 	}
 
-
+	FORCEINLINE UBossCriticalAttackComponent* GetUBossCriticalAttackComponent()
+	{
+		return BossCriticalAttackComponent;
+	}
 	
 	void SetPlayerDeadTime(float time);
 	void SetCurrentHp(float currenthp);

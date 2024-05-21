@@ -119,6 +119,16 @@ void UGameWidget::HideCriticalWidget()
 	CriticalAttackWidget->SetVisibility(ESlateVisibility::Hidden);
 }
 
+void UGameWidget::ShowPlayerStateWidget()
+{
+	Overlay_PlayerState->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UGameWidget::HidePlayerStateWidget()
+{
+	Overlay_PlayerState->SetVisibility(ESlateVisibility::Hidden);
+}
+
 void UGameWidget::HideWeaponWidget()
 {
 	Overlay_Weapon->SetVisibility(ESlateVisibility::Hidden);

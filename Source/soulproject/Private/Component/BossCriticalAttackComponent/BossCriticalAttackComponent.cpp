@@ -36,7 +36,8 @@ void UBossCriticalAttackComponent::TickComponent(float DeltaTime, ELevelTick Tic
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if(CheckBossHp()) ShowCriticalAttackWidget();
+	if (CheckBossHp() && !isDisplayWidget) ShowCriticalAttackWidget();
+	if (CheckBossDead()) HideCriticalAttackWidget();
 
 }
 
@@ -58,9 +59,26 @@ bool UBossCriticalAttackComponent::CheckBossHp()
 	float currentHp = enemy->GetCurrentHp();
 	float maxHp = enemy->GetEnemyData()->MaxHP;
 
+	if (currentHp < 0.0f) return false;
+
 	
 
 	return (enemyCode == TEXT("000004") && (currentHp / maxHp) < 0.3f);
+}
+
+bool UBossCriticalAttackComponent::CheckBossDead()
+{
+	AGameCharacter* gameCharacter = Cast<AGameCharacter>(GetOwner());
+	if (!IsValid(gameCharacter)) return false;
+
+	// 게임 플레이어가 공격한 적 객체를 얻습니다.
+	AEnemyCharacter* enemy = gameCharacter->GetAttackComponent()->enemyCharacter;
+	if (!IsValid(enemy)) return false;
+
+	bool isBossDead = enemy->IsDeadState();
+
+
+	return isBossDead;
 }
 
 void UBossCriticalAttackComponent::ShowCriticalAttackWidget()
@@ -69,8 +87,19 @@ void UBossCriticalAttackComponent::ShowCriticalAttackWidget()
 	AGamePlayerController* controller = Cast<AGamePlayerController>(gameCharacter->GetController());
 
 	if (!IsValid(controller)) return;
+	isDisplayWidget = true;
 
 	controller->GetGameWidget()->ShowCriticalWidget();
+}
+
+void UBossCriticalAttackComponent::HideCriticalAttackWidget()
+{
+	AGameCharacter* gameCharacter = Cast<AGameCharacter>(GetOwner());
+	AGamePlayerController* controller = Cast<AGamePlayerController>(gameCharacter->GetController());
+
+	if (!IsValid(controller)) return;
+
+	controller->GetGameWidget()->HideCriticalWidget();
 }
 
 
