@@ -30,6 +30,7 @@ void UNpcDialogWidget::InitializeNpcDialogWidget(FNpcData* npcData, FOnDialogClo
 	OnDialogClosed = onDialogClosed;
 }
 
+
 void UNpcDialogWidget::OnCloseButtonClicked()
 {
 	OnDialogClosed.Broadcast();

@@ -34,7 +34,7 @@ bool ANpcSkully::OnInteractionStarted(FOnInteractionFinishSignature onInteractio
 
 	if (!result) return false;
 
-	// »óÈ£ÀÛ¿ë ¾Ö´Ï¸ÞÀÌ¼Ç Àç»ý
+	// ï¿½ï¿½È£ï¿½Û¿ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½
 	Cast<UNpcAnimInstance>(GetMesh()->GetAnimInstance())->SetTalkState(true);
 
 	return true;
