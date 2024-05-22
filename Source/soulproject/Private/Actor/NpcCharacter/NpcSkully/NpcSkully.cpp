@@ -1,5 +1,8 @@
 #include "Actor/NpcCharacter/NpcSkully/NpcSkully.h"
 #include "Enum/Npc/NpcType.h"
+#include "Object/InteractionParam/SupplyNpcInteractParam/SupplyNpcInteractParam.h"
+
+#include "Widget/SupplyStoreWidget/SupplyStoreWidget.h"
 #include "AnimInstance/Npc/NpcAnimInstance.h"
 
 ANpcSkully::ANpcSkully()
@@ -13,6 +16,11 @@ ANpcSkully::ANpcSkully()
 		TEXT("/Script/Engine.AnimBlueprint'/Game/Blueprints/AnimInstance/AnimBP_Skully.AnimBP_Skully_C'"));
 
 	if (ANIMBP_NPC.Succeeded()) GetMesh()->SetAnimClass(ANIMBP_NPC.Class);
+
+	static ConstructorHelpers::FClassFinder<USupplyStoreWidget> WIDGET_SUPPLY(
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/SkullyStoreWidget/WidgetBP_SkullyItem.WidgetBP_SkullyItem_C'"));
+
+	if (WIDGET_SUPPLY.Succeeded()) BP_SupplyItemStoreWidgetClass = WIDGET_SUPPLY.Class;
 
 	NpcCode = TEXT("000002");
 	NpcType = ENpcType::SupplyBase;
@@ -30,4 +38,15 @@ bool ANpcSkully::OnInteractionStarted(FOnInteractionFinishSignature onInteractio
 	Cast<UNpcAnimInstance>(GetMesh()->GetAnimInstance())->SetTalkState(true);
 
 	return true;
+}
+
+UInteractionParamBase* ANpcSkully::GetInteractionParam()
+{
+	Super::GetInteractionParam();
+
+	USupplyNpcInteractParam* interactionParam = NewObject<USupplyNpcInteractParam>(this);
+	interactionParam->BP_SupplyStoreWidgetClass = BP_SupplyItemStoreWidgetClass;
+
+
+	return interactionParam;
 }
