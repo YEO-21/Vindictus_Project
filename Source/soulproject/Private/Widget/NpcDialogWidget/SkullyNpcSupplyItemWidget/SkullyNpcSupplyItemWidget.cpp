@@ -44,6 +44,8 @@ void USkullyNpcSupplyItemWidget::CreateSupplyItemWidget()
 	slot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
 	slot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
 
+	// Áö¿ø ¾ÆÀÌÅÛ À§Á¬ ÃÊ±âÈ­
+	supplyStoreWidget->InitializeSupplyStoreWidget();
 
 	//// ´ëÈ­ À§Á¬ ¼û±è
 	HideDialogWidget();

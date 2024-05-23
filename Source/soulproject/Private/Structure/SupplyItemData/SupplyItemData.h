@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/DataTabel.h"
+#include "Engine/DataTable.h"
 #include "SupplyItemData.generated.h"
 
 USTRUCT()
@@ -19,11 +19,15 @@ public:
 
 	// 버프 이미지
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UTexture BuffImage;
+	UMaterialInterface* BuffImage;
 
-	// 버프 능력
-	class USupplyNpcInteractParam* BuffObject;
-
+	// 가격
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float BuffPrice;
+		
+	// 지속 시간
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float PersistTime;
 
 
 };
