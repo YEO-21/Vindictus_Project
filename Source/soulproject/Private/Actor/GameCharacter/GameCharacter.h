@@ -65,6 +65,9 @@ private :
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class USkeletalMeshComponent* SubWeaponMesh;
 
+	UPROPERTY()
+	TArray<class USupplyNpcInteractParam*> BuffList;
+
 
 	FGenericTeamId Team;
 
@@ -269,6 +272,11 @@ public:
 	FORCEINLINE UBossCriticalAttackComponent* GetUBossCriticalAttackComponent()
 	{
 		return BossCriticalAttackComponent;
+	}
+
+	FORCEINLINE TArray<class USupplyNpcInteractParam*> GetBuffList()
+	{
+		return BuffList;
 	}
 	
 	void SetPlayerDeadTime(float time);

@@ -74,14 +74,6 @@ void UWeaponStoreWidget::InitializeWeaponStoreWidget(TArray<FName> itemCodes)
 		createdStoreItemWidget->WeaponCode = itemCode;
 		
 
-
-		// 이벤트 바인딩
-		//createdStoreItemWidget->Button_Buy->OnClicked.AddDynamic(this, &ThisClass::OnBuyButtonClicked);
-
-		//createdStoreItemWidget->WeaponBuyEvent.AddLambda(
-		//	[this](FName code) {OnBuyButtonClicked();
-		//	});
-
 		// 버튼 클릭 이벤트 바인딩
 		WeaponBuyButtonClickSignature onBuyButtonClicked;
 		onBuyButtonClicked.AddLambda(
@@ -97,13 +89,7 @@ void UWeaponStoreWidget::InitializeWeaponStoreWidget(TArray<FName> itemCodes)
 		
 	}
 
-	//PassWeaponWidget.AddLambda([this, gameCharacter]() {
-	//
-	//	// 교환이 가능하면 플레이어의 장착 무기 코드를 설정합니다.
-	//	gameCharacter->GetEquipWeaponComponent()->EquipWeapon();
-	//});
-	//
-
+	
 }
 
 void UWeaponStoreWidget::InitializeItemNameWidget(GetItemNameSignature itemName)

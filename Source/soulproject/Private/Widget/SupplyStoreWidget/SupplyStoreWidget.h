@@ -16,19 +16,11 @@ class USupplyStoreWidget : public UUserWidget
 
 private:
 	UPROPERTY(meta = (BindWidget))
-	class UUniformGridPanel* GridPanel_SupplyItem;
+	class UButton* Button_SupplyItem;
 
 	UPROPERTY(meta = (BindWidget))
-	class UButton* Button_Atk;
+	class UTextBlock* TextBlock_SupplyItem;
 
-	UPROPERTY(meta = (BindWidget))
-	class UButton* Button_Def;
-
-	UPROPERTY(meta = (BindWidget))
-	class UButton* Button_Hp;
-
-	UPROPERTY(meta = (BindWidget))
-	class UButton* Button_Critical;
 
 public:
 	UPROPERTY()

@@ -56,8 +56,8 @@ void UGameWidget::FloatingWidgetAdditive(UUserWidget* widgetInstance)
 void UGameWidget::RemoveWidgetAdditive(UUserWidget* widgetForClose)
 {
 
-	//widgetForClose->RemoveFromParent();
-	Overlay_Additive->RemoveChild(widgetForClose);
+	widgetForClose->RemoveFromParent();
+	//Overlay_Additive->RemoveChild(widgetForClose);
 }
 
 UPlayerStateWidget* UGameWidget::GetPlayerStateWidget() const

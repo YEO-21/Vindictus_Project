@@ -188,8 +188,7 @@ bool ANpcCharacter::OnInteractionStarted(FOnInteractionFinishSignature onInterac
 	// 커서를 표시합니다.
 	playerController->bShowMouseCursor = true;
 
-	//if(NpcType == ENpcType::WeaponBase)
-	//Cast<UWeaponNpcInteractParam>(interactionParam)->InteractNpcParam();
+	UE_LOG(LogTemp, Warning, TEXT("Interact"));
 
 	return true;
 }

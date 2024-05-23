@@ -2,6 +2,8 @@
 #include "Enum/Npc/NpcType.h"
 #include "Object/InteractionParam/SupplyNpcInteractParam/SupplyNpcInteractParam.h"
 
+#include "Widget/SupplyItemGridWidget/SupplyItemGridWidget.h"
+
 #include "Widget/SupplyStoreWidget/SupplyStoreWidget.h"
 #include "AnimInstance/Npc/NpcAnimInstance.h"
 
@@ -17,8 +19,8 @@ ANpcSkully::ANpcSkully()
 
 	if (ANIMBP_NPC.Succeeded()) GetMesh()->SetAnimClass(ANIMBP_NPC.Class);
 
-	static ConstructorHelpers::FClassFinder<USupplyStoreWidget> WIDGET_SUPPLY(
-		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/SkullyStoreWidget/WidgetBP_SkullyItem.WidgetBP_SkullyItem_C'"));
+	static ConstructorHelpers::FClassFinder<USupplyItemGridWidget> WIDGET_SUPPLY(
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/SkullyStoreWidget/WidgetBP_SkullyStore.WidgetBP_SkullyStore_C'"));
 
 	if (WIDGET_SUPPLY.Succeeded()) BP_SupplyItemStoreWidgetClass = WIDGET_SUPPLY.Class;
 
@@ -34,7 +36,7 @@ bool ANpcSkully::OnInteractionStarted(FOnInteractionFinishSignature onInteractio
 
 	if (!result) return false;
 
-	// ��ȣ�ۿ� �ִϸ��̼� ���
+
 	Cast<UNpcAnimInstance>(GetMesh()->GetAnimInstance())->SetTalkState(true);
 
 	return true;
@@ -46,7 +48,7 @@ UInteractionParamBase* ANpcSkully::GetInteractionParam()
 
 	USupplyNpcInteractParam* interactionParam = NewObject<USupplyNpcInteractParam>(this);
 	interactionParam->BP_SupplyStoreWidgetClass = BP_SupplyItemStoreWidgetClass;
-
+	UE_LOG(LogTemp, Warning, TEXT("%d"), IsValid(BP_SupplyItemStoreWidgetClass));
 
 	return interactionParam;
 }

@@ -114,5 +114,6 @@ bool ANpcWalldo::OnInteractionStarted(FOnInteractionFinishSignature onInteractio
 	// 대화 애니메이션 재생
 	Cast<UNpcAnimInstance>(GetMesh()->GetAnimInstance())->SetTalkState(true);
 
+
 	return true;
 }

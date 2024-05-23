@@ -14,9 +14,7 @@ class USkullyNpcSupplyItemWidget : public UNpcDialogWidget
 {
 	GENERATED_BODY()
 
-private:
-	UPROPERTY(meta = (BindWidget))
-	class UOverlay* Overlay_Child;
+
 private:
 	FTimerHandle SupplyStoreShowTimerHandle;
 

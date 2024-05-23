@@ -15,7 +15,21 @@ class USupplyNpcInteractParam : public UInteractionParamBase
 	GENERATED_BODY()
 
 public:
-
 	TSubclassOf<class USupplyStoreWidget> BP_SupplyStoreWidgetClass;
+
+	UPROPERTY()
+	USupplyNpcInteractParam* AttackSupply;
 	
+	UPROPERTY()
+	USupplyNpcInteractParam* DefenceSupply;
+
+	UPROPERTY()
+	USupplyNpcInteractParam* HpSupply;
+
+	UPROPERTY()
+	USupplyNpcInteractParam* CriticalAttackSupply;
+	
+
+
+
 };

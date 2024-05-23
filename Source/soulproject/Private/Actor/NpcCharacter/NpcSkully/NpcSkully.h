@@ -14,7 +14,7 @@ class ANpcSkully : public ANpcCharacter
 
 private:
 	UPROPERTY()
-	TSubclassOf<class USupplyStoreWidget> BP_SupplyItemStoreWidgetClass;
+	TSubclassOf<class USupplyItemGridWidget> BP_SupplyItemStoreWidgetClass;
 
 
 public:

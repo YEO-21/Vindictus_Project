@@ -36,6 +36,7 @@ void UWalldoNpcWeaponWidget::NativeConstruct()
 
 void UWalldoNpcWeaponWidget::CreateWeaponWidget()
 {
+	UE_LOG(LogTemp, Warning, TEXT("CreateWeaponWidget"));
 
 	UWeaponNpcInteractParam* interactionParam = Cast<UWeaponNpcInteractParam>(UIInteractionParam);
 	UWeaponStoreWidget* weaponStoreWidget = CreateWidget<UWeaponStoreWidget>(this, interactionParam->BP_WeaponStoreWidgetClass);
@@ -54,12 +55,12 @@ void UWalldoNpcWeaponWidget::CreateWeaponWidget()
 	
 	// ÆÇ¸Å ¾ÆÀÌÅÛ À§Á¬ ÃÊ±âÈ­
 	weaponStoreWidget->InitializeWeaponStoreWidget(interactionParam->SaleItemCodes);
-	
-	// Get PlayerController
+	//
+	//// Get PlayerController
 	AGamePlayerController* playerController = 
 		Cast<AGamePlayerController>(gameCharacter->GetController());
 
-	// ´ëÈ­ À§Á¬ ¼û±è
+	//// ´ëÈ­ À§Á¬ ¼û±è
 	HideDialogWidget();
 	// ¹«±â »óÅÂ À§Á¬ ¼û±è
 	playerController->GetGameWidget()->HideWeaponWidget();
