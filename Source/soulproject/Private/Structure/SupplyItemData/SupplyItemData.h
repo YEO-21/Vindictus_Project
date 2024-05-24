@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Enum/SupplyItem/SupplyItemType.h"
 #include "Engine/DataTable.h"
 #include "SupplyItemData.generated.h"
 
@@ -28,6 +29,17 @@ public:
 	// 지속 시간
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float PersistTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<class USupplyNpcInteractParam> BuffClass;
+
+	// 아이템 타입
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	ESupplyItemType ItemType;
+
+	// 아이템 효과
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FText ItemEffect;
 
 
 };

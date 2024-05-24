@@ -3,6 +3,8 @@
 
 #include "Structure/SupplyItemData/SupplyItemData.h"
 
+#include "Component/PlayerBuffControlComponent/PlayerBuffControlComponent.h"
+
 #include "Components/UniformGridPanel.h"
 #include "Components/UniformGridSlot.h"
 
@@ -56,8 +58,26 @@ void USupplyItemGridWidget::InitializeSupplyStoreWidget()
 		// 아이템 위젯의 이미지를 설정합니다.
 		supplyStoreWidget->SetImageMaterial(supplyItemData->BuffImage);
 
+		// 아이템 위젯의 텍스트를 설정합니다.
+		supplyStoreWidget->SetText(supplyItemData->ItemEffect);
+
 		// 그리드 패널에 위젯을 추가합니다.
 		ItemGridPanel->AddChild(supplyStoreWidget);
+
+
+
+
+		SupplyItemBuyButtonClickSignature supplyItemBuyEvent;
+		supplyItemBuyEvent.AddLambda([supplyItemData, gameCharacter]()
+			{
+				gameCharacter->GetBuffControlComponent()->SupplyItemLists.Add(supplyItemData->ItemType);
+
+
+			});
+
+		supplyStoreWidget->InitializeSupplyItem(supplyItemBuyEvent);
+
+		
 
 		// 행과 열을 설정합니다.
 		UUniformGridSlot* slot = Cast<UUniformGridSlot>(supplyStoreWidget->Slot);

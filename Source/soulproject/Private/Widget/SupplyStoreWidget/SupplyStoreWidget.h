@@ -6,15 +6,14 @@
 #include "Blueprint/UserWidget.h"
 #include "SupplyStoreWidget.generated.h"
 
-/**
- * 
- */
+DECLARE_EVENT(USupplyStoreWidget, SupplyItemBuyButtonClickSignature)
+
 UCLASS()
 class USupplyStoreWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-private:
+protected:
 	// 지원 아이템 구매 버튼
 	UPROPERTY(meta = (BindWidget))
 	class UButton* Button_SupplyItem;
@@ -34,6 +33,8 @@ private:
 	UPROPERTY()
 	FName SupplyItemCode;
 
+	SupplyItemBuyButtonClickSignature SupplyItemBuyEvent;
+
 public:
 	// 지원 아이템 정보를 나타냅니다.
 	struct FSupplyItemData* PlayerSupplyData;
@@ -46,13 +47,19 @@ public:
 
 	void SetImageMaterial(UMaterialInterface* material);
 
+	void SetText(FText text);
+
 	void InitializeSupplyStoreWidget();
 
 	void InitializeItemCode(FName itemCode);
 
+	void InitializeSupplyItem(SupplyItemBuyButtonClickSignature supplyEvent);
+
 protected:
 	virtual void NativeConstruct() override;
-
-
+	
+public:
+	UFUNCTION()
+	void OnBuyButtonClicked();
 	
 };

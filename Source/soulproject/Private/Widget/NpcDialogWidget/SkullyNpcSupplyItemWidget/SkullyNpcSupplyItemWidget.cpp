@@ -8,6 +8,8 @@
 
 #include "Object/InteractionParam/SupplyNpcInteractParam/SupplyNpcInteractParam.h"
 
+#include "Component/PlayerBuffControlComponent/PlayerBuffControlComponent.h"
+
 #include "Components/Overlay.h"
 #include "Components/OverlaySlot.h"
 
@@ -37,6 +39,13 @@ void USkullyNpcSupplyItemWidget::CreateSupplyItemWidget()
 		Cast<AGamePlayerController>(GetWorld()->GetFirstPlayerController());
 
 	if (!IsValid(playerController)) return;
+	
+	// Get gameCharacter
+	AGameCharacter* gameCharacter = Cast<AGameCharacter>(playerController->GetPawn());
+	if (!IsValid(gameCharacter)) return;
+
+	gameCharacter->GetBuffControlComponent()->Buff
+
 	
 
 	Overlay_Parent->AddChild(supplyStoreWidget);

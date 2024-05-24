@@ -60,13 +60,15 @@ private :
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class USkeletalMeshComponent* WeaponMesh_Spear;
 
+	// 버프 제어 컴포넌트
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class UPlayerBuffControlComponent* BuffControlComponent;
+
 
 	// 추후에 삭제해야함
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class USkeletalMeshComponent* SubWeaponMesh;
 
-	UPROPERTY()
-	TArray<class USupplyNpcInteractParam*> BuffList;
 
 
 	FGenericTeamId Team;
@@ -274,9 +276,9 @@ public:
 		return BossCriticalAttackComponent;
 	}
 
-	FORCEINLINE TArray<class USupplyNpcInteractParam*> GetBuffList()
+	FORCEINLINE class UPlayerBuffControlComponent* GetBuffControlComponent()
 	{
-		return BuffList;
+		return BuffControlComponent;
 	}
 	
 	void SetPlayerDeadTime(float time);

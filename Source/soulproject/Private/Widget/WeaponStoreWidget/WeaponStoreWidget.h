@@ -41,6 +41,7 @@ public:
 	void InitializeItemNameWidget(GetItemNameSignature itemName);
 	void InitializePassItemNameWidget(PassWeaponWidgetSignature passWeaponWidget);
 
+private:
 	UFUNCTION()
 	void OnBuyButtonClicked();
 

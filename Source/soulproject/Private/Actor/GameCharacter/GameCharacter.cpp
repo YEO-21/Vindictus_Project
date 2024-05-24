@@ -92,6 +92,9 @@ AGameCharacter::AGameCharacter()
 	BossCriticalAttackComponent =
 		CreateDefaultSubobject<UBossCriticalAttackComponent>(TEXT("PLAYER_BOSS_CRITICAL_ATTACK_COMPONENT"));
 
+	BuffControlComponent =
+		CreateDefaultSubobject<UPlayerBuffControlComponent>(TEXT("PLAYER_BUFF_CONTROL_COMPONENT"));
+
 	// SpringArm 컴포넌트를 루트 컴포넌트에 추가합니다.
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 	CameraComponent->SetupAttachment(SpringArmComponent);
