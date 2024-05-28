@@ -41,6 +41,17 @@ private :
 	UPROPERTY()
 	class UNpcDialogWidget* DialogWidget;
 
+
+	// 플레이어 버프 위젯 블루프린트 클래스
+	UPROPERTY()
+	TSubclassOf<class UPlayerStateSlotWidget> PlayerStateSlotWidgetClass;
+
+
+	// 플레이어 버프 위젯
+	UPROPERTY()
+	class UPlayerStateSlotWidget* PlayerStateSlotWidget;
+
+
 	// 크리티컬 공격 위젯 클래스
 	UPROPERTY()
 	TSubclassOf<class UUserWidget> CriticalAttackWidget;
@@ -62,7 +73,6 @@ private :
 	// 현재 Stamina
 	float CurrentStamina;
 
-	
 
 	// 스태미너를 계산하기 위한 이전 캐릭터 위치
 	FVector PrevCharacterLocation;
@@ -71,7 +81,9 @@ protected:
 	UPROPERTY()
 	class UBlackboardComponent* BlackboardComponent;
 
-
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<class USupplyNpcInteractParam*> SupplyInteractionItems;
 
 
 public :
@@ -130,11 +142,15 @@ private :
 	// 대화 진행 시 호출됩니다.
 	void ProgressDialog();
 
+	// 플레이어의 버프 상태를 확인합니다.
+	void CheckPlayerBuffState();
 
 		
 public :
 	class UGameWidget* GetGameWidget() const;
 	class UPlayerWeaponStateWidget* GetWeaponStateWidget() const;
+	class UPlayerStateSlotWidget* GetPlayerStateSlotWidget() const;
+
 
 	void SetCameraViewTarget(class AActor* target);
 	void ClearCameraViewTarget();
@@ -160,6 +176,7 @@ public :
 	}
 
 	
+
 
 	
 };

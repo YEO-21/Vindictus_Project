@@ -31,6 +31,9 @@ private:
 	// 지원 아이템 위젯 클래스를 나타냅니다.
 	TSubclassOf<class USupplyStoreWidget> WidgetBP_SkullyStore;
 
+	
+
+
 	UPROPERTY()
 	TArray<FName> itemCodes;
 

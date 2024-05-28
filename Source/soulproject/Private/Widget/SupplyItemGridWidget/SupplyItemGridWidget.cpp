@@ -1,5 +1,7 @@
 #include "Widget/SupplyItemGridWidget/SupplyItemGridWidget.h"
 #include "Widget/SupplyStoreWidget/SupplyStoreWidget.h"
+#include "Widget/PlayerStateSlotWidget/PlayerStateSlotWidget.h"
+#include "Widget/GameWidget/GameWidget.h"
 
 #include "Structure/SupplyItemData/SupplyItemData.h"
 
@@ -12,15 +14,17 @@
 #include "Components/Image.h"
 
 #include "Actor/GameCharacter/GameCharacter.h"
+#include "Actor/PlayerController/GamePlayerController.h"
 
 USupplyItemGridWidget::USupplyItemGridWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	static ConstructorHelpers::FClassFinder<USupplyStoreWidget> WIDGETBP_SUPPLY(
 		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/SkullyStoreWidget/WidgetBP_SupplyItem.WidgetBP_SupplyItem_C'"));
 
+
 	if (WIDGETBP_SUPPLY.Succeeded()) WidgetBP_SkullyStore = WIDGETBP_SUPPLY.Class;
 
-	
+
 
 }
 
@@ -44,6 +48,9 @@ void USupplyItemGridWidget::InitializeSupplyStoreWidget()
 	AGameCharacter* gameCharacter =
 		Cast<AGameCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
 
+	AGamePlayerController* playerController =
+		Cast<AGamePlayerController>(gameCharacter->GetController());
+
 	
 	for (FName itemCode : itemCodes)
 	{
@@ -65,14 +72,16 @@ void USupplyItemGridWidget::InitializeSupplyStoreWidget()
 		ItemGridPanel->AddChild(supplyStoreWidget);
 
 
-
-
 		SupplyItemBuyButtonClickSignature supplyItemBuyEvent;
-		supplyItemBuyEvent.AddLambda([supplyItemData, gameCharacter]()
+		supplyItemBuyEvent.AddLambda([supplyItemData, gameCharacter, playerController]()
 			{
-				gameCharacter->GetBuffControlComponent()->SupplyItemLists.Add(supplyItemData->ItemType);
+				gameCharacter->GetBuffControlComponent()->SupplyItemList.Enqueue(supplyItemData->ItemType);
 
+				UPlayerStateSlotWidget* playerStateSlot = playerController->GetPlayerStateSlotWidget();
 
+				playerStateSlot->SetImageMaterial(supplyItemData->ItemType, supplyItemData->BuffImage);
+
+				playerController->GetGameWidget()->InitializePlayerStateSlotWidget(playerStateSlot);
 			});
 
 		supplyStoreWidget->InitializeSupplyItem(supplyItemBuyEvent);

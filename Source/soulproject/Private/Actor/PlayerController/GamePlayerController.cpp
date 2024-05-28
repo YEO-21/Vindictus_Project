@@ -8,10 +8,12 @@
 #include "Widget/PlayerWeaponStateWidget/PlayerWeaponStateWidget.h"
 #include "Widget/NpcDialogWidget/NpcDialogWidget.h"
 #include "Widget/PlayerWeaponStateWidget/PlayerWeaponStateWidget.h"
+#include "Widget/PlayerStateSlotWidget/PlayerStateSlotWidget.h"
 #include "Structure/PlayerCharacterData/PlayerCharacterData.h"
 #include "Component/PlayerCharacterMovementComponent/PlayerCharacterMovementComponent.h"
 
 #include "Object/CameraShake/AttackCameraShake.h"
+#include "Object/InteractionParam/SupplyNpcInteractParam/SupplyNpcInteractParam.h"
 
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -38,6 +40,9 @@ AGamePlayerController::AGamePlayerController()
 	static ConstructorHelpers::FClassFinder<UUserWidget> WIDGETBP_CRITICALATTACK(
 		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/CriticalAttackWidget/WidgetBP_CriticalAttack.WidgetBP_CriticalAttack_C'"));
 
+	static ConstructorHelpers::FClassFinder<UPlayerStateSlotWidget> WIDGETBP_PLAYERSTATE(
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/PlayerStateSlotWidget/WidgetBP_PlayerStateSlot.WidgetBP_PlayerStateSlot_C'"));
+
 
 
 	if (WIDGETBP_GAME.Succeeded())
@@ -62,6 +67,8 @@ AGamePlayerController::AGamePlayerController()
 
 	if (WIDGETBP_CRITICALATTACK.Succeeded()) CriticalAttackWidget = WIDGETBP_CRITICALATTACK.Class;
 
+	if (WIDGETBP_PLAYERSTATE.Succeeded()) PlayerStateSlotWidgetClass = WIDGETBP_PLAYERSTATE.Class;
+
 	PlayerCharacterData = nullptr;
 
 }
@@ -71,6 +78,8 @@ void AGamePlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	UpdateStamina(DeltaTime);
+
+	CheckPlayerBuffState();
 }
 
 void AGamePlayerController::SetupInputComponent()
@@ -162,6 +171,8 @@ void AGamePlayerController::OnPossess(APawn* pawn)
 
 	CriticalWidget = CreateWidget<UUserWidget>(this, CriticalAttackWidget);
 	CriticalWidget->SetVisibility(ESlateVisibility::Hidden);
+
+	PlayerStateSlotWidget = CreateWidget<UPlayerStateSlotWidget>(this, PlayerStateSlotWidgetClass);
 
 	// 생성된 위젯을 화면에 표시합니다.
 	GameWidget->AddToViewport();
@@ -329,6 +340,22 @@ void AGamePlayerController::ProgressDialog()
 	++(DialogWidget->DialogNumber);
 }
 
+void AGamePlayerController::CheckPlayerBuffState()
+{
+	if (SupplyInteractionItems.Num() == 0) return;
+
+	for (USupplyNpcInteractParam* buff : SupplyInteractionItems)
+	{
+		if (buff->bIsEnable)
+		{
+
+		}
+	}
+
+
+
+}
+
 UGameWidget* AGamePlayerController::GetGameWidget() const
 {
 	return GameWidget;
@@ -338,6 +365,13 @@ UPlayerWeaponStateWidget* AGamePlayerController::GetWeaponStateWidget() const
 {
 	return WeaponStateWidget;
 }
+
+UPlayerStateSlotWidget* AGamePlayerController::GetPlayerStateSlotWidget() const
+{
+	return PlayerStateSlotWidget;
+}
+
+
 
 void AGamePlayerController::SetCameraViewTarget(AActor* target)
 {

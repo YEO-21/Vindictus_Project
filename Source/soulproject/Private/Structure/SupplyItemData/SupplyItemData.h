@@ -30,9 +30,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float PersistTime;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<class USupplyNpcInteractParam> BuffClass;
-
 	// 아이템 타입
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	ESupplyItemType ItemType;
@@ -41,5 +38,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText ItemEffect;
 
+
+	
 
 };

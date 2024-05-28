@@ -15,20 +15,21 @@ class UPlayerBuffControlComponent : public UActorComponent
 
 
 public:
-	// 플레이어가 받을 효과를 나타냅니다.
-	//class USupplyNpcInteractParam* Buff;
+	// 현재 적용된 지원 아이템의 타입을 나타냅니다.
+	enum ESupplyItemType SupplyItem;
 
+	// 적용시킬 버프들을 담을 큐입니다.
+	TQueue<enum ESupplyItemType> SupplyItemList;
+	
+	// 적용된 버프를 담는 배열입니다.
+	TArray<enum ESupplyItemType> CurrentBuffs;
 
-	// 플레이어가 받은 효과를 나타내는 배열입니다.
-	//TArray<class USupplyNpcInteractParam*> BuffLists;
+	class USupplyNpcInteractParam* AttackSupply;
+	class USupplyNpcInteractParam* DefenceSupply;
+	class USupplyNpcInteractParam* HpSupply;
+	class USupplyNpcInteractParam* CriticalAttackSupply;
 
-	TArray<enum ESupplyItemType> SupplyItemLists;
-
-	//TMap<ESupplyItemType, class USupplyNpcInteractParam> SupplyToBuff;
-
-
-
-public:	
+public:
 	UPlayerBuffControlComponent();
 
 protected:
@@ -37,9 +38,10 @@ protected:
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void SetBuffLists(ESupplyItemType item);
-	void RemoveBuff();
+	
+public:
+	void ApplySupplyItem();
 
-	void CheckSupplyItemLists();
-		
+	void CheckCurrentBuff(ESupplyItemType itemType);
+
 };

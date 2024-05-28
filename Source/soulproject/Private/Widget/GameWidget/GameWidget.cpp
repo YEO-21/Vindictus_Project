@@ -1,12 +1,14 @@
 #include "Widget/GameWidget/GameWidget.h"
 #include "Widget/PlayerStateWidget/PlayerStateWidget.h"
 #include "Widget/EnemyStateWidget/EnemyStateWidget.h"
+#include "Widget/PlayerStateSlotWidget/PlayerStateSlotWidget.h"
 
 #include "Actor/EnemyCharacter/EnemyCharacter.h"
 
 #include "Components/Overlay.h"
 #include "Components/OverlaySlot.h"
 #include "Components/TextBlock.h"
+#include "Components/Image.h"
 
 void UGameWidget::NativeConstruct()
 {
@@ -18,12 +20,14 @@ void UGameWidget::NativeConstruct()
 	EnemyStateWidget = Cast<UEnemyStateWidget>(GetWidgetFromName(TEXT("EnemyStateWidget")));
 	TextBlock_Dead = Cast<UTextBlock>(GetWidgetFromName(TEXT("TextBlock_Dead")));
 	CriticalAttackWidget = Cast<UUserWidget>(GetWidgetFromName(TEXT("CriticalAttackWidget")));
+	PlayerStateSlotWidget = Cast<UPlayerStateSlotWidget>(GetWidgetFromName(TEXT("PlayerStateSlotWidget")));
 	
 
 	// Àû »óÅÂ À§Á¬À» ¼û±é´Ï´Ù.
 	HideEnemyState();
 
 	// »ç¸Á »óÅÂ À§Á¬À» ¼û±é´Ï´Ù.
+
 	HideDeadWidget();
 
 	// Å©¸®Æ¼ÄÃ À§Á¬À» ¼û±é´Ï´Ù.
@@ -129,7 +133,13 @@ void UGameWidget::HidePlayerStateWidget()
 	Overlay_PlayerState->SetVisibility(ESlateVisibility::Hidden);
 }
 
+void UGameWidget::InitializePlayerStateSlotWidget(UPlayerStateSlotWidget* playerSlotWidget)
+{
+	PlayerStateSlotWidget = playerSlotWidget;
+}
+
 void UGameWidget::HideWeaponWidget()
 {
 	Overlay_Weapon->SetVisibility(ESlateVisibility::Hidden);
 }
+

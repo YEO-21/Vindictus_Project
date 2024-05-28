@@ -44,7 +44,7 @@ void USkullyNpcSupplyItemWidget::CreateSupplyItemWidget()
 	AGameCharacter* gameCharacter = Cast<AGameCharacter>(playerController->GetPawn());
 	if (!IsValid(gameCharacter)) return;
 
-	gameCharacter->GetBuffControlComponent()->Buff
+	//gameCharacter->GetBuffControlComponent()->Buff
 
 	
 

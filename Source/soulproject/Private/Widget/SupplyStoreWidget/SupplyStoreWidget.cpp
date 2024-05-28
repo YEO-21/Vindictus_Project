@@ -1,5 +1,7 @@
 #include "Widget/SupplyStoreWidget/SupplyStoreWidget.h"
 
+#include "Structure/SupplyItemData/SupplyItemData.h"
+
 #include "Components/Image.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"

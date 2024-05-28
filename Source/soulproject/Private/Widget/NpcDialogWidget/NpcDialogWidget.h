@@ -57,6 +57,7 @@ protected:
 public :
 	void InitializeNpcDialogWidget(struct FNpcData* npcData, FOnDialogCloseEventSignature onDialogClosed, class UInteractionParamBase* interactionParam);
 
+	class UInteractionParamBase* GetInteractionParam();
 
 private :
 	UFUNCTION()

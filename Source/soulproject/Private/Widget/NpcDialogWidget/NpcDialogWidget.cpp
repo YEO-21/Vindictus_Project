@@ -30,6 +30,11 @@ void UNpcDialogWidget::InitializeNpcDialogWidget(FNpcData* npcData, FOnDialogClo
 	OnDialogClosed = onDialogClosed;
 }
 
+UInteractionParamBase* UNpcDialogWidget::GetInteractionParam()
+{
+	return UIInteractionParam;
+}
+
 
 void UNpcDialogWidget::OnCloseButtonClicked()
 {

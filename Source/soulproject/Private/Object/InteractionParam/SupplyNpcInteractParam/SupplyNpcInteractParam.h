@@ -17,19 +17,14 @@ class USupplyNpcInteractParam : public UInteractionParamBase
 public:
 	TSubclassOf<class USupplyStoreWidget> BP_SupplyStoreWidgetClass;
 
-	UPROPERTY()
-	USupplyNpcInteractParam* AttackSupply;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsEnable;
+
 	
-	UPROPERTY()
-	USupplyNpcInteractParam* DefenceSupply;
-
-	UPROPERTY()
-	USupplyNpcInteractParam* HpSupply;
-
-	UPROPERTY()
-	USupplyNpcInteractParam* CriticalAttackSupply;
 	
 
+public:
+	void SetPlayerStateSlotMaterial(USupplyNpcInteractParam* supplyParam);
 
 
 };

@@ -48,7 +48,7 @@ UInteractionParamBase* ANpcSkully::GetInteractionParam()
 
 	USupplyNpcInteractParam* interactionParam = NewObject<USupplyNpcInteractParam>(this);
 	interactionParam->BP_SupplyStoreWidgetClass = BP_SupplyItemStoreWidgetClass;
-	UE_LOG(LogTemp, Warning, TEXT("%d"), IsValid(BP_SupplyItemStoreWidgetClass));
+
 
 	return interactionParam;
 }

@@ -38,6 +38,7 @@ private :
 	UPROPERTY()
 	class UPlayerStateWidget * PlayerStateWidget;
 
+
 	// 적 상태 위젯을 나타냅니다.
 	UPROPERTY()
 	class UEnemyStateWidget* EnemyStateWidget;
@@ -45,10 +46,15 @@ private :
 	// 적 상태 위젯이 띄워진 시간을 저장할 변수
 	UPROPERTY()
 	float EnemyStateWidgetFloatingTime;
-
+	
 	// 크리티컬 공격을 나타내는 위젯입니다.
 	UPROPERTY()
 	class UUserWidget* CriticalAttackWidget;
+
+protected:
+	// 플레이어 상태 슬롯 위젯을 나타냅니다.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UPlayerStateSlotWidget* PlayerStateSlotWidget;
 
 
 protected : 
@@ -81,4 +87,5 @@ public :
 	void ShowPlayerStateWidget();
 	void HidePlayerStateWidget();
 
+	void InitializePlayerStateSlotWidget(UPlayerStateSlotWidget* playerSlotWidget);
 };
