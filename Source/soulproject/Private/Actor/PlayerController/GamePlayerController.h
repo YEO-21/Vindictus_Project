@@ -70,8 +70,17 @@ private :
 	// 현재 Hp
 	float CurrentHp;
 
+	// 목표 Hp
+	float TargetHp;
+
 	// 현재 Stamina
 	float CurrentStamina;
+
+	// 현재 방어력
+	float CurrentDef;
+
+	// Hp 증가 함수를 실행시키기 위한 변수입니다.
+	bool bIsActivateHpItem;
 
 
 	// 스태미너를 계산하기 위한 이전 캐릭터 위치
@@ -97,6 +106,7 @@ protected :
 
 private :
 	void UpdateStamina(float dt);
+	void UpdateHp(float dt);
 
 private :
 	// 수직 축 입력 시 호출됩니다.
@@ -143,7 +153,11 @@ private :
 	void ProgressDialog();
 
 	// 플레이어의 버프 상태를 확인합니다.
-	void CheckPlayerBuffState();
+	void CheckPlayerBuffState(float deltaTime);
+
+	// 플레이어 HP를 회복시키는 함수
+	void RecoverHp(float dt);
+
 
 		
 public :

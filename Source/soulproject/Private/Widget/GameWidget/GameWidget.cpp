@@ -64,6 +64,16 @@ void UGameWidget::RemoveWidgetAdditive(UUserWidget* widgetForClose)
 	//Overlay_Additive->RemoveChild(widgetForClose);
 }
 
+void UGameWidget::FloatingWidgetPlayerState(UUserWidget* widgetInstance)
+{
+	// Overlay_PlayerState 하위로 위젯을 추가합니다.
+	Overlay_PlayerState->AddChild(widgetInstance);
+
+
+
+
+}
+
 UPlayerStateWidget* UGameWidget::GetPlayerStateWidget() const
 {
 	return PlayerStateWidget;

@@ -18,6 +18,7 @@ void UPlayerStateSlotWidget::SetImageMaterial(ESupplyItemType itemType, UMateria
 	case ESupplyItemType::AtkBase:
 	{
 		Slot_Atk->SetBrushFromMaterial(material);
+		UE_LOG(LogTemp, Warning, TEXT("SetImageMaterial"));
 	}
 	break;
 	case ESupplyItemType::DefBase:

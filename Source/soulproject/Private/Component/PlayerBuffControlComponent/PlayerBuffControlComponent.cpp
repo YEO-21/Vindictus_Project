@@ -55,28 +55,34 @@ void UPlayerBuffControlComponent::CheckCurrentBuff(ESupplyItemType itemType)
 	case ESupplyItemType::AtkBase:
 	{
 		AttackSupply->bIsEnable = true;
+		AttackSupply->ItemType = ESupplyItemType::AtkBase;
 		playerController->SupplyInteractionItems.Add(AttackSupply);
 	}
 	break;
 	case ESupplyItemType::DefBase:
 	{
 		DefenceSupply->bIsEnable = true;
+		DefenceSupply->ItemType = ESupplyItemType::DefBase;
 		playerController->SupplyInteractionItems.Add(DefenceSupply);
 	}
 	break;
 	case ESupplyItemType::HpBase:
 	{
 		HpSupply->bIsEnable = true;
+		HpSupply->ItemType = ESupplyItemType::HpBase;
 		playerController->SupplyInteractionItems.Add(HpSupply);
 	}
 	break;
 	case ESupplyItemType::CriticalBase:
 	{
 		CriticalAttackSupply->bIsEnable = true;
+		CriticalAttackSupply->ItemType = ESupplyItemType::CriticalBase;
 		playerController->SupplyInteractionItems.Add(CriticalAttackSupply);
 	}
 	break;
 	}
 
 }
+
+
 

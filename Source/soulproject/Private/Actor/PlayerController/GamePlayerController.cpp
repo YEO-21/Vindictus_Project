@@ -11,6 +11,7 @@
 #include "Widget/PlayerStateSlotWidget/PlayerStateSlotWidget.h"
 #include "Structure/PlayerCharacterData/PlayerCharacterData.h"
 #include "Component/PlayerCharacterMovementComponent/PlayerCharacterMovementComponent.h"
+#include "Component/PlayerCharacterAttackComponent/PlayerCharacterAttackComponent.h"
 
 #include "Object/CameraShake/AttackCameraShake.h"
 #include "Object/InteractionParam/SupplyNpcInteractParam/SupplyNpcInteractParam.h"
@@ -78,8 +79,11 @@ void AGamePlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	UpdateStamina(DeltaTime);
+	UpdateHp(DeltaTime);
 
-	CheckPlayerBuffState();
+	if (bIsActivateHpItem) RecoverHp(DeltaTime);
+
+	CheckPlayerBuffState(DeltaTime);
 }
 
 void AGamePlayerController::SetupInputComponent()
@@ -231,6 +235,15 @@ void AGamePlayerController::UpdateStamina(float dt)
 	PrevCharacterLocation = currentLocation;
 }
 
+void AGamePlayerController::UpdateHp(float dt)
+{
+	UPlayerStateWidget* playerStateWidget = GameWidget->GetPlayerStateWidget();
+	if (IsValid(playerStateWidget))
+	{
+		playerStateWidget->UpdateHp(CurrentHp);
+	}
+}
+
 void AGamePlayerController::OnVerticalMovementInput(float axis)
 {
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
@@ -340,21 +353,64 @@ void AGamePlayerController::ProgressDialog()
 	++(DialogWidget->DialogNumber);
 }
 
-void AGamePlayerController::CheckPlayerBuffState()
+void AGamePlayerController::CheckPlayerBuffState(float deltaTime)
 {
 	if (SupplyInteractionItems.Num() == 0) return;
+
+	AGameCharacter* gameCharacter = Cast<AGameCharacter>(GetPawn());
+	if (!IsValid(gameCharacter)) return;
 
 	for (USupplyNpcInteractParam* buff : SupplyInteractionItems)
 	{
 		if (buff->bIsEnable)
 		{
+			switch (buff->ItemType)
+			{
+			case ESupplyItemType::AtkBase:
+			{
+				// 공격 버프라면 공격력을 +15 증가시킵니다.
+				float atk = gameCharacter->GetAttackComponent()->GetCurrentAtk();
+				gameCharacter->GetAttackComponent()->UpdateAtk(atk + 15.0f);
+				SupplyInteractionItems.Remove(buff);
+				
+			}
+			break;
+			case ESupplyItemType::DefBase:
+			{
+				// 방어 버프라면 방어력을 +10 증가시킵니다.
+				PlayerCharacterData->Def += 10.0f;
+				SupplyInteractionItems.Remove(buff);
+			}
+			break;
+			case ESupplyItemType::HpBase:
+			{
+				// 체력 회복 버프라면 체력을 +30 회복합니다.
+				TargetHp = CurrentHp + 30.0f;
 
+				bIsActivateHpItem = true;
+
+				SupplyInteractionItems.Remove(buff);
+			}
+			break;
+			case ESupplyItemType::CriticalBase:
+			{
+				// 치명타 확률을 +20% 증가시킵니다.
+				UE_LOG(LogTemp, Warning, TEXT("CriticalAttack"));
+				SupplyInteractionItems.Remove(buff);
+			}
+			break;
+			}
 		}
 	}
-
-
-
 }
+
+void AGamePlayerController::RecoverHp(float dt)
+{
+	CurrentHp = FMath::FInterpTo(CurrentHp, TargetHp, dt * 20.f, 1.0f);
+	if (FMath::Abs(TargetHp - CurrentHp) == 0.0f) bIsActivateHpItem = false;
+}
+
+
 
 UGameWidget* AGamePlayerController::GetGameWidget() const
 {
@@ -400,8 +456,6 @@ void AGamePlayerController::OnDamaged(float damage)
 
 	// 카메라 쉐이크 적용
 	ClientStartCameraShake(UAttackCameraShake::StaticClass());
-
-   
 
 	UPlayerStateWidget* playerStateWidget = GameWidget->GetPlayerStateWidget();
 

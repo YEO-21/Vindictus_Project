@@ -166,4 +166,8 @@ public :
 		return AttackLocation;
 	}
 
+	FORCEINLINE float GetCurrentAtk() const
+	{
+		return Atk;
+	}
 };

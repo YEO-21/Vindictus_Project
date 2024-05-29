@@ -81,7 +81,7 @@ void USupplyItemGridWidget::InitializeSupplyStoreWidget()
 
 				playerStateSlot->SetImageMaterial(supplyItemData->ItemType, supplyItemData->BuffImage);
 
-				playerController->GetGameWidget()->InitializePlayerStateSlotWidget(playerStateSlot);
+				playerController->GetGameWidget()->FloatingWidgetPlayerState(playerStateSlot);
 			});
 
 		supplyStoreWidget->InitializeSupplyItem(supplyItemBuyEvent);

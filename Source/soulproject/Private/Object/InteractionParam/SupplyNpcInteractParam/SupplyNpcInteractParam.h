@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Enum/SupplyItem/SupplyItemType.h"
 #include "Object/InteractionParam/InteractionParamBase.h"
 #include "SupplyNpcInteractParam.generated.h"
 
@@ -19,6 +20,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsEnable;
+	
+	ESupplyItemType ItemType;
 
 	
 	

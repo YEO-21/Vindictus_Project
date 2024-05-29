@@ -104,7 +104,7 @@ void UPlayerCharacterAttackComponent::AttackProcedure()
 
 		int32 sectionNameIndex = CurrentCombo - 1;
 		FName sectionName = CurrentAttackData->LinkableAttackSectionNames[sectionNameIndex];
-		UE_LOG(LogTemp, Warning, TEXT("Atk is %.2f"), CurrentAttackData->AttackDamage);
+		
 
 		PlayerCharacter->PlayAnimMontage(CurrentAttackData->UseAnimMontage, 1.0f, sectionName);
 	}

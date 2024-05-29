@@ -69,6 +69,11 @@ public :
 	// Overlay_Additive 에 추가된 위젯을 제거합니다.
 	void RemoveWidgetAdditive(class UUserWidget* widgetForClose);
 
+	// Overlay_PlayerState 에 위젯을 추가합니다.
+	void FloatingWidgetPlayerState(class UUserWidget* widgetInstance);
+
+
+
 	// 상태 위젯을 반환합니다.
 	class UPlayerStateWidget* GetPlayerStateWidget() const;
 
