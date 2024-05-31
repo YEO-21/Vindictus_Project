@@ -1,4 +1,5 @@
 #include "NiagaraSystem/AttackNiagaraSystem.h"
+#include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
 #include "Actor/GameCharacter/GameCharacter.h"
 #include "Actor/PlayerController/GamePlayerController.h"
@@ -7,6 +8,8 @@
 
 UAttackNiagaraSystem::UAttackNiagaraSystem()
 {
+	
+
 	// 나이아가라 컴포넌트 추가
 	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(
 		TEXT("NiagaraComponent"));
@@ -15,6 +18,11 @@ UAttackNiagaraSystem::UAttackNiagaraSystem()
 	HitNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(
 		TEXT("HitNiagaraComponent"));
 
+	//NiagaraComponent->InitializeComponent();
+	//HitNiagaraComponent->InitializeComponent();
+
+	NiagaraComponent->ActivateSystem();
+	HitNiagaraComponent->ActivateSystem();
 
 	// 나이아가라 시스템 에셋 설정
 	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NS_ATTACK(
@@ -30,22 +38,15 @@ UAttackNiagaraSystem::UAttackNiagaraSystem()
 	if (NS_ATTACKHIT.Succeeded())
 		HitNiagaraComponent->SetAsset(NS_ATTACKHIT.Object);
 
+
+
 	// 나이아가라 시스템 크기 설정
 	NiagaraComponent->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
 
 	// 나이아가라 시스템 자동 활성화 off
-	NiagaraComponent->bAutoActivate = false;
-	HitNiagaraComponent->bAutoActivate = false;
+	NiagaraComponent->bAutoActivate = true;
+	HitNiagaraComponent->bAutoActivate = true;
 
-
-	// 공격한 위치를 저장합니다.
-	//FVector attackLocation = GetAttackLocation();
-
-	//NiagaraComponent->SetupAttachment(OwnerCharacter->GetMesh());
-
-	//NiagaraComponent->SetWorldLocation(attackLocation);
-
-	//NiagaraComponent->SetWorldLocation();
 
 }
 
@@ -76,6 +77,10 @@ void UAttackNiagaraSystem::SetNiagaraSystemLocation(FVector playerlocation, FVec
 
 void UAttackNiagaraSystem::SetNiagaraSystemAsset(UNiagaraSystem* effect, UNiagaraSystem* hiteffect)
 {
+	if (effect == nullptr) return;
+	if (hiteffect == nullptr) return;
+
+
 	// 나이아가라 시스템 에셋 설정
 	NiagaraComponent->SetAsset(effect);
 	HitNiagaraComponent->SetAsset(hiteffect);

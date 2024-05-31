@@ -38,7 +38,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText ItemEffect;
 
-
+public:
+	FSupplyItemData();
 	
 
 };

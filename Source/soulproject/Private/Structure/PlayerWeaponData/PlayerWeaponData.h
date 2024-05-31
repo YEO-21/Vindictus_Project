@@ -59,6 +59,7 @@ struct FPlayerWeaponData : public FTableRowBase
 	// 특수 능력
 	//UPROPERTY(EditAnywhere, BlueprintReadOnly)
 
-
+public:
+	FPlayerWeaponData();
 
 };

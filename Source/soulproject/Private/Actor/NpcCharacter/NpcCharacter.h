@@ -19,8 +19,6 @@ class ANpcCharacter : public ACharacter
 private :
 	FOnInteractionFinishSignature OnInteractionFinished;
 
-	UPROPERTY()
-	TSubclassOf<class UWalldoNpcWeaponWidget> BP_WallWeaponWidget;
 
 	UPROPERTY()
 	class UDataTable* DT_NpcData;

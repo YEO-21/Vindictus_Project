@@ -38,4 +38,7 @@ public:
 	{
 		return LinkableAttackSectionNames.Num();
 	}
+
+public:
+	FAttackData();
 };

@@ -58,20 +58,6 @@ void UPlayerEquipWeaponComponent::BeginPlay()
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetOwner());
 	playerCharacter->EquippedWeaponCode = _SHARPNER;
 
-	//WeaponStoreWidget = CreateWidget<UWeaponStoreWidget>(GetWorld()->GetFirstPlayerController(), BP_WeaponStoreWidget);
-
-	//PassWeaponWidgetSignature passWeaponEvent;
-	//passWeaponEvent.AddLambda([this]() {
-	//	EquipWeapon();
-	//	UE_LOG(LogTemp, Warning, TEXT("passWeaponEvent"));
-	//	});
-
-	//WeaponStoreWidget->PassWeaponWidget.AddLambda([this]() {
-	//	EquipWeapon();
-	//	UE_LOG(LogTemp, Warning, TEXT("passWeaponEvent"));
-	//	});
-
-	//WeaponStoreWidget->InitializePassItemNameWidget(passWeaponEvent);
 
 }
 

@@ -25,4 +25,7 @@ public :
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText DialogText;
 
+public:
+	FNpcData();
+
 };

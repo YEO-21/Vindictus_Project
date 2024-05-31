@@ -29,4 +29,7 @@ struct FPlayerCharacterData : public FTableRowBase
 	// ¹æ¾î·Â
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float Def;
+
+public:
+	FPlayerCharacterData();
 };

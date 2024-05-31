@@ -50,6 +50,9 @@ public :
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UMaterialInstance * MaterialInstanceOnDead;
 
+public:
+	FEnemyData();
+
 
 
 };

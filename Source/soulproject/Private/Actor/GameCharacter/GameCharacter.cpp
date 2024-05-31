@@ -12,6 +12,7 @@
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 #include "Widget/GameWidget/GameWidget.h"
 #include "../../Engine/Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"

@@ -39,8 +39,6 @@ ANpcCharacter::ANpcCharacter()
 	static ConstructorHelpers::FClassFinder<UNpcWidget> WIDGETBP_NPC(
 		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/NpcWidget/WidgetBP_Npc.WidgetBP_Npc_C'"));
 
-	static ConstructorHelpers::FClassFinder<UWalldoNpcWeaponWidget> WIDGETBP_WALLDO(
-		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/WeaponStoreWidget/WidgetBP_WeaponStore.WidgetBP_WeaponStore_C'"));
 
 	// »óÈ£ÀÛ¿ë ºä Å¸±ê Ä«¸Þ¶ó ÄÄÆ÷³ÍÆ®
 	InteractionViewTargetCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("VIEWTARGET_CAM_COMP"));
@@ -71,10 +69,7 @@ ANpcCharacter::ANpcCharacter()
 		NpcWidgetComponent->SetWidgetClass(WIDGETBP_NPC.Class);
 	}
 
-	if (WIDGETBP_WALLDO.Succeeded())
-	{
-		BP_WallWeaponWidget = WIDGETBP_WALLDO.Class;
-	}
+	
 
 
 	PrimaryActorTick.bCanEverTick = true;
