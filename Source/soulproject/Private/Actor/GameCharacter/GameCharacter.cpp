@@ -156,6 +156,7 @@ AGameCharacter::AGameCharacter()
 
 	// 피해 이벤트 설정
 	OnTakeAnyDamage.AddDynamic(this, &ThisClass::OnDamaged);
+
 }
 
 // Called when the game starts or when spawned

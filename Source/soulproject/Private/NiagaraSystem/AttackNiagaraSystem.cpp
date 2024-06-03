@@ -1,6 +1,8 @@
 #include "NiagaraSystem/AttackNiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "NiagaraScript.h"
+#include "NiagaraScriptBase.h"
 #include "Actor/GameCharacter/GameCharacter.h"
 #include "Actor/PlayerController/GamePlayerController.h"
 
@@ -11,16 +13,19 @@ UAttackNiagaraSystem::UAttackNiagaraSystem()
 	
 
 	// 나이아가라 컴포넌트 추가
-	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(
-		TEXT("NiagaraComponent"));
+	NiagaraComponent =
+		CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
+
 
 	// 나이아가라 피격 컴포넌트 추가
-	HitNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(
-		TEXT("HitNiagaraComponent"));
+	HitNiagaraComponent = 
+		CreateDefaultSubobject<UNiagaraComponent>(TEXT("HitNiagaraComponent"));
 
-	//NiagaraComponent->InitializeComponent();
-	//HitNiagaraComponent->InitializeComponent();
+	NiagaraSystemScript =
+		CreateDefaultSubobject<UNiagaraScript>(TEXT("NiaraScript"));
 
+
+	
 	NiagaraComponent->ActivateSystem();
 	HitNiagaraComponent->ActivateSystem();
 
@@ -43,9 +48,12 @@ UAttackNiagaraSystem::UAttackNiagaraSystem()
 	// 나이아가라 시스템 크기 설정
 	NiagaraComponent->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
 
-	// 나이아가라 시스템 자동 활성화 off
+	// 나이아가라 시스템 자동 활성화 on
 	NiagaraComponent->bAutoActivate = true;
 	HitNiagaraComponent->bAutoActivate = true;
+
+	NiagaraComponent->InitializeSystem();
+	HitNiagaraComponent->InitializeSystem();
 
 
 }
@@ -66,6 +74,11 @@ void UAttackNiagaraSystem::ActivateNiagaraSystem()
 	// 나이아가라 시스템 활성화 
 	NiagaraComponent->ActivateSystem();
 	HitNiagaraComponent->ActivateSystem();
+
+	NiagaraComponent->Activate();
+	HitNiagaraComponent->Activate();
+
+	
 }
 
 void UAttackNiagaraSystem::SetNiagaraSystemLocation(FVector playerlocation, FVector hitLocation)

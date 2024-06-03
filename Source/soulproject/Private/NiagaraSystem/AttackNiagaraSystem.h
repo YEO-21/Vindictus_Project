@@ -21,7 +21,8 @@ private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UNiagaraComponent* HitNiagaraComponent;
 
-
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
+	class UNiagaraScript* NiagaraSystemScript;
 
 
 	UPROPERTY()

@@ -115,8 +115,8 @@ void UPlayerEquipWeaponComponent::EquipWeapon()
 	playerCharacter->ShowWeaponMesh(CheckWeaponType());
 
 	// 무기 타입에 따른 이펙트를 설정합니다.
-	playerCharacter->GetAttackNiagaraSystem()->SetNiagaraSystemAsset(
-		PlayerWeaponData->AttackEffect, PlayerWeaponData->AttackHitEffect);
+	//playerCharacter->GetAttackNiagaraSystem()->SetNiagaraSystemAsset(
+		//PlayerWeaponData->AttackEffect, PlayerWeaponData->AttackHitEffect);
 }
 
 bool UPlayerEquipWeaponComponent::IsSpearWeapon() const
