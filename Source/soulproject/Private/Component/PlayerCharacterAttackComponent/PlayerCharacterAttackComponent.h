@@ -88,6 +88,10 @@ private :
 public:
 	class AEnemyCharacter* enemyCharacter;
 
+	// 플레이어가 공격에 성공했음을 나타냅니다.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsAttackSuccess;
+
 
 public:	
 	UPlayerCharacterAttackComponent();

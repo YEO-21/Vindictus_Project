@@ -52,10 +52,6 @@ UAttackNiagaraSystem::UAttackNiagaraSystem()
 	NiagaraComponent->bAutoActivate = true;
 	HitNiagaraComponent->bAutoActivate = true;
 
-	NiagaraComponent->InitializeSystem();
-	HitNiagaraComponent->InitializeSystem();
-
-
 }
 
 FVector UAttackNiagaraSystem::GetAttackLocation()
