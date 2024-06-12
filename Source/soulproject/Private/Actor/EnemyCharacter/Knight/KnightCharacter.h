@@ -26,6 +26,12 @@ protected :
 
 	UPROPERTY();
 	class UAnimMontage* HitAnimMontage;
+
+	
+private:
+	// 플레이어가 뒤에 있음을 나타냅니다.
+	UPROPERTY()
+	bool isPlayerBehind;
 	
 
 
@@ -52,5 +58,8 @@ public :
 	{
 		return AttackComponent;
 	}
+
+	void SetisPlayerBehind(bool isbehind);
+	
 
 };

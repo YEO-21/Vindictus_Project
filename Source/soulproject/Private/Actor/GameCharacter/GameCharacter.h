@@ -69,6 +69,8 @@ private :
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class USkeletalMeshComponent* SubWeaponMesh;
 
+	
+
 
 
 	FGenericTeamId Team;
@@ -119,6 +121,10 @@ public:
 	// ÀåÂøµÈ ¹«±â ÄÚµå
 	UPROPERTY()
 	FName EquippedWeaponCode;
+
+	UPROPERTY()
+	class ULevelTransitionGameInstance* LevelTransitionGameInstance;
+
 
 
 public:
@@ -299,5 +305,10 @@ public:
 
 	// ½ºÄÌ·¹Å» ¸Þ½Ã ¹«±â ¼û±è
 	void HideSkeletalMeshWeapon();
+
+	void SetLevelTransition(ULevelTransitionGameInstance* levelTransition);
+
+	void SetGameInstance();
+	void UpdateGameInstance();
 
 };

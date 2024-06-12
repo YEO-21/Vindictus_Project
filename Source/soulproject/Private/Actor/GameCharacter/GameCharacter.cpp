@@ -12,6 +12,8 @@
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 #include "Widget/GameWidget/GameWidget.h"
 #include "../../Engine/Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
+
+#include "Object/LevelTransition/LevelTransitionGameInstance/LevelTransitionGameInstance.h"
 #include "NiagaraFunctionLibrary.h"
 
 #include "Camera/CameraComponent.h"
@@ -96,6 +98,7 @@ AGameCharacter::AGameCharacter()
 	BuffControlComponent =
 		CreateDefaultSubobject<UPlayerBuffControlComponent>(TEXT("PLAYER_BUFF_CONTROL_COMPONENT"));
 
+
 	// SpringArm 컴포넌트를 루트 컴포넌트에 추가합니다.
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 	CameraComponent->SetupAttachment(SpringArmComponent);
@@ -149,8 +152,6 @@ AGameCharacter::AGameCharacter()
 	}*/
 
 
-
-
 	// 플레이어 캐릭터의 팀을 설정합니다.
 	SetGenericTeamId(FGenericTeamId(ECharacterTeam::Player));
 
@@ -163,6 +164,9 @@ AGameCharacter::AGameCharacter()
 void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	LevelTransitionGameInstance =
+		Cast<ULevelTransitionGameInstance>(GetGameInstance());
 
 	// 시작 메인 무기를 샤프너로 설정합니다.
 	CurrentWeaponCode = WEAPON_SHARPNER;
@@ -203,6 +207,8 @@ void AGameCharacter::BeginPlay()
 		PlayerCharacterMovementComponent, &UPlayerCharacterMovementComponent::SetAllowMovementInput);
 	PlayerCharacterAnimController->onRollAnimFinished.BindUObject(
 		PlayerCharacterMovementComponent, &UPlayerCharacterMovementComponent::OnRollFinished);
+
+	UpdateGameInstance();
 }
 
 // Called every frame
@@ -212,11 +218,9 @@ void AGameCharacter::Tick(float DeltaTime)
 
 	// 무기 소켓 위치 갱신
 	UpdateWeaponSocket();
-	//AttackComponent->UpdateStaticWeaponSocketLocation(WeaponMesh);
 
 	if (IsDead) Respawn(StartLocation, TIMETOWAITRESPAWN);
 
-	
 }
 
 void AGameCharacter::OnDamaged(
@@ -617,3 +621,28 @@ void AGameCharacter::HideSkeletalMeshWeapon()
 	WeaponMesh_Onehanded->SetVisibility(false);
 	WeaponMesh->SetVisibility(true);
 }
+
+void AGameCharacter::SetLevelTransition(ULevelTransitionGameInstance* levelTransition)
+{
+	LevelTransitionGameInstance = levelTransition;
+}
+
+void AGameCharacter::SetGameInstance()
+{
+	AGamePlayerController* playerController = Cast<AGamePlayerController>(GetController());
+
+
+	LevelTransitionGameInstance->SaveCharacterInfo(
+		CurrentHp,
+		playerController->GetCurrentStamina(),
+		EquippedWeaponCode);
+
+
+}
+
+void AGameCharacter::UpdateGameInstance()
+{
+	LevelTransitionGameInstance->UpdateCharacterInfo(this);
+}
+
+

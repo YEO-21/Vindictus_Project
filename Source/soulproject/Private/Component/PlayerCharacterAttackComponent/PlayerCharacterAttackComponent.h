@@ -46,6 +46,9 @@ private :
 	// 방어 입력을 시작한 시간을 나타냅니다.
 	float BlockStartTime;
 
+	// 공격을 시작했음을 나타냅니다.
+	bool isAttackStarted;
+
 	// 공격 시 감지된 적 객체를 잠시 저장해둘 배열
 	TArray<class AEnemyCharacter*> AttackDetectedEnemies;
 
@@ -111,6 +114,8 @@ private :
 
 	// 창 무기로 공격을 하는지 확인합니다.
 	void CheckSpearAttack();
+
+
 
 public :
 	void UpdateAtk(float atk);

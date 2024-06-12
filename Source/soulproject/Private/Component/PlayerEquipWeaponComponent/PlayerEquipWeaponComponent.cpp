@@ -8,6 +8,8 @@
 #include "Widget/StoreItemWidget/StoreItemWidget.h"
 #include "Widget/WeaponStoreWidget/WeaponStoreWidget.h"
 
+#include "Object/LevelTransition/LevelTransitionGameInstance/LevelTransitionGameInstance.h"
+
 #include "Structure/PlayerWeaponData/PlayerWeaponData.h"
 
 
@@ -34,7 +36,6 @@ UPlayerEquipWeaponComponent::UPlayerEquipWeaponComponent()
 void UPlayerEquipWeaponComponent::InitializeEquippedWeapon(FName weaponCode)
 {
 	WeaponCode = weaponCode;
-	//UE_LOG(LogTemp, Warning, TEXT("WeaponCode = %s"), *WeaponCode.ToString());
 	if (WeaponCode.IsNone())
 	{
 		PlayerWeaponData = nullptr;
@@ -75,12 +76,13 @@ void UPlayerEquipWeaponComponent::EquipWeapon()
 
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetOwner());
 
+
 	InitializeEquippedWeapon(playerCharacter->EquippedWeaponCode);
-	UE_LOG(LogTemp, Warning, TEXT("playerCharacter->EquippedWeaponCode is %s"), *playerCharacter->EquippedWeaponCode.ToString());
 
 
 	UPlayerCharacterAnimInstance* animInst = 
 		Cast<UPlayerCharacterAnimInstance>(playerCharacter->GetMesh()->GetAnimInstance());
+
 
 	if (PlayerWeaponData == nullptr) return;
 
@@ -95,6 +97,7 @@ void UPlayerEquipWeaponComponent::EquipWeapon()
 		playerCharacter->GetWeaponMeshOneHanded()->SetSkeletalMesh(PlayerWeaponData->WeaponSkeletalMesh);
 		animInst->SetOneHandedWeapon(false);
 		animInst->SetSpear(false);
+		UE_LOG(LogTemp, Warning, TEXT("EquipAxe"));
 		break;
 	case EWeaponType::TWIN_DRAGON_SWORD:
 		playerCharacter->GetWeaponMeshOneHanded()->SetSkeletalMesh(PlayerWeaponData->WeaponSkeletalMesh);
@@ -117,6 +120,8 @@ void UPlayerEquipWeaponComponent::EquipWeapon()
 	// 무기 타입에 따른 이펙트를 설정합니다.
 	playerCharacter->GetAttackNiagaraSystem()->SetNiagaraSystemAsset(
 		PlayerWeaponData->AttackEffect, PlayerWeaponData->AttackHitEffect);
+
+	
 }
 
 bool UPlayerEquipWeaponComponent::IsSpearWeapon() const

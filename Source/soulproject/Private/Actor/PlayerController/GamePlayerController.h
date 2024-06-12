@@ -189,8 +189,15 @@ public :
 		return CurrentHp;
 	}
 
-	
+	FORCEINLINE float GetCurrentStamina()
+	{
+		return CurrentStamina;
+	}
 
+	void SetCurrentStamina(float stamina)
+	{
+		CurrentStamina = stamina;
+	}
 
 	
 };

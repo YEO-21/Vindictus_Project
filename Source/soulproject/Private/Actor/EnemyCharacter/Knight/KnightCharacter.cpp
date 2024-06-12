@@ -98,3 +98,8 @@ void AKnightCharacter::OnDamaged(AGameCharacter* gameCharacter, float damage)
 	direction = direction.GetSafeNormal();
 	LaunchCharacter(direction, 200.0f);
 }
+
+void AKnightCharacter::SetisPlayerBehind(bool isbehind)
+{
+	isPlayerBehind = isbehind;
+}

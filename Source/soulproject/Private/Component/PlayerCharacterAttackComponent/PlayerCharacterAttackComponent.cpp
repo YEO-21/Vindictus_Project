@@ -118,8 +118,12 @@ void UPlayerCharacterAttackComponent::AttackProcedure()
 
 void UPlayerCharacterAttackComponent::CheckAttackArea()
 {
+	//UE_LOG(LogTemp, Warning, TEXT("IsAttackAreaEnabled = %d"), IsAttackAreaEnabled);
+
 	// 공격중이 아닌 경우 함수 호출 종료.
 	if (!IsAttackAreaEnabled) return;
+
+
 
 	float radius = 10.0f;
 
@@ -127,7 +131,9 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 
 	TArray<AActor*> actorsToIgnore;
 	TArray<FHitResult> hitResults;
-	bool isHit = UKismetSystemLibrary::SphereTraceMultiByProfile(
+
+
+	UKismetSystemLibrary::SphereTraceMultiByProfile(
 		this,
 		CurrentStartSocketLocation,
 		CurrentEndSocketLocation,
@@ -141,12 +147,10 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetOwner());
 	
+	
 	for (FHitResult& hit : hitResults)
 	{
 		enemyCharacter = Cast<AEnemyCharacter>(hit.GetActor());
-
-		
-
 
 		if (IsValid(enemyCharacter))
 		{
@@ -154,6 +158,7 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 			{
 
 				AttackDetectedEnemies.Add(enemyCharacter);
+
 
 
 				// 공격을 가한 위치를 저장합니다.
@@ -183,23 +188,28 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 					PlayerCharacter->GetController(),
 					PlayerCharacter,
 					UDamageType::StaticClass());
+
+
+
 			}
 
 		}
 		else
 		{
-			if (!AttackDetectedActors.Contains(hit.GetActor()) && !hit.GetActor()->ActorHasTag(TEXT("Floor")))
+			if (!AttackDetectedActors.Contains(hit.GetActor()))
 			{
 				AttackDetectedActors.Add(hit.GetActor());
 				// 적 캐릭터 공격을 하는것이 아닐 때, 공격 막힘 애니메이션 재생
-				Cast<AGameCharacter>(GetOwner())->PlayAttackBlockAnim();
+				Cast<AGameCharacter>(GetOwner())->PlayAttackBlockAnim ();
 
-				UE_LOG(LogTemp, Warning, TEXT("It is not EnemyCharacter"));
+				UE_LOG(LogTemp, Warning, TEXT("hitResult = %s"), *hit.ToString());
+				break;
 			}
-			
+
 		}
 
 	}
+		
 
 }
 
@@ -219,10 +229,9 @@ void UPlayerCharacterAttackComponent::CheckSpearAttack()
 	else  gameCharacter->SetCurrentWeaponCode(WEAPON_SHARPNER);
 
 
-
-
-
 }
+
+
 
 void UPlayerCharacterAttackComponent::UpdateAtk(float atk)
 {
@@ -282,6 +291,8 @@ void UPlayerCharacterAttackComponent::CancelAttackState()
 
 void UPlayerCharacterAttackComponent::RequestAttack(FName attackName)
 {
+	isAttackStarted = true;
+
 	FString contextString;
 	FAttackData* attackData = DT_AttackData->FindRow<FAttackData>(attackName, contextString);
 
