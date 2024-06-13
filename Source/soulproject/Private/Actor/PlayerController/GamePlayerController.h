@@ -184,6 +184,9 @@ public :
 
 	void ShowCriticalAttackWidget();
 
+
+
+
 	FORCEINLINE float GetCurrentHp()
 	{
 		return CurrentHp;
@@ -192,6 +195,11 @@ public :
 	FORCEINLINE float GetCurrentStamina()
 	{
 		return CurrentStamina;
+	}
+
+	void SetCurrentHp(float hp)
+	{
+		CurrentHp = hp;
 	}
 
 	void SetCurrentStamina(float stamina)

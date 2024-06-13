@@ -8,6 +8,7 @@
 #include "Component/PlayerCharacterAttackComponent/PlayerCharacterAttackComponent.h"
 #include "Component/PlayerCharacterInteractComponent/PlayerCharacterInteractComponent.h"
 #include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
+#include "Component/PlayerBuffControlComponent/PlayerBuffControlComponent.h"
 #include "NiagaraSystem/AttackNiagaraSystem.h"
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 #include "Widget/GameWidget/GameWidget.h"
@@ -644,5 +645,7 @@ void AGameCharacter::UpdateGameInstance()
 {
 	LevelTransitionGameInstance->UpdateCharacterInfo(this);
 }
+
+
 
 

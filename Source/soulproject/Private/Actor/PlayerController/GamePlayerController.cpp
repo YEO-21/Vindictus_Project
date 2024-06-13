@@ -84,6 +84,7 @@ void AGamePlayerController::PlayerTick(float DeltaTime)
 	if (bIsActivateHpItem) RecoverHp(DeltaTime);
 
 	CheckPlayerBuffState(DeltaTime);
+
 }
 
 void AGamePlayerController::SetupInputComponent()
@@ -473,6 +474,7 @@ void AGamePlayerController::OnDamaged(float damage)
 	Cast<AGameCharacter>(GetPawn())->SetCurrentHp(CurrentHp);
 
 	// 사망 처리
+	
 	if (CurrentHp <= 0.0f && !playerCharacter->GetDeadState())
 	{
 		// 플레이어 사망 시간 기록
@@ -498,7 +500,6 @@ void AGamePlayerController::OnDamaged(float damage)
 
 		// 사망 시 게임 오버 위젯 표시 
 		GameWidget->ShowDeadWidget();
-		
 	}
 }
 
@@ -529,4 +530,7 @@ void AGamePlayerController::ShowCriticalAttackWidget()
 	CriticalWidget->SetVisibility(ESlateVisibility::Visible);
 	UE_LOG(LogTemp, Warning, TEXT("ShowCriticalAttackWidget"));
 }
+
+
+
 

@@ -10,6 +10,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
 
+#include "NiagaraSystem/AttackNiagaraSystem.h"
+
 #include "Animation/AnimMontage.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -188,8 +190,6 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 					PlayerCharacter->GetController(),
 					PlayerCharacter,
 					UDamageType::StaticClass());
-
-
 
 			}
 
