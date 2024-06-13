@@ -385,6 +385,12 @@ void AGameCharacter::OnInteractInput()
 	InteractComponent->TryInteraction();
 }
 
+void AGameCharacter::OnInteractItemInput()
+{
+	isInteractable = true;
+	UE_LOG(LogTemp, Warning, TEXT("Interact"));
+}
+
 void AGameCharacter::OnRollForward()
 {
 	PlayerCharacterMovementComponent->OnRollInput(FIntVector2(0, 1));
@@ -644,6 +650,14 @@ void AGameCharacter::SetGameInstance()
 void AGameCharacter::UpdateGameInstance()
 {
 	LevelTransitionGameInstance->UpdateCharacterInfo(this);
+}
+
+void AGameCharacter::PlayRagdoll()
+{
+	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
+
 }
 
 

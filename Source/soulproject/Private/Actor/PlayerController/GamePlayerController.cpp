@@ -117,6 +117,9 @@ void AGamePlayerController::SetupInputComponent()
 	InputComponent->BindAction(TEXT("Interact"), EInputEvent::IE_Pressed, this,
 		&ThisClass::OnInteractInput);
 
+	InputComponent->BindAction(TEXT("Interact_Item"), EInputEvent::IE_Pressed, this,
+		&ThisClass::OnInteractItemInput);
+
 	InputComponent->BindAction(TEXT("RollForward"), EInputEvent::IE_Pressed, this,
 		&ThisClass::OnRollForward);
 	InputComponent->BindAction(TEXT("RollBackward"), EInputEvent::IE_Pressed, this,
@@ -291,6 +294,12 @@ void AGamePlayerController::OnInteractInput()
 {
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
 	playerCharacter->OnInteractInput();
+}
+
+void AGamePlayerController::OnInteractItemInput()
+{
+	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
+	playerCharacter->OnInteractItemInput();
 }
 
 void AGamePlayerController::OnRollForward()
@@ -474,33 +483,7 @@ void AGamePlayerController::OnDamaged(float damage)
 	Cast<AGameCharacter>(GetPawn())->SetCurrentHp(CurrentHp);
 
 	// 사망 처리
-	
-	if (CurrentHp <= 0.0f && !playerCharacter->GetDeadState())
-	{
-		// 플레이어 사망 시간 기록
-		playerCharacter->SetPlayerDeadTime(GetWorld()->GetTimeSeconds());
-
-		playerCharacter->SetDeadState(true);
-
-		CurrentHp = 0.0f;
-
-		// 사망시 튕겨져 나감 처리
-		playerCharacter->DeadBounce();
-
-		UPlayerCharacterAnimInstance* animInst =
-			Cast<UPlayerCharacterAnimInstance>(playerCharacter->GetMesh()->GetAnimInstance());
-
-		if (!IsValid(animInst)) return;
-
-		// 사망 처리 애니메이션 재생
-		animInst->SetPlayerDeadState(true);
-
-		// 사망 시 카메라 전환
-		playerCharacter->SetCameraDeadView();
-
-		// 사망 시 게임 오버 위젯 표시 
-		GameWidget->ShowDeadWidget();
-	}
+	PlayerDead();
 }
 
 void AGamePlayerController::OnEnemyAttack(AEnemyCharacter* newTargetEnemy)
@@ -529,6 +512,42 @@ void AGamePlayerController::ShowCriticalAttackWidget()
 {
 	CriticalWidget->SetVisibility(ESlateVisibility::Visible);
 	UE_LOG(LogTemp, Warning, TEXT("ShowCriticalAttackWidget"));
+}
+
+void AGamePlayerController::PlayerDead()
+{
+	// Get PlayerCharacter
+	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
+
+	if (CurrentHp <= 0.0f && !playerCharacter->GetDeadState())
+	{
+		// 플레이어 사망 시간 기록
+		playerCharacter->SetPlayerDeadTime(GetWorld()->GetTimeSeconds());
+
+		playerCharacter->SetDeadState(true);
+
+		CurrentHp = 0.0f;
+
+		// 사망시 튕겨져 나감 처리
+		playerCharacter->DeadBounce();
+
+		UPlayerCharacterAnimInstance* animInst =
+			Cast<UPlayerCharacterAnimInstance>(playerCharacter->GetMesh()->GetAnimInstance());
+
+		if (!IsValid(animInst)) return;
+
+		// 사망 처리 애니메이션 재생
+		animInst->SetPlayerDeadState(true);
+
+		// 사망 시 카메라 전환
+		playerCharacter->SetCameraDeadView();
+
+		// 플레이어 사망 시 이동 제한
+		playerCharacter->GetPlayerCharacterMovementComponent()->SetAllowMovementInput(false);
+
+		// 사망 시 게임 오버 위젯 표시 
+		GameWidget->ShowDeadWidget();
+	}
 }
 
 

@@ -133,6 +133,8 @@ private :
 	// 상호작용 키 입력 시 호출됩니다.
 	void OnInteractInput();
 
+	void OnInteractItemInput();
+
 	void OnRollForward();
 	void OnRollBackward();
 	void OnRollRight();
@@ -184,7 +186,8 @@ public :
 
 	void ShowCriticalAttackWidget();
 
-
+	// 플레이어의 사망 처리를 합니다.
+	void PlayerDead();
 
 
 	FORCEINLINE float GetCurrentHp()

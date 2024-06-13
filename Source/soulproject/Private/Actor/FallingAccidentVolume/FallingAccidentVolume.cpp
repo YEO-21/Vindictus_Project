@@ -3,6 +3,8 @@
 #include "Actor/GameCharacter/GameCharacter.h"
 #include "Actor/PlayerController/GamePlayerController.h"
 
+#include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
+
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -46,12 +48,19 @@ void AFallingAccidentVolume::OnBeginOverlap(
 
 	if (!IsValid(playerController)) return;
 
-
 	// 낙사 처리
 	playerController->SetCurrentHp(0.0f);
+	playerController->PlayerDead();
 
+	// 애님 인스턴스를 얻습니다.
+	UPlayerCharacterAnimInstance* animInst = Cast<UPlayerCharacterAnimInstance>(
+		gameCharacter->GetMesh()->GetAnimInstance());
 
+	if (!IsValid(animInst)) return;
 
+	// 점프 애니메이션 재생하지 않도록 설정
+	animInst->SetGroundedState(true);
+ 
 }
 
 

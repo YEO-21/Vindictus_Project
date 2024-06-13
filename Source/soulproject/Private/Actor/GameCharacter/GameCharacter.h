@@ -125,6 +125,9 @@ public:
 	UPROPERTY()
 	class ULevelTransitionGameInstance* LevelTransitionGameInstance;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+	bool isInteractable;
+
 
 
 public:
@@ -163,6 +166,7 @@ public:
 	void OnJumpInput();
 	void OnAttackInput();
 	void OnInteractInput();
+	void OnInteractItemInput();
 
 	void OnRollForward();
 	void OnRollBackward();
@@ -311,6 +315,6 @@ public:
 	void SetGameInstance();
 	void UpdateGameInstance();
 
-
+	void PlayRagdoll();
 
 };

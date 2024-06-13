@@ -24,6 +24,7 @@ void ULevelTransitionGameInstance::UpdateCharacterInfo(ACharacter* playerCharact
 	player->EquippedWeaponCode = EquippedWeaponCode;
 	
 	player->GetEquipWeaponComponent()->EquipWeapon();
+	player->isInteractable = false;
 	UE_LOG(LogTemp, Warning, TEXT("EquippedWeaponCode = %s"), *EquippedWeaponCode.ToString());
 
 }
