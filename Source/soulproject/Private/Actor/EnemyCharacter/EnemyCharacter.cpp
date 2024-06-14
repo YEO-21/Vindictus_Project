@@ -57,6 +57,8 @@ void AEnemyCharacter::BeginPlay()
 	
 	// 대미지 이벤트 설정
 	OnTakeAnyDamage.AddDynamic(this, &ThisClass::OnDamaged);
+
+	
 }
 
 void AEnemyCharacter::PossessedBy(AController* NewController)

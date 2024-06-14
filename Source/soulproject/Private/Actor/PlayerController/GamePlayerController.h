@@ -63,6 +63,14 @@ private :
 	UPROPERTY()
 	TSubclassOf<class UNpcDialogWidget> DialogWidgetClass;
 
+	// 상호작용 위젯 클래스
+	UPROPERTY()
+	TSubclassOf<UUserWidget> WidgetBP_InteractionKey;
+
+	// 상호작용 위젯
+	UPROPERTY()
+	UUserWidget* InteractionWidget;
+
 
 	// 플레이어 캐릭터 데이터
 	struct FPlayerCharacterData* PlayerCharacterData;
@@ -166,6 +174,7 @@ public :
 	class UGameWidget* GetGameWidget() const;
 	class UPlayerWeaponStateWidget* GetWeaponStateWidget() const;
 	class UPlayerStateSlotWidget* GetPlayerStateSlotWidget() const;
+	class UUserWidget* GetInteractionWidget() const;
 
 
 	void SetCameraViewTarget(class AActor* target);

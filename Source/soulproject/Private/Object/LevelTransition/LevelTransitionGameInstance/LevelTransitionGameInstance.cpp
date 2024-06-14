@@ -20,9 +20,14 @@ void ULevelTransitionGameInstance::SaveCharacterInfo(float hp, float stamina, FN
 void ULevelTransitionGameInstance::UpdateCharacterInfo(ACharacter* playerCharacter)
 {
 	AGameCharacter* player = Cast<AGameCharacter>(playerCharacter);
-	player->SetCurrentHp(CurrentHp);
+	AGamePlayerController* playerController = Cast<AGamePlayerController>(player->GetController());
+
+	// 체력 로드
+	playerController->SetCurrentHp(CurrentHp);
 	player->EquippedWeaponCode = EquippedWeaponCode;
 	
+	
+	// 무기 코드 로드
 	player->GetEquipWeaponComponent()->EquipWeapon();
 	player->isInteractable = false;
 	UE_LOG(LogTemp, Warning, TEXT("EquippedWeaponCode = %s"), *EquippedWeaponCode.ToString());
@@ -33,7 +38,10 @@ void ULevelTransitionGameInstance::Init()
 {
 	Super::Init();
 
+	// 게임 시작 시 무기 코드, 체력을 설정합니다.
 	EquippedWeaponCode = _SHARPNER;
+	CurrentHp = 100.0f;
+
 
 }
 

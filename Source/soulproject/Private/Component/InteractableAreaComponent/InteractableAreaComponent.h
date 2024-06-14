@@ -23,6 +23,7 @@ public:
 	UPROPERTY()
 	class AGameCharacter* PlayerCharacter;
 
+
 	
 public :
 	UInteractableAreaComponent();

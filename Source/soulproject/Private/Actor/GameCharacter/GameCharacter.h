@@ -69,9 +69,6 @@ private :
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class USkeletalMeshComponent* SubWeaponMesh;
 
-	
-
-
 
 	FGenericTeamId Team;
 
@@ -122,11 +119,21 @@ public:
 	UPROPERTY()
 	FName EquippedWeaponCode;
 
+	// 레벨 전환 Game Instance 입니다.
 	UPROPERTY()
 	class ULevelTransitionGameInstance* LevelTransitionGameInstance;
 
+	// 보물 상자 상호작용 여부를 나타냅니다.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
 	bool isInteractable;
+
+	// 보물 아이템을 가지고 있는지 여부를 나타냅니다.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+	bool isContainItem;
+
+	// 상호작용 위젯 애니메이션 재생용 변수입니다.
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool IsReadyToPlayAnimationWidget;
 
 
 
@@ -317,4 +324,5 @@ public:
 
 	void PlayRagdoll();
 
+	
 };

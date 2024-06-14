@@ -44,6 +44,8 @@ AGamePlayerController::AGamePlayerController()
 	static ConstructorHelpers::FClassFinder<UPlayerStateSlotWidget> WIDGETBP_PLAYERSTATE(
 		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/PlayerStateSlotWidget/WidgetBP_PlayerStateSlot.WidgetBP_PlayerStateSlot_C'"));
 
+	ConstructorHelpers::FClassFinder<UUserWidget> WIDGET_INTERACTION(
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/InteractionWidget/WidgetBP_InteractionF.WidgetBP_InteractionF_C'"));
 
 
 	if (WIDGETBP_GAME.Succeeded())
@@ -70,7 +72,18 @@ AGamePlayerController::AGamePlayerController()
 
 	if (WIDGETBP_PLAYERSTATE.Succeeded()) PlayerStateSlotWidgetClass = WIDGETBP_PLAYERSTATE.Class;
 
+	if (WIDGET_INTERACTION.Succeeded()) WidgetBP_InteractionKey = WIDGET_INTERACTION.Class;
+
 	PlayerCharacterData = nullptr;
+
+	// 플레이어 캐릭터 정보를 얻습니다.
+	FString contextString;
+	PlayerCharacterData = PlayerCharacterDataTable->FindRow<FPlayerCharacterData>(
+		PLAYERCHARACTER_DATA_NORMAL, contextString);
+
+	// Hp, Stamina 초기화
+	CurrentHp = PlayerCharacterData->MaxHp;
+	CurrentStamina = PlayerCharacterData->MaxStamina;
 
 }
 
@@ -181,6 +194,9 @@ void AGamePlayerController::OnPossess(APawn* pawn)
 	CriticalWidget->SetVisibility(ESlateVisibility::Hidden);
 
 	PlayerStateSlotWidget = CreateWidget<UPlayerStateSlotWidget>(this, PlayerStateSlotWidgetClass);
+
+	// 상호작용 위젯 생성
+	InteractionWidget = CreateWidget<UUserWidget>(this, WidgetBP_InteractionKey);
 
 	// 생성된 위젯을 화면에 표시합니다.
 	GameWidget->AddToViewport();
@@ -437,6 +453,11 @@ UPlayerStateSlotWidget* AGamePlayerController::GetPlayerStateSlotWidget() const
 	return PlayerStateSlotWidget;
 }
 
+UUserWidget* AGamePlayerController::GetInteractionWidget() const
+{
+	return InteractionWidget;
+}
+
 
 
 void AGamePlayerController::SetCameraViewTarget(AActor* target)
@@ -453,11 +474,13 @@ void AGamePlayerController::InitializePlayerStateWidget(float maxHp, float maxSt
 {
 	if (!IsValid(GameWidget)) return;
 
+
 	UPlayerStateWidget* playerStateWidget = GameWidget->GetPlayerStateWidget();
 	playerStateWidget->SetMaxHp(maxHp);
 	playerStateWidget->UpdateHp(maxHp);
 	playerStateWidget->SetMaxStamina(maxStamina);
 	playerStateWidget->UpdateStamina(maxStamina);
+	
 }
 
 void AGamePlayerController::OnDamaged(float damage)

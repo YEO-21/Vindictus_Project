@@ -172,6 +172,10 @@ void AGameCharacter::BeginPlay()
 	// 시작 메인 무기를 샤프너로 설정합니다.
 	CurrentWeaponCode = WEAPON_SHARPNER;
 
+	// 시작 체력을 으로 설정합니다.
+	AGamePlayerController* playerController = Cast<AGamePlayerController>(GetController());
+	CurrentHp = playerController->GetCurrentHp();
+
 	// 시작 위치를 저장합니다.
 	StartLocation = GetActorLocation();
 	
@@ -209,6 +213,7 @@ void AGameCharacter::BeginPlay()
 	PlayerCharacterAnimController->onRollAnimFinished.BindUObject(
 		PlayerCharacterMovementComponent, &UPlayerCharacterMovementComponent::OnRollFinished);
 
+	
 	UpdateGameInstance();
 }
 
@@ -659,7 +664,5 @@ void AGameCharacter::PlayRagdoll()
 	GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
 
 }
-
-
 
 

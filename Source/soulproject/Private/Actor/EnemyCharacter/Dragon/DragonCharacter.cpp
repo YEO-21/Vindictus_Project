@@ -90,7 +90,7 @@ void ADragonCharacter::BeginPlay()
 	animInst->OnRushAttackStarted.AddUObject(AttackComponent, &UDragonCharacterAttackComponent::StartRushAttack);
 	animInst->OnRushAttackFinished.AddUObject(AttackComponent, &UDragonCharacterAttackComponent::FinishRushAttack);
 
-
+	GetMesh()->SetCollisionProfileName(TEXT("EnemyCharacter"));
 }
 
 void ADragonCharacter::PlayMoveAnimMontage(FName playSectionName)
