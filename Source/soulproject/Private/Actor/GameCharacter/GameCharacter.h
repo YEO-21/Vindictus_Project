@@ -131,9 +131,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
 	bool isContainItem;
 
-	// 상호작용 위젯 애니메이션 재생용 변수입니다.
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	bool IsReadyToPlayAnimationWidget;
+	
 
 
 
