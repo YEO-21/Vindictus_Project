@@ -71,6 +71,8 @@ private :
 	UPROPERTY()
 	UUserWidget* InteractionWidget;
 
+	
+
 
 	// 플레이어 캐릭터 데이터
 	struct FPlayerCharacterData* PlayerCharacterData;

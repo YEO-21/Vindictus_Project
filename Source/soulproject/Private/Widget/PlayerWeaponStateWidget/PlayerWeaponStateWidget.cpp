@@ -5,8 +5,15 @@ void UPlayerWeaponStateWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	
+	UpdateWeaponStateTexture.BindUObject(this, &UPlayerWeaponStateWidget::SetMainWeaponImage);
+}
 
+
+
+
+FUpdateTextureEventSignature UPlayerWeaponStateWidget::GetWeaponStateEvent() const
+{
+	return UpdateWeaponStateTexture;
 }
 
 void UPlayerWeaponStateWidget::ExchangeWeaponWidget()
@@ -30,4 +37,10 @@ void UPlayerWeaponStateWidget::HideWeaponStateWidget()
 void UPlayerWeaponStateWidget::ShowWeaponStateWidget()
 {
 	SetVisibility(ESlateVisibility::Visible);
+}
+
+void UPlayerWeaponStateWidget::SetMainWeaponImage(UTexture2D* texture)
+{
+	MainWeapon->SetBrushFromTexture(texture);
+	UE_LOG(LogTemp, Warning, TEXT("SetMainWeaponImage is Called"));
 }

@@ -9,7 +9,7 @@ FPlayerWeaponData::FPlayerWeaponData()
 	WeaponStaticMesh = nullptr;
 	WeaponSkeletalMesh = nullptr;
 	Price = 0.0f;
-	WeaponImage = nullptr;
+	StoreWeaponImage = nullptr;
 	AttackEffect = nullptr;
 	AttackHitEffect = nullptr;
 }

@@ -143,6 +143,16 @@ void UGameWidget::HidePlayerStateWidget()
 	Overlay_PlayerState->SetVisibility(ESlateVisibility::Hidden);
 }
 
+void UGameWidget::HideAllWidget()
+{
+	Overlay_All->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void UGameWidget::ShowAllWidget()
+{
+	Overlay_All->SetVisibility(ESlateVisibility::Visible);
+}
+
 void UGameWidget::InitializePlayerStateSlotWidget(UPlayerStateSlotWidget* playerSlotWidget)
 {
 	PlayerStateSlotWidget = playerSlotWidget;

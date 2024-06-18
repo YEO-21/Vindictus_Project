@@ -48,6 +48,8 @@ AGamePlayerController::AGamePlayerController()
 		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/InteractionWidget/WidgetBP_InteractionF.WidgetBP_InteractionF_C'"));
 
 
+
+
 	if (WIDGETBP_GAME.Succeeded())
 	{
 		GameWidgetClass = WIDGETBP_GAME.Class;
@@ -197,6 +199,7 @@ void AGamePlayerController::OnPossess(APawn* pawn)
 
 	// 상호작용 위젯 생성
 	InteractionWidget = CreateWidget<UUserWidget>(this, WidgetBP_InteractionKey);
+
 
 	// 생성된 위젯을 화면에 표시합니다.
 	GameWidget->AddToViewport();

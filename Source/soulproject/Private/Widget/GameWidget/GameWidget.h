@@ -15,6 +15,9 @@ class UGameWidget : public UUserWidget
 	GENERATED_BODY()
 
 private :
+	UPROPERTY(meta = (BindWidget))
+	class UOverlay* Overlay_All;
+
 	UPROPERTY()
 	class UOverlay * Overlay_Player;
 
@@ -91,6 +94,12 @@ public :
 
 	void ShowPlayerStateWidget();
 	void HidePlayerStateWidget();
+
+	UFUNCTION(BlueprintCallable)
+	void HideAllWidget();
+
+	UFUNCTION(BlueprintCallable)
+	void ShowAllWidget();
 
 	void InitializePlayerStateSlotWidget(UPlayerStateSlotWidget* playerSlotWidget);
 };

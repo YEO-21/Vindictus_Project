@@ -6,6 +6,9 @@
 #include "Blueprint/UserWidget.h"
 #include "PlayerWeaponStateWidget.generated.h"
 
+DECLARE_DELEGATE_OneParam(FUpdateTextureEventSignature, UTexture2D*)
+
+
 /**
  * 
  */
@@ -25,11 +28,20 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 	bool IsExChangeWeapon;
 
+	// 메인 무기 텍스쳐 
+	UPROPERTY()
+	UTexture2D* MainWeaponTexture;
+
+public:
+	FUpdateTextureEventSignature UpdateWeaponStateTexture;
+
 
 protected:
 	 virtual void NativeConstruct() override;
 
 public:
+	FUpdateTextureEventSignature GetWeaponStateEvent() const;
+
 	void ExchangeWeaponWidget();
 
 	UFUNCTION(BlueprintCallable)
@@ -38,6 +50,8 @@ public:
 		return IsExChangeWeapon;
 	}
 
-	 void HideWeaponStateWidget();
-	 void ShowWeaponStateWidget();
+	void HideWeaponStateWidget();
+	void ShowWeaponStateWidget();
+
+	void SetMainWeaponImage(UTexture2D* texture);
 };

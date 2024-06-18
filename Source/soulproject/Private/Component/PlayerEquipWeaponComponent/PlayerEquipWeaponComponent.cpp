@@ -1,5 +1,6 @@
 #include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
 #include "Actor/GameCharacter/GameCharacter.h"
+#include "Actor/PlayerController/GamePlayerController.h"
 
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 
@@ -7,6 +8,7 @@
 
 #include "Widget/StoreItemWidget/StoreItemWidget.h"
 #include "Widget/WeaponStoreWidget/WeaponStoreWidget.h"
+#include "Widget/PlayerWeaponStateWidget/PlayerWeaponStateWidget.h"
 
 #include "Object/LevelTransition/LevelTransitionGameInstance/LevelTransitionGameInstance.h"
 
@@ -28,7 +30,6 @@ UPlayerEquipWeaponComponent::UPlayerEquipWeaponComponent()
 		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/WeaponStoreWidget/WidgetBP_WeaponStore.WidgetBP_WeaponStore_C'"));
 
 	if (BP_WEAPON_STORE.Succeeded()) BP_WeaponStoreWidget = BP_WEAPON_STORE.Class;
-
 
 
 }
@@ -59,7 +60,9 @@ void UPlayerEquipWeaponComponent::BeginPlay()
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetOwner());
 	playerCharacter->EquippedWeaponCode = _SHARPNER;
 
+	
 
+	
 }
 
 
@@ -75,6 +78,10 @@ void UPlayerEquipWeaponComponent::EquipWeapon()
 	//TransitionToSpear();
 
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetOwner());
+
+	// Get Controller
+	AGamePlayerController* playerController =
+		Cast<AGamePlayerController>(playerCharacter->GetController());
 
 
 	InitializeEquippedWeapon(playerCharacter->EquippedWeaponCode);
@@ -121,7 +128,10 @@ void UPlayerEquipWeaponComponent::EquipWeapon()
 	playerCharacter->GetAttackNiagaraSystem()->SetNiagaraSystemAsset(
 		PlayerWeaponData->AttackEffect, PlayerWeaponData->AttackHitEffect);
 
-	
+	// 무기 상태 위젯의 이미지 설정
+	UPlayerWeaponStateWidget* playerWeaponStateWidget = playerController->GetWeaponStateWidget();
+	playerWeaponStateWidget->UpdateWeaponStateTexture.BindUObject(playerWeaponStateWidget, &UPlayerWeaponStateWidget::SetMainWeaponImage);
+
 }
 
 bool UPlayerEquipWeaponComponent::IsSpearWeapon() const
@@ -146,4 +156,6 @@ int32 UPlayerEquipWeaponComponent::CheckWeaponType()
 	else return 1;
 
 }
+
+
 

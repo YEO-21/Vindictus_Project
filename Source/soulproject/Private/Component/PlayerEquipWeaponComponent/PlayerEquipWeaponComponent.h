@@ -23,6 +23,9 @@ class UPlayerEquipWeaponComponent : public UActorComponent
 public:
 	struct FPlayerWeaponData* PlayerWeaponData;
 
+
+
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName WeaponCode;
@@ -35,6 +38,8 @@ protected:
 
 	UPROPERTY()
 	class UWeaponStoreWidget* WeaponStoreWidget;
+
+	
 
 
 
@@ -67,5 +72,7 @@ public:
 
 private:
 	int32 CheckWeaponType();
+
+	
 
 };
