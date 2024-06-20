@@ -129,8 +129,8 @@ void UPlayerEquipWeaponComponent::EquipWeapon()
 		PlayerWeaponData->AttackEffect, PlayerWeaponData->AttackHitEffect);
 
 	// 무기 상태 위젯의 이미지 설정
-	UPlayerWeaponStateWidget* playerWeaponStateWidget = playerController->GetWeaponStateWidget();
-	playerWeaponStateWidget->UpdateWeaponStateTexture.BindUObject(playerWeaponStateWidget, &UPlayerWeaponStateWidget::SetMainWeaponImage);
+	UpdateWeaponStateTexture.ExecuteIfBound(PlayerWeaponData->WidgetWeaponImage);
+
 
 }
 
@@ -140,6 +140,11 @@ bool UPlayerEquipWeaponComponent::IsSpearWeapon() const
 	FName weaponCode = playerCharacter->EquippedWeaponCode;
 
 	return (weaponCode ==_WALLDO) || (weaponCode == _NAMELESSSPEAR);
+}
+
+void UPlayerEquipWeaponComponent::InitializeUpdateWeaponImageEvent(FUpdateTextureEventSignature event)
+{
+	UpdateWeaponStateTexture = event;
 }
 
 

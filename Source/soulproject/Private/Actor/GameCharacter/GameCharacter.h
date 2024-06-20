@@ -65,11 +65,6 @@ private :
 	class UPlayerBuffControlComponent* BuffControlComponent;
 
 
-	// 추후에 삭제해야함
-	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	class USkeletalMeshComponent* SubWeaponMesh;
-
-
 	FGenericTeamId Team;
 
 	// 피해를 입었을 경우 재생시킬 애님 몽타주
@@ -266,10 +261,6 @@ public:
 		return	WeaponMesh;
 	}
 
-	FORCEINLINE USkeletalMeshComponent* GetSubWeaponMesh()
-	{
-		return	SubWeaponMesh;
-	}
 
 	FORCEINLINE USkeletalMeshComponent* GetWeaponMeshOneHanded()
 	{

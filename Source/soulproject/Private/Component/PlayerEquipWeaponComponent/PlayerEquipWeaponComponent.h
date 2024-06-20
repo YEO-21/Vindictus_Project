@@ -11,7 +11,7 @@
 #define _WALLDO				TEXT("000004")
 #define _NAMELESSSPEAR		TEXT("000005")
 
-
+DECLARE_DELEGATE_OneParam(FUpdateTextureEventSignature, UTexture2D*)
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -23,7 +23,8 @@ class UPlayerEquipWeaponComponent : public UActorComponent
 public:
 	struct FPlayerWeaponData* PlayerWeaponData;
 
-
+	// 무기 장착 시 무기 이미지 갱신 이벤트입니다.
+	FUpdateTextureEventSignature UpdateWeaponStateTexture;
 
 
 protected:
@@ -40,7 +41,6 @@ protected:
 	class UWeaponStoreWidget* WeaponStoreWidget;
 
 	
-
 
 
 
@@ -67,6 +67,7 @@ public:
 
 	bool IsSpearWeapon() const;
 	
+	void InitializeUpdateWeaponImageEvent(FUpdateTextureEventSignature event);
 
 	
 

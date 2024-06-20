@@ -69,6 +69,9 @@ public :
 	// Overlay_Additive 에 위젯을 추가합니다.
 	void FloatingWidgetAdditive(class UUserWidget* widgetInstance);
 
+	// Overlay_Weapon 에 위젯을 추가합니다.
+	void FloatingWidgetWeapon(class UUserWidget* widgetInstance);
+
 	// Overlay_Additive 에 추가된 위젯을 제거합니다.
 	void RemoveWidgetAdditive(class UUserWidget* widgetForClose);
 

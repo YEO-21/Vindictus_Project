@@ -73,7 +73,7 @@ void USupplyItemGridWidget::InitializeSupplyStoreWidget()
 
 
 		SupplyItemBuyButtonClickSignature supplyItemBuyEvent;
-		supplyItemBuyEvent.AddLambda([supplyItemData, gameCharacter, playerController]()
+		supplyItemBuyEvent.AddLambda([supplyItemData, gameCharacter, playerController, itemCode]()
 			{
 				gameCharacter->GetBuffControlComponent()->SupplyItemList.Enqueue(supplyItemData->ItemType);
 
@@ -82,10 +82,14 @@ void USupplyItemGridWidget::InitializeSupplyStoreWidget()
 				playerStateSlot->SetImageMaterial(supplyItemData->ItemType, supplyItemData->BuffImage);
 
 				playerController->GetGameWidget()->FloatingWidgetPlayerState(playerStateSlot);
+
+				// 레벨 전환용 
+				playerController->AddSupplyItemCode(itemCode);
+
 			});
 
 		supplyStoreWidget->InitializeSupplyItem(supplyItemBuyEvent);
-
+		
 		
 
 		// 행과 열을 설정합니다.

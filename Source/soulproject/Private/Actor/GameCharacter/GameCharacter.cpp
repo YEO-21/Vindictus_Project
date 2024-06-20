@@ -12,9 +12,15 @@
 #include "NiagaraSystem/AttackNiagaraSystem.h"
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 #include "Widget/GameWidget/GameWidget.h"
+#include "Widget/PlayerStateSlotWidget/PlayerStateSlotWidget.h"
+#include "Widget/PlayerWeaponStateWidget/PlayerWeaponStateWidget.h"
 #include "../../Engine/Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
 
+#include "Components/Image.h"
+
 #include "Object/LevelTransition/LevelTransitionGameInstance/LevelTransitionGameInstance.h"
+#include "Object/InteractionParam/SupplyNpcInteractParam/SupplyNpcInteractParam.h"
+
 #include "NiagaraFunctionLibrary.h"
 
 #include "Camera/CameraComponent.h"
@@ -81,9 +87,7 @@ AGameCharacter::AGameCharacter()
 	WeaponMesh =
 		CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WEAPON_MESH"));
 
-	SubWeaponMesh =
-		CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SUB_WEAPON_MESH"));
-
+	
 	WeaponMesh_Onehanded =
 		CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_WEAPON_MESH_ONEHANDED"));
 
@@ -135,7 +139,6 @@ AGameCharacter::AGameCharacter()
 	WeaponMesh->SetupAttachment(GetMesh(), TEXT("Socket_Weapon"));
 	WeaponMesh_Onehanded->SetupAttachment(GetMesh(), TEXT("Socket_Weapon_OneHanded"));
 	WeaponMesh_Spear->SetupAttachment(GetMesh(), TEXT("Socket_Spear"));
-	//SubWeaponMesh->SetupAttachment(GetMesh(), TEXT("Socket_SubWeapon"));
 
 	// 메인 무기 붙이기(샤프너)
 	if (SM_SABER.Succeeded())
@@ -144,13 +147,7 @@ AGameCharacter::AGameCharacter()
 		WeaponMesh->SetCollisionProfileName(TEXT("OverlapAll"));
 	}
 
-	// 서브 무기 붙이기(스톰 브레이커)
-	/*if (SK_AXE.Succeeded())
-	{
-		SubWeaponMesh->SetSkeletalMesh(SK_AXE.Object);
-		SubWeaponMesh->SetVisibility(false);
-		SubWeaponMesh->SetCollisionProfileName(TEXT("BlockAllDynamic"));
-	}*/
+	
 
 
 	// 플레이어 캐릭터의 팀을 설정합니다.
@@ -471,26 +468,7 @@ void AGameCharacter::OnHitFinished()
 	IsHit = false;
 }
 
-void AGameCharacter::OnWeaponChanged()
-{
-	++WeaponCount;
-	if ((WeaponCount %2) != 0)
-	{
-		// 스톰 브레이커(서브 무기) 선택
-		WeaponMesh->SetVisibility(false);
-		SubWeaponMesh->SetVisibility(true);
-		CurrentWeaponCode = WEAPON_STORMBREAKER;
-	}
-	else
-	{
-		// 샤프너(메인 무기) 선택
-		WeaponMesh->SetVisibility(true);
-		SubWeaponMesh->SetVisibility(false);
-		CurrentWeaponCode = WEAPON_SHARPNER;
-	}
 
-	
-}
 
 void AGameCharacter::PlayAttackBlockAnim()
 {
@@ -641,14 +619,19 @@ void AGameCharacter::SetLevelTransition(ULevelTransitionGameInstance* levelTrans
 
 void AGameCharacter::SetGameInstance()
 {
+	// Get PlayerController
 	AGamePlayerController* playerController = Cast<AGamePlayerController>(GetController());
 
+	// Get Widgets
+	UPlayerStateSlotWidget* playerStateSlotWidget = playerController->GetPlayerStateSlotWidget();
+	UPlayerWeaponStateWidget* weaponStateWidget = playerController->GetWeaponStateWidget();
+	
 
 	LevelTransitionGameInstance->SaveCharacterInfo(
 		CurrentHp,
-		playerController->GetCurrentStamina(),
-		EquippedWeaponCode);
-
+		weaponStateWidget->PortionCount,
+		EquippedWeaponCode,
+		playerController->LevelTransitionBuffCodes);
 
 }
 

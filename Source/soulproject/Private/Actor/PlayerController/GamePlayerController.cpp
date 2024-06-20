@@ -9,9 +9,11 @@
 #include "Widget/NpcDialogWidget/NpcDialogWidget.h"
 #include "Widget/PlayerWeaponStateWidget/PlayerWeaponStateWidget.h"
 #include "Widget/PlayerStateSlotWidget/PlayerStateSlotWidget.h"
+#include "Widget/SupplyStoreWidget/SupplyStoreWidget.h"
 #include "Structure/PlayerCharacterData/PlayerCharacterData.h"
 #include "Component/PlayerCharacterMovementComponent/PlayerCharacterMovementComponent.h"
 #include "Component/PlayerCharacterAttackComponent/PlayerCharacterAttackComponent.h"
+#include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
 
 #include "Object/CameraShake/AttackCameraShake.h"
 #include "Object/InteractionParam/SupplyNpcInteractParam/SupplyNpcInteractParam.h"
@@ -43,11 +45,12 @@ AGamePlayerController::AGamePlayerController()
 
 	static ConstructorHelpers::FClassFinder<UPlayerStateSlotWidget> WIDGETBP_PLAYERSTATE(
 		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/PlayerStateSlotWidget/WidgetBP_PlayerStateSlot.WidgetBP_PlayerStateSlot_C'"));
-
-	ConstructorHelpers::FClassFinder<UUserWidget> WIDGET_INTERACTION(
+	
+	static ConstructorHelpers::FClassFinder<UUserWidget> WIDGET_INTERACTION(
 		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/InteractionWidget/WidgetBP_InteractionF.WidgetBP_InteractionF_C'"));
 
-
+	static ConstructorHelpers::FClassFinder<USupplyStoreWidget> WIDGET_SUPPLYSTOREWIDGET(
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/SkullyStoreWidget/WidgetBP_SupplyItem.WidgetBP_SupplyItem_C'"));
 
 
 	if (WIDGETBP_GAME.Succeeded())
@@ -75,6 +78,8 @@ AGamePlayerController::AGamePlayerController()
 	if (WIDGETBP_PLAYERSTATE.Succeeded()) PlayerStateSlotWidgetClass = WIDGETBP_PLAYERSTATE.Class;
 
 	if (WIDGET_INTERACTION.Succeeded()) WidgetBP_InteractionKey = WIDGET_INTERACTION.Class;
+
+	if (WIDGET_SUPPLYSTOREWIDGET.Succeeded()) SupplyStoreWidgetClass = WIDGET_SUPPLYSTOREWIDGET.Class;
 
 	PlayerCharacterData = nullptr;
 
@@ -154,11 +159,11 @@ void AGamePlayerController::SetupInputComponent()
 	InputComponent->BindAction(TEXT("Run"), EInputEvent::IE_Released, this,
 		&ThisClass::OnRunReleased);
 
-	//InputComponent->BindAction(TEXT("WeaponChange"), EInputEvent::IE_Pressed, this,
-	//	&ThisClass::OnWeaponChangePressed);
-
 	InputComponent->BindAction(TEXT("Next"), EInputEvent::IE_Pressed, this,
 		&ThisClass::ProgressDialog);
+
+	InputComponent->BindAction(TEXT("ConsumePortion"), EInputEvent::IE_Pressed, this,
+		&ThisClass::ConsumeHpPortion);
 
 }
 
@@ -190,16 +195,20 @@ void AGamePlayerController::OnPossess(APawn* pawn)
 	// GameWidget 생성
 	GameWidget = CreateWidget<UGameWidget>(this, GameWidgetClass);
 
+	// WeaponStateWidget 생성 / GameWidget 오버레이에 추가
 	WeaponStateWidget = CreateWidget<UPlayerWeaponStateWidget>(this, WeaponStateWidgetClass);
+	GameWidget->FloatingWidgetWeapon(WeaponStateWidget);
 
 	CriticalWidget = CreateWidget<UUserWidget>(this, CriticalAttackWidget);
 	CriticalWidget->SetVisibility(ESlateVisibility::Hidden);
 
 	PlayerStateSlotWidget = CreateWidget<UPlayerStateSlotWidget>(this, PlayerStateSlotWidgetClass);
 
+	// 지원 아이템 상점 위젯 생성
+	SupplyStoreWidget = CreateWidget<USupplyStoreWidget>(this, SupplyStoreWidgetClass);
+
 	// 상호작용 위젯 생성
 	InteractionWidget = CreateWidget<UUserWidget>(this, WidgetBP_InteractionKey);
-
 
 	// 생성된 위젯을 화면에 표시합니다.
 	GameWidget->AddToViewport();
@@ -207,7 +216,8 @@ void AGamePlayerController::OnPossess(APawn* pawn)
 	// 플레이어 캐릭터 상태 위젯 초기화
 	InitializePlayerStateWidget(PlayerCharacterData->MaxHp, PlayerCharacterData->MaxStamina);
 
-
+	// 무기 상태 위젯 이미지 갱신 함수 바인딩 
+	SetWeaponStateWidgetImage();
 	
 }
 
@@ -369,12 +379,7 @@ void AGamePlayerController::OnRunReleased()
 	playerCharacter->OnRunFinished();
 }
 
-void AGamePlayerController::OnWeaponChangePressed()
-{
-	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
-	playerCharacter->OnWeaponChanged();
-	
-}
+
 
 void AGamePlayerController::ProgressDialog()
 {
@@ -401,7 +406,7 @@ void AGamePlayerController::CheckPlayerBuffState(float deltaTime)
 				float atk = gameCharacter->GetAttackComponent()->GetCurrentAtk();
 				gameCharacter->GetAttackComponent()->UpdateAtk(atk + 15.0f);
 				SupplyInteractionItems.Remove(buff);
-				
+				UE_LOG(LogTemp, Warning, TEXT("Atk Buff is fire!"));
 			}
 			break;
 			case ESupplyItemType::DefBase:
@@ -439,7 +444,22 @@ void AGamePlayerController::RecoverHp(float dt)
 	if (FMath::Abs(TargetHp - CurrentHp) == 0.0f) bIsActivateHpItem = false;
 }
 
+void AGamePlayerController::ConsumeHpPortion()
+{
+	// 포션 사용 횟수가 0 이라면 함수 호출 종료
+	if (WeaponStateWidget->PortionCount == 0) return;
 
+	// RecoverHp()를 호출 하기 위한 변수 설정
+	TargetHp = CurrentHp + 30.0f;
+	if (TargetHp > PlayerCharacterData->MaxHp) TargetHp = PlayerCharacterData->MaxHp;
+	bIsActivateHpItem = true;
+
+	// 포션 사용 횟수 감소
+	WeaponStateWidget->ReducePortionCount();
+
+	UE_LOG(LogTemp, Warning, TEXT("ConsumeHp"));
+
+}
 
 UGameWidget* AGamePlayerController::GetGameWidget() const
 {
@@ -461,7 +481,10 @@ UUserWidget* AGamePlayerController::GetInteractionWidget() const
 	return InteractionWidget;
 }
 
-
+USupplyStoreWidget* AGamePlayerController::GetSupplyStoreWidget() const
+{
+	return SupplyStoreWidget;
+}
 
 void AGamePlayerController::SetCameraViewTarget(AActor* target)
 {
@@ -574,6 +597,21 @@ void AGamePlayerController::PlayerDead()
 		// 사망 시 게임 오버 위젯 표시 
 		GameWidget->ShowDeadWidget();
 	}
+}
+
+void AGamePlayerController::SetWeaponStateWidgetImage()
+{
+	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
+	UPlayerEquipWeaponComponent* weaponComponent = playerCharacter->GetEquipWeaponComponent();
+
+	FUpdateTextureEventSignature UpdateWeaponStateWidgetEvent;
+	UpdateWeaponStateWidgetEvent.BindUObject(WeaponStateWidget, &UPlayerWeaponStateWidget::SetMainWeaponImage);
+	weaponComponent->InitializeUpdateWeaponImageEvent(UpdateWeaponStateWidgetEvent);
+}
+
+void AGamePlayerController::AddSupplyItemCode(FName itemCode)
+{
+	LevelTransitionBuffCodes.Add(itemCode);
 }
 
 

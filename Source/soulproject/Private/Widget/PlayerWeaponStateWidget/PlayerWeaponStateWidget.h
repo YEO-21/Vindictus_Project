@@ -6,8 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "PlayerWeaponStateWidget.generated.h"
 
-DECLARE_DELEGATE_OneParam(FUpdateTextureEventSignature, UTexture2D*)
-
+#define PORTION_COUNT       3
 
 /**
  * 
@@ -23,35 +22,28 @@ protected:
 	class UImage* MainWeapon;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* SubWeapon;
+	class UTextBlock* TextBlock_PortionCount;
 
-	UPROPERTY(BlueprintReadWrite)
-	bool IsExChangeWeapon;
-
-	// 메인 무기 텍스쳐 
-	UPROPERTY()
-	UTexture2D* MainWeaponTexture;
+	UPROPERTY(Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* ConsumeHp;
 
 public:
-	FUpdateTextureEventSignature UpdateWeaponStateTexture;
+	int32 PortionCount;
 
 
 protected:
 	 virtual void NativeConstruct() override;
 
 public:
-	FUpdateTextureEventSignature GetWeaponStateEvent() const;
-
-	void ExchangeWeaponWidget();
-
-	UFUNCTION(BlueprintCallable)
-	 bool GetExChangeWeaponState() const
-	{
-		return IsExChangeWeapon;
-	}
-
 	void HideWeaponStateWidget();
 	void ShowWeaponStateWidget();
 
 	void SetMainWeaponImage(UTexture2D* texture);
+
+	void ReducePortionCount();
+
+	void SetPortionCount(int32 count);
+
+
+	
 };

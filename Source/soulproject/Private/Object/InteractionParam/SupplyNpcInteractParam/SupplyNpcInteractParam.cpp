@@ -3,7 +3,4 @@
 
 #include "Object/InteractionParam/SupplyNpcInteractParam/SupplyNpcInteractParam.h"
 
-void USupplyNpcInteractParam::SetPlayerStateSlotMaterial(USupplyNpcInteractParam* supplyParam)
-{
 
-}
