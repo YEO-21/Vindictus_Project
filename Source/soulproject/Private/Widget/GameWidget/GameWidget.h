@@ -29,13 +29,22 @@ private :
 
 	UPROPERTY(meta = (BindWidget))
 	class UOverlay* Overlay_PlayerState;
-	
 
 	UPROPERTY()
 	class UTextBlock* TextBlock_Dead;
 
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* TextBlock_Critical;
+
+
+	// 데드씬 애니메이션
 	UPROPERTY(Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* TextBlock_Dead_Animation;
+
+	// 크리티컬 공격 성공 시 재생될 애니메이션입니다.
+	UPROPERTY(Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* CriticalAttack;
+
 
 	// 상태 위젯을 나타냅니다.
 	UPROPERTY()
@@ -103,6 +112,9 @@ public :
 
 	UFUNCTION(BlueprintCallable)
 	void ShowAllWidget();
+
+	// 크리티컬 공격 성공 시 호출될 함수입니다.
+	void ShowCriticalAttackWidget();
 
 	void InitializePlayerStateSlotWidget(UPlayerStateSlotWidget* playerSlotWidget);
 };

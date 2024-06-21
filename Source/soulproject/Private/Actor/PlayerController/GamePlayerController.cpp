@@ -429,6 +429,7 @@ void AGamePlayerController::CheckPlayerBuffState(float deltaTime)
 			case ESupplyItemType::CriticalBase:
 			{
 				// 치명타 확률을 +20% 증가시킵니다.
+				gameCharacter->GetAttackComponent()->SetCriticalAttackPercentage(CRITICAL_ATTACK + 20);
 				UE_LOG(LogTemp, Warning, TEXT("CriticalAttack"));
 				SupplyInteractionItems.Remove(buff);
 			}

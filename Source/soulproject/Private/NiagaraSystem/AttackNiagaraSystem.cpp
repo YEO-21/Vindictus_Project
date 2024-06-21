@@ -21,9 +21,9 @@ UAttackNiagaraSystem::UAttackNiagaraSystem()
 	HitNiagaraComponent = 
 		CreateDefaultSubobject<UNiagaraComponent>(TEXT("HitNiagaraComponent"));
 
-	NiagaraSystemScript =
-		CreateDefaultSubobject<UNiagaraScript>(TEXT("NiaraScript"));
-
+	// 나이아가라 치명타 컴포넌트 추가
+	CriticalAttackNiagaraComponent =
+		CreateDefaultSubobject<UNiagaraComponent>(TEXT("CriticalAttackNiagaraComponent"));
 
 	
 	NiagaraComponent->ActivateSystem();
@@ -37,16 +37,22 @@ UAttackNiagaraSystem::UAttackNiagaraSystem()
 	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NS_ATTACKHIT(
 		TEXT("/Script/Niagara.NiagaraSystem'/Game/Hack_And_Slash_FX/VFX_Niagara/Impacts/NS_Lightning_Slash_Impact.NS_Lightning_Slash_Impact'"));
 
+	// 치명타 나이아가라 시스템 에셋 설정
+	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NS_CRITICALATTACK(
+		TEXT("/Script/Niagara.NiagaraSystem'/Game/Hack_And_Slash_FX/VFX_Niagara/Slashes/NS_Claws_Floor.NS_Claws_Floor'"));
+
 	if (NS_ATTACK.Succeeded())
 		NiagaraComponent->SetAsset(NS_ATTACK.Object);
 
 	if (NS_ATTACKHIT.Succeeded())
 		HitNiagaraComponent->SetAsset(NS_ATTACKHIT.Object);
 
-
+	if (NS_CRITICALATTACK.Succeeded())
+		CriticalAttackNiagaraComponent->SetAsset(NS_CRITICALATTACK.Object);
 
 	// 나이아가라 시스템 크기 설정
 	NiagaraComponent->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
+	CriticalAttackNiagaraComponent->SetRelativeScale3D(FVector(0.5f, 0.5f, 0.5f));
 
 	// 나이아가라 시스템 자동 활성화 on
 	NiagaraComponent->bAutoActivate = true;
@@ -82,6 +88,15 @@ void UAttackNiagaraSystem::SetNiagaraSystemLocation(FVector playerlocation, FVec
 	// 나이아가라 시스템 월드 위치 설정
 	NiagaraComponent->SetWorldLocation(playerlocation);
 	HitNiagaraComponent->SetWorldLocation(hitLocation);
+}
+
+void UAttackNiagaraSystem::SetCriticalNiagaraSystemLocation(FVector hitLocation)
+{
+	CriticalAttackNiagaraComponent->ActivateSystem();
+	CriticalAttackNiagaraComponent->Activate();
+
+	CriticalAttackNiagaraComponent->SetWorldLocation(hitLocation);
+
 }
 
 void UAttackNiagaraSystem::SetNiagaraSystemAsset(UNiagaraSystem* effect, UNiagaraSystem* hiteffect)

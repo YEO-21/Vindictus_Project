@@ -156,6 +156,8 @@ AGameCharacter::AGameCharacter()
 	// 피해 이벤트 설정
 	OnTakeAnyDamage.AddDynamic(this, &ThisClass::OnDamaged);
 
+
+
 }
 
 // Called when the game starts or when spawned
@@ -210,6 +212,7 @@ void AGameCharacter::BeginPlay()
 	PlayerCharacterAnimController->onRollAnimFinished.BindUObject(
 		PlayerCharacterMovementComponent, &UPlayerCharacterMovementComponent::OnRollFinished);
 
+
 	
 	UpdateGameInstance();
 }
@@ -221,6 +224,9 @@ void AGameCharacter::Tick(float DeltaTime)
 
 	// 무기 소켓 위치 갱신
 	UpdateWeaponSocket();
+
+	// 스프링암 길이에 따른 위치 갱신
+	//CheckSpringArm(DeltaTime);
 
 	if (IsDead) Respawn(StartLocation, TIMETOWAITRESPAWN);
 
@@ -628,10 +634,12 @@ void AGameCharacter::SetGameInstance()
 	
 
 	LevelTransitionGameInstance->SaveCharacterInfo(
-		CurrentHp,
+		playerController->GetCurrentHp(),
 		weaponStateWidget->PortionCount,
 		EquippedWeaponCode,
 		playerController->LevelTransitionBuffCodes);
+
+	UE_LOG(LogTemp, Warning, TEXT("LevelTransitionBuffCodes's Num() = %d"), playerController->LevelTransitionBuffCodes.Num());
 
 }
 
@@ -647,5 +655,46 @@ void AGameCharacter::PlayRagdoll()
 	GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
 
 }
+
+void AGameCharacter::CheckSpringArm(float deltaTime)
+{
+	FVector camearaLocation = CameraComponent->GetComponentLocation();
+	
+	float distance = FVector::Distance(GetActorLocation(), camearaLocation);
+
+	//UE_LOG(LogTemp, Warning, TEXT("distance = %.2f"), distance);
+
+	if (distance < MIN_CAMERA_DISTANCE && !isCameraSettingReChanged)
+	{
+		// 카메라와의 거리가 가까운 경우 FOV 값 재설정
+		CurrentFOV = CameraComponent->FieldOfView;
+		TargetFOV = MAX_FOV;
+
+		if(CurrentFOV != TargetFOV) CurrentFOV += 1.0f;
+
+		CameraComponent->SetFieldOfView(CurrentFOV);
+
+		if(CurrentFOV == TargetFOV)
+		isCameraSettingReChanged = true;
+	}
+	else if (distance >= MIN_CAMERA_DISTANCE && isCameraSettingReChanged)
+	{
+		// 카메라와의 거리가 정상적으로 유지되는 경우 기존의 FOV로 설정
+		CurrentFOV = CameraComponent->FieldOfView;
+		TargetFOV = STANDARD_FOV;
+
+		if (CurrentFOV != TargetFOV) CurrentFOV -= 1.0f;
+
+		CameraComponent->SetFieldOfView(CurrentFOV);
+
+		UE_LOG(LogTemp, Warning, TEXT("CurrentFOV = %.2f"), CurrentFOV);
+
+		if (CurrentFOV == TargetFOV)
+		isCameraSettingReChanged = false;
+	}
+	
+}
+
+
 
 

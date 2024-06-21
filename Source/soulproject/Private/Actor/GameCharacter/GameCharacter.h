@@ -13,6 +13,13 @@
 #define WEAPON_STORMBREAKER		TEXT("AxeAttack")
 #define WEAPON_SPEAR			TEXT("SpearAttack")
 
+// 카메라 세팅 값
+#define MIN_CAMERA_DISTANCE		100.0f
+#define STANDARD_FOV			90.0f
+#define MAX_FOV					140.f
+
+
+
 
 UCLASS()
 class AGameCharacter : public ACharacter, 
@@ -95,6 +102,7 @@ private :
 	UPROPERTY()
 	float PlayerDeadTime;
 
+	UPROPERTY()
 	float CurrentHp;
 
 	// 카메라 시작 위치
@@ -105,9 +113,22 @@ private :
 	UPROPERTY()
 	FRotator CameraStartRotation;
 
-	
+	// 카메라 세팅이 변경이 되었는지를 나타냅니다.
+	UPROPERTY()
+	bool isCameraSettingReChanged;
+
+	// 목표 카메라 FOV 를 나타내기 위한 변수입니다.
+	UPROPERTY()
+	float TargetFOV;
+
+	// 현재 FOV 값을 나타냅니다.
+	UPROPERTY()
+	float CurrentFOV;
+
+
 	// 공격 애니메이션 재생용 현재 무기 코드입니다.
 	FName CurrentWeaponCode;
+
 
 public:
 	// 장착된 무기 코드
@@ -151,7 +172,10 @@ private :
 	void SetPlayerRespawn();
 
 	void UpdateWeaponSocket();
-	
+
+	// 스프링암 컴포넌트 타깃암 길이가 작을 경우 호출되는 함수입니다.
+	void CheckSpringArm(float deltaTime);
+
 
 public:	
 	virtual void SetupPlayerInputComponent(
@@ -313,5 +337,7 @@ public:
 
 	void PlayRagdoll();
 
-	
+
+
+
 };

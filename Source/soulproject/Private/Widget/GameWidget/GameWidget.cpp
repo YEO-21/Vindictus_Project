@@ -165,6 +165,13 @@ void UGameWidget::ShowAllWidget()
 	Overlay_All->SetVisibility(ESlateVisibility::Visible);
 }
 
+void UGameWidget::ShowCriticalAttackWidget()
+{
+	TextBlock_Critical->SetVisibility(ESlateVisibility::Visible);
+
+	PlayAnimation(CriticalAttack);
+}
+
 void UGameWidget::InitializePlayerStateSlotWidget(UPlayerStateSlotWidget* playerSlotWidget)
 {
 	PlayerStateSlotWidget = playerSlotWidget;

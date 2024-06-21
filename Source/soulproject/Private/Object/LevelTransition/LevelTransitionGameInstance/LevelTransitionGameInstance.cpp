@@ -43,8 +43,11 @@ void ULevelTransitionGameInstance::UpdateCharacterInfo(ACharacter* playerCharact
 	player->GetEquipWeaponComponent()->EquipWeapon();
 	player->isInteractable = false;
 
+
+	
 	// 포션 횟수 로드
 	playerController->GetWeaponStateWidget()->SetPortionCount(PortionCount);
+
 
 
 	// 버프 이미지 로드
@@ -89,6 +92,7 @@ void ULevelTransitionGameInstance::SetBuffImage(ACharacter* playerCharacter)
 		
 		// 버프 효과 로드
 		player->GetBuffControlComponent()->CheckCurrentBuff(supplyData->ItemType);
+
 	}
 
 

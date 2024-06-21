@@ -16,7 +16,8 @@
 #define WEAPON_SOCKET_START		TEXT("Socket_WeaponStart")
 #define WEAPON_SOCKET_END		TEXT("Socket_WeaponEnd")
 
-
+// 초기 치명타 확률
+#define CRITICAL_ATTACK			20
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -88,6 +89,13 @@ private :
 	// 공격을 가한 위치
 	FVector AttackLocation;
 
+	// 치명타 확률을 나타냅니다.
+	int32 CriticalAttackPercentage;
+
+	// 치명타 공격임을 나타냅니다.
+	UPROPERTY()
+	bool IsCriticalAttack;
+
 public:
 	class AEnemyCharacter* enemyCharacter;
 
@@ -115,6 +123,8 @@ private :
 	// 창 무기로 공격을 하는지 확인합니다.
 	void CheckSpearAttack();
 
+	// 치명타 공격을 연산합니다.
+	void ApplyCriticalAttack();
 
 
 public :
@@ -152,6 +162,9 @@ public :
 
 	// 방어 끝
 	void OnBlockFinished();
+
+	// 치명타 확률 설정
+	void SetCriticalAttackPercentage(int32 percent);
 
 	FAttackData* GetAttackData();
 

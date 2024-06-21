@@ -5,7 +5,8 @@
 #include "../../Structure/AttackData/AttackData.h"
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 #include "Object/CameraShake/AttackCameraShake.h"
-//#include "NiagaraSystem/AttackNiagaraSystem.h"
+
+#include "Widget/GameWidget/GameWidget.h"
 
 #include "Components/StaticMeshComponent.h"
 #include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
@@ -31,8 +32,9 @@ UPlayerCharacterAttackComponent::UPlayerCharacterAttackComponent()
 
 	IsAttacking = false;
 
-
 	IsAttackAreaEnabled = false;
+
+	CriticalAttackPercentage = CRITICAL_ATTACK;
 }
 
 void UPlayerCharacterAttackComponent::BeginPlay()
@@ -65,17 +67,13 @@ void UPlayerCharacterAttackComponent::AttackProcedure()
 	// 요청된 공격을 얻습니다.
 	FAttackData* requestedAttack;
 	RequestAttackQueue.Dequeue(requestedAttack);
-	//CurrentAttackData = GetAttackData();
-	//RequestAttackQueue.Dequeue(CurrentAttackData);
 
 	AttackDetectedActors.Empty();
 	AttackDetectedEnemies.Empty();
 
 
 	// 현재 공격을 요청된 공격으로 설정합니다.
-	//requestedAttack = GetAttackData();
 	CurrentAttackData = GetAttackData();
-	UE_LOG(LogTemp, Warning, TEXT("CurrentAttackData AttackDamage = %.2f"), CurrentAttackData->AttackDamage);
 	ApplyDamage = CurrentAttackData->AttackDamage;
 	IsAttacking = true;
 
@@ -114,18 +112,13 @@ void UPlayerCharacterAttackComponent::AttackProcedure()
 	{
 		// 공격을 시작합니다.
 		PlayerCharacter->PlayAnimMontage(CurrentAttackData->UseAnimMontage);
-		UE_LOG(LogTemp, Warning, TEXT("Atk is %.2f"), CurrentAttackData->AttackDamage);
 	}
 }
 
 void UPlayerCharacterAttackComponent::CheckAttackArea()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("IsAttackAreaEnabled = %d"), IsAttackAreaEnabled);
-
 	// 공격중이 아닌 경우 함수 호출 종료.
 	if (!IsAttackAreaEnabled) return;
-
-
 
 	float radius = 10.0f;
 
@@ -161,7 +154,8 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 
 				AttackDetectedEnemies.Add(enemyCharacter);
 
-
+				// 치명타 공격인지 확인합니다.
+				ApplyCriticalAttack();
 
 				// 공격을 가한 위치를 저장합니다.
 				AttackLocation = hit.Location;
@@ -180,9 +174,20 @@ void UPlayerCharacterAttackComponent::CheckAttackArea()
 				playerCharacter->GetAttackNiagaraSystem()->ActivateNiagaraSystem();
 				playerCharacter->GetAttackNiagaraSystem()->SetNiagaraSystemLocation(playerCharacter->GetActorLocation(), AttackLocation);
 
+				if (IsCriticalAttack)
+				{
+					// 치명타 나이아가라 시스템 적용
+					playerCharacter->GetAttackNiagaraSystem()->SetCriticalNiagaraSystemLocation(AttackLocation);
+
+					// 치명타 위젯 적용
+					playerController->GetGameWidget()->ShowCriticalAttackWidget();
+
+				}
 
 				// 적에게 가할 피해량 계산
-				float damage = (Atk * 0.5f) + ApplyDamage;
+				float damage = IsCriticalAttack ? 
+					((Atk * 2.0f) + ApplyDamage) :
+					(Atk * 0.5f) + ApplyDamage;
 
 				UGameplayStatics::ApplyDamage(
 					enemyCharacter,
@@ -231,6 +236,16 @@ void UPlayerCharacterAttackComponent::CheckSpearAttack()
 
 }
 
+void UPlayerCharacterAttackComponent::ApplyCriticalAttack()
+{
+	// 1 ~ 100 중 랜덤한 정수값을 얻습니다.
+	int32 randomNumber = FMath::RandRange(1, 100);
+	UE_LOG(LogTemp, Warning, TEXT("CriticalAttackPercentage = %d"), CriticalAttackPercentage);
+
+	IsCriticalAttack = (randomNumber <= CriticalAttackPercentage);
+
+}
+
 
 
 void UPlayerCharacterAttackComponent::UpdateAtk(float atk)
@@ -250,9 +265,6 @@ void UPlayerCharacterAttackComponent::UpdateSkeletalWeaponSocketLocation(USkelet
 	CurrentStartSocketLocation = weaponMesh->GetSocketTransform(WEAPON_SOCKET_START).GetLocation();
 	CurrentEndSocketLocation = weaponMesh->GetSocketTransform(WEAPON_SOCKET_END).GetLocation();
 
-	//UE_LOG(LogTemp, Warning, TEXT("CurrentStartSocketLocation.X = %.2f"), CurrentStartSocketLocation.X);
-	//UE_LOG(LogTemp, Warning, TEXT("CurrentStartSocketLocation.Y = %.2f"), CurrentStartSocketLocation.Y);
-	//UE_LOG(LogTemp, Warning, TEXT("CurrentStartSocketLocation.Z = %.2f"), CurrentStartSocketLocation.Z);
 }
 
 void UPlayerCharacterAttackComponent::ClearCurrentAttack()
@@ -278,7 +290,7 @@ void UPlayerCharacterAttackComponent::CancelAttackState()
 	// 공격 상태 비활성화
 	IsAttacking = false;
 
-	// 공격 데이터 비위기
+	// 공격 데이터 비우기
 	CurrentAttackData = nullptr;
 	PrevAttackData = nullptr;
 
@@ -360,6 +372,11 @@ void UPlayerCharacterAttackComponent::OnBlockFinished()
 	IsBlocking = false;
 }
 
+void UPlayerCharacterAttackComponent::SetCriticalAttackPercentage(int32 percent)
+{
+	CriticalAttackPercentage = percent;
+}
+
 FAttackData* UPlayerCharacterAttackComponent::GetAttackData()
 {
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetOwner());
@@ -376,7 +393,6 @@ FAttackData* UPlayerCharacterAttackComponent::GetAttackData()
 
 	requestedAttack = DT_AttackData->FindRow<FAttackData>(AttackCode, contextstring);
 
-	//UE_LOG(LogTemp, Warning, TEXT("requestedAttack AttackDamage = %.2f"), requestedAttack->AttackDamage);
 
 	return requestedAttack;
 }
