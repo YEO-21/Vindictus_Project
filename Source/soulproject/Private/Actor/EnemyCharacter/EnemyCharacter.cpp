@@ -271,13 +271,19 @@ void AEnemyCharacter::OnDead()
 	// 사망 시 메터리얼 상태 적용
 	//ChangeMaterialToDeadState();
 
+	// 드래곤을 제외한 적 캐릭터는 15초 후 리스폰 하고, 랙돌을 적용합니다.
+	if (!(EnemyCode == TEXT("000004")))
+	{
+		// 리스폰 타이머 설정(5s)
+		GetWorldTimerManager().ClearTimer(RespawnTimerHandle);
+		GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ThisClass::EnemyRespawn, 15.0f, false);
 
-	// 리스폰 타이머 설정(5s)
-	GetWorldTimerManager().ClearTimer(RespawnTimerHandle);
-	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ThisClass::EnemyRespawn, 8.0f, false);
+		// 랙돌 적용
+		PlayRagdoll();
+	}
+	
 
-	// 랙돌 적용
-	if (!(EnemyCode == TEXT("000004")))PlayRagdoll();
+	
 }
 
 void AEnemyCharacter::OnEnemyDestroy()

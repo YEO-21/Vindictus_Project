@@ -19,6 +19,10 @@ private :
 
 	UPROPERTY()
 	bool IsRushAttack;
+	
+	// 드래곤의 공격 영역 체크 활성화 여부
+	UPROPERTY()
+	bool bIsAttackCheckEnabled;
 
 
 public:	
@@ -55,5 +59,8 @@ public:
 	{
 		return IsRushAttack;
 	}
+
+private:
+	void CheckAttackArea();
 		
 };

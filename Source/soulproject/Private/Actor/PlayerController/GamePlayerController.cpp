@@ -17,6 +17,7 @@
 
 #include "Object/CameraShake/AttackCameraShake.h"
 #include "Object/InteractionParam/SupplyNpcInteractParam/SupplyNpcInteractParam.h"
+#include "Object/LevelTransition/LevelTransitionGameInstance/LevelTransitionGameInstance.h"
 
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -612,7 +613,10 @@ void AGamePlayerController::SetWeaponStateWidgetImage()
 
 void AGamePlayerController::AddSupplyItemCode(FName itemCode)
 {
-	LevelTransitionBuffCodes.Add(itemCode);
+	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
+	playerCharacter->LevelTransitionGameInstance->BuffCodes.Add(itemCode);
+
+	//LevelTransitionBuffCodes.Add(itemCode);
 }
 
 

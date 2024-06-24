@@ -22,6 +22,7 @@
 #include "Object/InteractionParam/SupplyNpcInteractParam/SupplyNpcInteractParam.h"
 
 #include "NiagaraFunctionLibrary.h"
+#include "TimerManager.h"
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -156,7 +157,9 @@ AGameCharacter::AGameCharacter()
 	// 피해 이벤트 설정
 	OnTakeAnyDamage.AddDynamic(this, &ThisClass::OnDamaged);
 
+	
 
+	
 
 }
 
@@ -215,6 +218,10 @@ void AGameCharacter::BeginPlay()
 
 	
 	UpdateGameInstance();
+
+	// 3초 마다 스프링암과 캐릭터 사이의 거리를 확인하여 스프링암 컴포넌트 위치 재설정
+	GetWorldTimerManager().SetTimer(CheckSpringArmLocation, this, &AGameCharacter::CheckSpringArm, 3.0f, true);
+
 }
 
 // Called every frame
@@ -225,8 +232,9 @@ void AGameCharacter::Tick(float DeltaTime)
 	// 무기 소켓 위치 갱신
 	UpdateWeaponSocket();
 
-	// 스프링암 길이에 따른 위치 갱신
-	//CheckSpringArm(DeltaTime);
+	// 스프링암 컴포넌트 위치 설정
+	SetSpringArmLocation(DeltaTime);
+
 
 	if (IsDead) Respawn(StartLocation, TIMETOWAITRESPAWN);
 
@@ -503,12 +511,6 @@ void AGameCharacter::DeadBounce()
 
 	// 사망 시 넉백
 	Knockback(forwardVector, 100000.0f);
-	UE_LOG(LogTemp, Warning, TEXT("StartLocation.X = %.2f"), StartLocation.X);
-	UE_LOG(LogTemp, Warning, TEXT("StartLocation.Y = %.2f"), StartLocation.Y);
-	UE_LOG(LogTemp, Warning, TEXT("StartLocation.Z = %.2f"), StartLocation.Z);
-
-	
-
 }
 
 
@@ -636,10 +638,9 @@ void AGameCharacter::SetGameInstance()
 	LevelTransitionGameInstance->SaveCharacterInfo(
 		playerController->GetCurrentHp(),
 		weaponStateWidget->PortionCount,
-		EquippedWeaponCode,
-		playerController->LevelTransitionBuffCodes);
+		EquippedWeaponCode
+		);
 
-	UE_LOG(LogTemp, Warning, TEXT("LevelTransitionBuffCodes's Num() = %d"), playerController->LevelTransitionBuffCodes.Num());
 
 }
 
@@ -656,43 +657,53 @@ void AGameCharacter::PlayRagdoll()
 
 }
 
-void AGameCharacter::CheckSpringArm(float deltaTime)
+void AGameCharacter::CheckSpringArm()
 {
 	FVector camearaLocation = CameraComponent->GetComponentLocation();
 	
-	float distance = FVector::Distance(GetActorLocation(), camearaLocation);
+	Distance = FVector::Distance(GetActorLocation(), camearaLocation);
+}
 
-	//UE_LOG(LogTemp, Warning, TEXT("distance = %.2f"), distance);
+void AGameCharacter::SetSpringArmLocation(float DeltaTime)
+{
 
-	if (distance < MIN_CAMERA_DISTANCE && !isCameraSettingReChanged)
+
+	if (Distance < MIN_CAMERA_DISTANCE)
 	{
-		// 카메라와의 거리가 가까운 경우 FOV 값 재설정
-		CurrentFOV = CameraComponent->FieldOfView;
-		TargetFOV = MAX_FOV;
+		// 카메라와의 거리가 스프링암 컴포넌트 위치 캐릭터 위로 설정
+		TargetSpringArmLocationZ = 80.0f;
 
-		if(CurrentFOV != TargetFOV) CurrentFOV += 1.0f;
+		CurrentSpringArmLocationZ = SpringArmComponent->GetRelativeLocation().Z;
 
-		CameraComponent->SetFieldOfView(CurrentFOV);
+		CurrentSpringArmLocationZ = FMath::FInterpTo(CurrentSpringArmLocationZ, TargetSpringArmLocationZ, DeltaTime, 1.0f);
 
-		if(CurrentFOV == TargetFOV)
-		isCameraSettingReChanged = true;
+
+		if (FMath::Abs(TargetSpringArmLocationZ - CurrentSpringArmLocationZ) <= 0.1f)
+		{
+			CurrentSpringArmLocationZ = TargetSpringArmLocationZ;
+		}
+
+		SpringArmComponent->SetRelativeLocation(FVector::UpVector * CurrentSpringArmLocationZ);
+
 	}
-	else if (distance >= MIN_CAMERA_DISTANCE && isCameraSettingReChanged)
+	else
 	{
-		// 카메라와의 거리가 정상적으로 유지되는 경우 기존의 FOV로 설정
-		CurrentFOV = CameraComponent->FieldOfView;
-		TargetFOV = STANDARD_FOV;
+		// 카메라와의 거리가 정상적으로 유지되는 경우 기존 스프링암 컴포넌트 위치로 재설정
+		TargetSpringArmLocationZ = 0.0f;
 
-		if (CurrentFOV != TargetFOV) CurrentFOV -= 1.0f;
+		CurrentSpringArmLocationZ = SpringArmComponent->GetRelativeLocation().Z;
 
-		CameraComponent->SetFieldOfView(CurrentFOV);
 
-		UE_LOG(LogTemp, Warning, TEXT("CurrentFOV = %.2f"), CurrentFOV);
+		CurrentSpringArmLocationZ = FMath::FInterpTo(CurrentSpringArmLocationZ, TargetSpringArmLocationZ, DeltaTime, 1.0f);
 
-		if (CurrentFOV == TargetFOV)
-		isCameraSettingReChanged = false;
+		if (FMath::Abs(TargetSpringArmLocationZ - CurrentSpringArmLocationZ) <= 0.1f)
+		{
+			CurrentSpringArmLocationZ = TargetSpringArmLocationZ;
+		}
+
+		SpringArmComponent->SetRelativeLocation(FVector::UpVector * CurrentSpringArmLocationZ);
+
 	}
-	
 }
 
 

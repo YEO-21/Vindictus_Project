@@ -14,11 +14,7 @@
 #define WEAPON_SPEAR			TEXT("SpearAttack")
 
 // 카메라 세팅 값
-#define MIN_CAMERA_DISTANCE		100.0f
-#define STANDARD_FOV			90.0f
-#define MAX_FOV					140.f
-
-
+#define MIN_CAMERA_DISTANCE		200.0f
 
 
 UCLASS()
@@ -117,13 +113,18 @@ private :
 	UPROPERTY()
 	bool isCameraSettingReChanged;
 
-	// 목표 카메라 FOV 를 나타내기 위한 변수입니다.
 	UPROPERTY()
-	float TargetFOV;
+	float TargetSpringArmLocationZ;
 
-	// 현재 FOV 값을 나타냅니다.
 	UPROPERTY()
-	float CurrentFOV;
+	float CurrentSpringArmLocationZ;
+
+	// 스프링암 위치에 따른 거리르 계산하기 위한 타이머핸들입니다.
+	FTimerHandle CheckSpringArmLocation;
+
+	// 스프링암 컴포넌트와 캐릭터 사이의 거리를 나타냅니다.
+	UPROPERTY()
+	float Distance;
 
 
 	// 공격 애니메이션 재생용 현재 무기 코드입니다.
@@ -174,7 +175,9 @@ private :
 	void UpdateWeaponSocket();
 
 	// 스프링암 컴포넌트 타깃암 길이가 작을 경우 호출되는 함수입니다.
-	void CheckSpringArm(float deltaTime);
+	void CheckSpringArm();
+
+	void SetSpringArmLocation(float DeltaTime);
 
 
 public:	

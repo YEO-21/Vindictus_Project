@@ -29,6 +29,9 @@ void UDragonCharacterAttackComponent::TickComponent(float DeltaTime, ELevelTick 
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	// 드래곤의 공격을 감지합니다.
+	if (bIsAttackCheckEnabled) CheckAttackArea();
+
 	// ...
 }
 
@@ -60,5 +63,9 @@ void UDragonCharacterAttackComponent::StartRushAttack()
 void UDragonCharacterAttackComponent::FinishRushAttack()
 {
 	IsRushAttack = false;
+}
+
+void UDragonCharacterAttackComponent::CheckAttackArea()
+{
 }
 

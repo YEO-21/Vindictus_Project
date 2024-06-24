@@ -36,7 +36,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void SaveCharacterInfo(float hp, int32 remainPortionCount, FName WeaponCode, TArray<FName> itemcodes);
+	void SaveCharacterInfo(float hp, int32 remainPortionCount, FName WeaponCode);
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateCharacterInfo(class ACharacter* playerCharacter);

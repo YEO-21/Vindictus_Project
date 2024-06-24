@@ -81,3 +81,9 @@ void UDragonCharacterAnimInstance::AnimNotify_OnRushAttackFinished()
 {
 	OnRushAttackFinished.Broadcast();
 }
+
+void UDragonCharacterAnimInstance::SetDragonDeadState(bool isDead)
+{
+	bIsDead = isDead;
+
+}

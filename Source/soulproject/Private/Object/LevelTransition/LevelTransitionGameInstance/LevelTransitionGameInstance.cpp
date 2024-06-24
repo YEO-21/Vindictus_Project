@@ -21,12 +21,12 @@
 
 
 void ULevelTransitionGameInstance::SaveCharacterInfo(
-	float hp, int32 remainPortionCount, FName equippedWeaponCode, TArray<FName> itemCodes)
+	float hp, int32 remainPortionCount, FName equippedWeaponCode)
 {
 	CurrentHp = hp;
 	PortionCount = remainPortionCount;
 	EquippedWeaponCode = equippedWeaponCode;
-	BuffCodes = itemCodes;
+	//BuffCodes = itemCodes;
 }
 
 void ULevelTransitionGameInstance::UpdateCharacterInfo(ACharacter* playerCharacter)
