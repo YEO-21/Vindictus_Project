@@ -9,12 +9,15 @@
 #include "Widget/NpcDialogWidget/NpcDialogWidget.h"
 #include "Widget/PlayerWeaponStateWidget/PlayerWeaponStateWidget.h"
 #include "Widget/PlayerStateSlotWidget/PlayerStateSlotWidget.h"
+#include "Widget/SupplyStoreWidget/SupplyStoreWidget.h"
 #include "Structure/PlayerCharacterData/PlayerCharacterData.h"
 #include "Component/PlayerCharacterMovementComponent/PlayerCharacterMovementComponent.h"
 #include "Component/PlayerCharacterAttackComponent/PlayerCharacterAttackComponent.h"
+#include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
 
 #include "Object/CameraShake/AttackCameraShake.h"
 #include "Object/InteractionParam/SupplyNpcInteractParam/SupplyNpcInteractParam.h"
+#include "Object/LevelTransition/LevelTransitionGameInstance/LevelTransitionGameInstance.h"
 
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -43,7 +46,12 @@ AGamePlayerController::AGamePlayerController()
 
 	static ConstructorHelpers::FClassFinder<UPlayerStateSlotWidget> WIDGETBP_PLAYERSTATE(
 		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/PlayerStateSlotWidget/WidgetBP_PlayerStateSlot.WidgetBP_PlayerStateSlot_C'"));
+	
+	static ConstructorHelpers::FClassFinder<UUserWidget> WIDGET_INTERACTION(
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/InteractionWidget/WidgetBP_InteractionF.WidgetBP_InteractionF_C'"));
 
+	static ConstructorHelpers::FClassFinder<USupplyStoreWidget> WIDGET_SUPPLYSTOREWIDGET(
+		TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/Widget/SkullyStoreWidget/WidgetBP_SupplyItem.WidgetBP_SupplyItem_C'"));
 
 
 	if (WIDGETBP_GAME.Succeeded())
@@ -70,7 +78,20 @@ AGamePlayerController::AGamePlayerController()
 
 	if (WIDGETBP_PLAYERSTATE.Succeeded()) PlayerStateSlotWidgetClass = WIDGETBP_PLAYERSTATE.Class;
 
+	if (WIDGET_INTERACTION.Succeeded()) WidgetBP_InteractionKey = WIDGET_INTERACTION.Class;
+
+	if (WIDGET_SUPPLYSTOREWIDGET.Succeeded()) SupplyStoreWidgetClass = WIDGET_SUPPLYSTOREWIDGET.Class;
+
 	PlayerCharacterData = nullptr;
+
+	// 플레이어 캐릭터 정보를 얻습니다.
+	FString contextString;
+	PlayerCharacterData = PlayerCharacterDataTable->FindRow<FPlayerCharacterData>(
+		PLAYERCHARACTER_DATA_NORMAL, contextString);
+
+	// Hp, Stamina 초기화
+	CurrentHp = PlayerCharacterData->MaxHp;
+	CurrentStamina = PlayerCharacterData->MaxStamina;
 
 }
 
@@ -84,6 +105,7 @@ void AGamePlayerController::PlayerTick(float DeltaTime)
 	if (bIsActivateHpItem) RecoverHp(DeltaTime);
 
 	CheckPlayerBuffState(DeltaTime);
+
 }
 
 void AGamePlayerController::SetupInputComponent()
@@ -116,6 +138,9 @@ void AGamePlayerController::SetupInputComponent()
 	InputComponent->BindAction(TEXT("Interact"), EInputEvent::IE_Pressed, this,
 		&ThisClass::OnInteractInput);
 
+	InputComponent->BindAction(TEXT("Interact_Item"), EInputEvent::IE_Pressed, this,
+		&ThisClass::OnInteractItemInput);
+
 	InputComponent->BindAction(TEXT("RollForward"), EInputEvent::IE_Pressed, this,
 		&ThisClass::OnRollForward);
 	InputComponent->BindAction(TEXT("RollBackward"), EInputEvent::IE_Pressed, this,
@@ -135,11 +160,11 @@ void AGamePlayerController::SetupInputComponent()
 	InputComponent->BindAction(TEXT("Run"), EInputEvent::IE_Released, this,
 		&ThisClass::OnRunReleased);
 
-	//InputComponent->BindAction(TEXT("WeaponChange"), EInputEvent::IE_Pressed, this,
-	//	&ThisClass::OnWeaponChangePressed);
-
 	InputComponent->BindAction(TEXT("Next"), EInputEvent::IE_Pressed, this,
 		&ThisClass::ProgressDialog);
+
+	InputComponent->BindAction(TEXT("ConsumePortion"), EInputEvent::IE_Pressed, this,
+		&ThisClass::ConsumeHpPortion);
 
 }
 
@@ -171,12 +196,20 @@ void AGamePlayerController::OnPossess(APawn* pawn)
 	// GameWidget 생성
 	GameWidget = CreateWidget<UGameWidget>(this, GameWidgetClass);
 
+	// WeaponStateWidget 생성 / GameWidget 오버레이에 추가
 	WeaponStateWidget = CreateWidget<UPlayerWeaponStateWidget>(this, WeaponStateWidgetClass);
+	GameWidget->FloatingWidgetWeapon(WeaponStateWidget);
 
 	CriticalWidget = CreateWidget<UUserWidget>(this, CriticalAttackWidget);
 	CriticalWidget->SetVisibility(ESlateVisibility::Hidden);
 
 	PlayerStateSlotWidget = CreateWidget<UPlayerStateSlotWidget>(this, PlayerStateSlotWidgetClass);
+
+	// 지원 아이템 상점 위젯 생성
+	SupplyStoreWidget = CreateWidget<USupplyStoreWidget>(this, SupplyStoreWidgetClass);
+
+	// 상호작용 위젯 생성
+	InteractionWidget = CreateWidget<UUserWidget>(this, WidgetBP_InteractionKey);
 
 	// 생성된 위젯을 화면에 표시합니다.
 	GameWidget->AddToViewport();
@@ -184,7 +217,8 @@ void AGamePlayerController::OnPossess(APawn* pawn)
 	// 플레이어 캐릭터 상태 위젯 초기화
 	InitializePlayerStateWidget(PlayerCharacterData->MaxHp, PlayerCharacterData->MaxStamina);
 
-
+	// 무기 상태 위젯 이미지 갱신 함수 바인딩 
+	SetWeaponStateWidgetImage();
 	
 }
 
@@ -292,6 +326,12 @@ void AGamePlayerController::OnInteractInput()
 	playerCharacter->OnInteractInput();
 }
 
+void AGamePlayerController::OnInteractItemInput()
+{
+	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
+	playerCharacter->OnInteractItemInput();
+}
+
 void AGamePlayerController::OnRollForward()
 {
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
@@ -340,12 +380,7 @@ void AGamePlayerController::OnRunReleased()
 	playerCharacter->OnRunFinished();
 }
 
-void AGamePlayerController::OnWeaponChangePressed()
-{
-	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
-	playerCharacter->OnWeaponChanged();
-	
-}
+
 
 void AGamePlayerController::ProgressDialog()
 {
@@ -372,7 +407,7 @@ void AGamePlayerController::CheckPlayerBuffState(float deltaTime)
 				float atk = gameCharacter->GetAttackComponent()->GetCurrentAtk();
 				gameCharacter->GetAttackComponent()->UpdateAtk(atk + 15.0f);
 				SupplyInteractionItems.Remove(buff);
-				
+				UE_LOG(LogTemp, Warning, TEXT("Atk Buff is fire!"));
 			}
 			break;
 			case ESupplyItemType::DefBase:
@@ -395,6 +430,7 @@ void AGamePlayerController::CheckPlayerBuffState(float deltaTime)
 			case ESupplyItemType::CriticalBase:
 			{
 				// 치명타 확률을 +20% 증가시킵니다.
+				gameCharacter->GetAttackComponent()->SetCriticalAttackPercentage(CRITICAL_ATTACK + 20);
 				UE_LOG(LogTemp, Warning, TEXT("CriticalAttack"));
 				SupplyInteractionItems.Remove(buff);
 			}
@@ -410,7 +446,22 @@ void AGamePlayerController::RecoverHp(float dt)
 	if (FMath::Abs(TargetHp - CurrentHp) == 0.0f) bIsActivateHpItem = false;
 }
 
+void AGamePlayerController::ConsumeHpPortion()
+{
+	// 포션 사용 횟수가 0 이라면 함수 호출 종료
+	if (WeaponStateWidget->PortionCount == 0) return;
 
+	// RecoverHp()를 호출 하기 위한 변수 설정
+	TargetHp = CurrentHp + 30.0f;
+	if (TargetHp > PlayerCharacterData->MaxHp) TargetHp = PlayerCharacterData->MaxHp;
+	bIsActivateHpItem = true;
+
+	// 포션 사용 횟수 감소
+	WeaponStateWidget->ReducePortionCount();
+
+	UE_LOG(LogTemp, Warning, TEXT("ConsumeHp"));
+
+}
 
 UGameWidget* AGamePlayerController::GetGameWidget() const
 {
@@ -427,7 +478,15 @@ UPlayerStateSlotWidget* AGamePlayerController::GetPlayerStateSlotWidget() const
 	return PlayerStateSlotWidget;
 }
 
+UUserWidget* AGamePlayerController::GetInteractionWidget() const
+{
+	return InteractionWidget;
+}
 
+USupplyStoreWidget* AGamePlayerController::GetSupplyStoreWidget() const
+{
+	return SupplyStoreWidget;
+}
 
 void AGamePlayerController::SetCameraViewTarget(AActor* target)
 {
@@ -443,11 +502,13 @@ void AGamePlayerController::InitializePlayerStateWidget(float maxHp, float maxSt
 {
 	if (!IsValid(GameWidget)) return;
 
+
 	UPlayerStateWidget* playerStateWidget = GameWidget->GetPlayerStateWidget();
 	playerStateWidget->SetMaxHp(maxHp);
 	playerStateWidget->UpdateHp(maxHp);
 	playerStateWidget->SetMaxStamina(maxStamina);
 	playerStateWidget->UpdateStamina(maxStamina);
+	
 }
 
 void AGamePlayerController::OnDamaged(float damage)
@@ -473,33 +534,7 @@ void AGamePlayerController::OnDamaged(float damage)
 	Cast<AGameCharacter>(GetPawn())->SetCurrentHp(CurrentHp);
 
 	// 사망 처리
-	if (CurrentHp <= 0.0f && !playerCharacter->GetDeadState())
-	{
-		// 플레이어 사망 시간 기록
-		playerCharacter->SetPlayerDeadTime(GetWorld()->GetTimeSeconds());
-
-		playerCharacter->SetDeadState(true);
-
-		CurrentHp = 0.0f;
-
-		// 사망시 튕겨져 나감 처리
-		playerCharacter->DeadBounce();
-
-		UPlayerCharacterAnimInstance* animInst =
-			Cast<UPlayerCharacterAnimInstance>(playerCharacter->GetMesh()->GetAnimInstance());
-
-		if (!IsValid(animInst)) return;
-
-		// 사망 처리 애니메이션 재생
-		animInst->SetPlayerDeadState(true);
-
-		// 사망 시 카메라 전환
-		playerCharacter->SetCameraDeadView();
-
-		// 사망 시 게임 오버 위젯 표시 
-		GameWidget->ShowDeadWidget();
-		
-	}
+	PlayerDead();
 }
 
 void AGamePlayerController::OnEnemyAttack(AEnemyCharacter* newTargetEnemy)
@@ -529,4 +564,61 @@ void AGamePlayerController::ShowCriticalAttackWidget()
 	CriticalWidget->SetVisibility(ESlateVisibility::Visible);
 	UE_LOG(LogTemp, Warning, TEXT("ShowCriticalAttackWidget"));
 }
+
+void AGamePlayerController::PlayerDead()
+{
+	// Get PlayerCharacter
+	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
+
+	if (CurrentHp <= 0.0f && !playerCharacter->GetDeadState())
+	{
+		// 플레이어 사망 시간 기록
+		playerCharacter->SetPlayerDeadTime(GetWorld()->GetTimeSeconds());
+
+		playerCharacter->SetDeadState(true);
+
+		CurrentHp = 0.0f;
+
+		// 사망시 튕겨져 나감 처리
+		playerCharacter->DeadBounce();
+
+		UPlayerCharacterAnimInstance* animInst =
+			Cast<UPlayerCharacterAnimInstance>(playerCharacter->GetMesh()->GetAnimInstance());
+
+		if (!IsValid(animInst)) return;
+
+		// 사망 처리 애니메이션 재생
+		animInst->SetPlayerDeadState(true);
+
+		// 사망 시 카메라 전환
+		playerCharacter->SetCameraDeadView();
+
+		// 플레이어 사망 시 이동 제한
+		playerCharacter->GetPlayerCharacterMovementComponent()->SetAllowMovementInput(false);
+
+		// 사망 시 게임 오버 위젯 표시 
+		GameWidget->ShowDeadWidget();
+	}
+}
+
+void AGamePlayerController::SetWeaponStateWidgetImage()
+{
+	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
+	UPlayerEquipWeaponComponent* weaponComponent = playerCharacter->GetEquipWeaponComponent();
+
+	FUpdateTextureEventSignature UpdateWeaponStateWidgetEvent;
+	UpdateWeaponStateWidgetEvent.BindUObject(WeaponStateWidget, &UPlayerWeaponStateWidget::SetMainWeaponImage);
+	weaponComponent->InitializeUpdateWeaponImageEvent(UpdateWeaponStateWidgetEvent);
+}
+
+void AGamePlayerController::AddSupplyItemCode(FName itemCode)
+{
+	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetPawn());
+	playerCharacter->LevelTransitionGameInstance->BuffCodes.Add(itemCode);
+
+	//LevelTransitionBuffCodes.Add(itemCode);
+}
+
+
+
 

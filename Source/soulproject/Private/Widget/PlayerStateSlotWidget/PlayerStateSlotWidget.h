@@ -31,6 +31,8 @@ protected:
 public:
 	bool bIsActivated;
 
+	TArray<class UImage*> Images;
+
 protected:
 	virtual void NativeConstruct() override;
 

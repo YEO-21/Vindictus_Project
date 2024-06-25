@@ -57,6 +57,19 @@ void UGameWidget::FloatingWidgetAdditive(UUserWidget* widgetInstance)
 	widgetSlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
 }
 
+void UGameWidget::FloatingWidgetWeapon(UUserWidget* widgetInstance)
+{
+	// Overlay_Additive 하위로 추가합니다.
+	Overlay_Weapon->AddChild(widgetInstance);
+
+	// 생성된 위젯에 대한 슬롯을 얻습니다.
+	UOverlaySlot* widgetSlot = Cast<UOverlaySlot>(widgetInstance->Slot);
+
+	// 위젯 화면 채우기
+	widgetSlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Fill);
+	widgetSlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Fill);
+}
+
 void UGameWidget::RemoveWidgetAdditive(UUserWidget* widgetForClose)
 {
 
@@ -68,7 +81,6 @@ void UGameWidget::FloatingWidgetPlayerState(UUserWidget* widgetInstance)
 {
 	// Overlay_PlayerState 하위로 위젯을 추가합니다.
 	Overlay_PlayerState->AddChild(widgetInstance);
-
 
 
 
@@ -141,6 +153,23 @@ void UGameWidget::ShowPlayerStateWidget()
 void UGameWidget::HidePlayerStateWidget()
 {
 	Overlay_PlayerState->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void UGameWidget::HideAllWidget()
+{
+	Overlay_All->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void UGameWidget::ShowAllWidget()
+{
+	Overlay_All->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UGameWidget::ShowCriticalAttackWidget()
+{
+	TextBlock_Critical->SetVisibility(ESlateVisibility::Visible);
+
+	PlayAnimation(CriticalAttack);
 }
 
 void UGameWidget::InitializePlayerStateSlotWidget(UPlayerStateSlotWidget* playerSlotWidget)

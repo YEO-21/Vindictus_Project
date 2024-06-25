@@ -1,7 +1,10 @@
 #include "Component/InteractableAreaComponent/InteractableAreaComponent.h"
 #include "Actor/GameCharacter/GameCharacter.h"
 #include "Actor/NpcCharacter/NpcCharacter.h"
+#include "Actor/PlayerController/GamePlayerController.h"
 #include "Component/PlayerCharacterInteractComponent/PlayerCharacterInteractComponent.h"
+#include "Blueprint/UserWidget.h"
+
 #include "Actor/GameCharacter/GameCharacter.h"
 #include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
 
@@ -9,6 +12,8 @@ UInteractableAreaComponent::UInteractableAreaComponent()
 {
 	OnComponentBeginOverlap.AddDynamic(this, &UInteractableAreaComponent::OnBeginOverlap);
 	OnComponentEndOverlap.AddDynamic(this, &UInteractableAreaComponent::OnEndOverlap);
+
+	
 
 }
 
@@ -54,7 +59,14 @@ void UInteractableAreaComponent::OnBeginOverlap(
 		// 교환이 가능하면 플레이어의 장착 무기 코드를 설정합니다.
 		if (exchangeWeapon) PlayerCharacter->EquippedWeaponCode = TEXT("000003");
 
-		UE_LOG(LogTemp, Warning, TEXT("EquippedWeaponCode is %s"), *PlayerCharacter->EquippedWeaponCode.ToString());
+		// Get Controller
+		AGamePlayerController* playerController =
+			Cast<AGamePlayerController>(PlayerCharacter->GetController());
+
+		// 상호작용 위젯 추가합니다.
+		playerController->GetInteractionWidget()->AddToViewport();
+
+		
 	}
 }
 
@@ -71,7 +83,14 @@ void UInteractableAreaComponent::OnEndOverlap(
 		// 상호작용 컴포넌트를 얻습니다.
 		gameCharacter->GetInteractComponent()->RemoveInteractableArea(this);
 
+		// Get Controller
+		AGamePlayerController* playerController =
+			Cast<AGamePlayerController>(PlayerCharacter->GetController());
 
+		// 상호작용 위젯을 제거합니다.
+		playerController->GetInteractionWidget()->RemoveFromViewport();
+
+		
 	}
 
 }

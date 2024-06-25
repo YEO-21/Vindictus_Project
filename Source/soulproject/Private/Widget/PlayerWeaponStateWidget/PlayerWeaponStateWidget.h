@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "PlayerWeaponStateWidget.generated.h"
 
+#define PORTION_COUNT       3
+
 /**
  * 
  */
@@ -20,24 +22,28 @@ protected:
 	class UImage* MainWeapon;
 	
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UImage* SubWeapon;
+	class UTextBlock* TextBlock_PortionCount;
 
-	UPROPERTY(BlueprintReadWrite)
-	bool IsExChangeWeapon;
+	UPROPERTY(Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* ConsumeHp;
+
+public:
+	int32 PortionCount;
 
 
 protected:
 	 virtual void NativeConstruct() override;
 
 public:
-	void ExchangeWeaponWidget();
+	void HideWeaponStateWidget();
+	void ShowWeaponStateWidget();
 
-	UFUNCTION(BlueprintCallable)
-	 bool GetExChangeWeaponState() const
-	{
-		return IsExChangeWeapon;
-	}
+	void SetMainWeaponImage(UTexture2D* texture);
 
-	 void HideWeaponStateWidget();
-	 void ShowWeaponStateWidget();
+	void ReducePortionCount();
+
+	void SetPortionCount(int32 count);
+
+
+	
 };

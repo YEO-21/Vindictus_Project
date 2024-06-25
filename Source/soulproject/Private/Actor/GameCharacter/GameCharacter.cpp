@@ -8,11 +8,21 @@
 #include "Component/PlayerCharacterAttackComponent/PlayerCharacterAttackComponent.h"
 #include "Component/PlayerCharacterInteractComponent/PlayerCharacterInteractComponent.h"
 #include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
+#include "Component/PlayerBuffControlComponent/PlayerBuffControlComponent.h"
 #include "NiagaraSystem/AttackNiagaraSystem.h"
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 #include "Widget/GameWidget/GameWidget.h"
+#include "Widget/PlayerStateSlotWidget/PlayerStateSlotWidget.h"
+#include "Widget/PlayerWeaponStateWidget/PlayerWeaponStateWidget.h"
 #include "../../Engine/Plugins/FX/Niagara/Source/Niagara/Public/NiagaraComponent.h"
+
+#include "Components/Image.h"
+
+#include "Object/LevelTransition/LevelTransitionGameInstance/LevelTransitionGameInstance.h"
+#include "Object/InteractionParam/SupplyNpcInteractParam/SupplyNpcInteractParam.h"
+
 #include "NiagaraFunctionLibrary.h"
+#include "TimerManager.h"
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -78,9 +88,7 @@ AGameCharacter::AGameCharacter()
 	WeaponMesh =
 		CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WEAPON_MESH"));
 
-	SubWeaponMesh =
-		CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SUB_WEAPON_MESH"));
-
+	
 	WeaponMesh_Onehanded =
 		CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SK_WEAPON_MESH_ONEHANDED"));
 
@@ -95,6 +103,7 @@ AGameCharacter::AGameCharacter()
 
 	BuffControlComponent =
 		CreateDefaultSubobject<UPlayerBuffControlComponent>(TEXT("PLAYER_BUFF_CONTROL_COMPONENT"));
+
 
 	// SpringArm 컴포넌트를 루트 컴포넌트에 추가합니다.
 	SpringArmComponent->SetupAttachment(GetRootComponent());
@@ -131,7 +140,6 @@ AGameCharacter::AGameCharacter()
 	WeaponMesh->SetupAttachment(GetMesh(), TEXT("Socket_Weapon"));
 	WeaponMesh_Onehanded->SetupAttachment(GetMesh(), TEXT("Socket_Weapon_OneHanded"));
 	WeaponMesh_Spear->SetupAttachment(GetMesh(), TEXT("Socket_Spear"));
-	//SubWeaponMesh->SetupAttachment(GetMesh(), TEXT("Socket_SubWeapon"));
 
 	// 메인 무기 붙이기(샤프너)
 	if (SM_SABER.Succeeded())
@@ -140,15 +148,7 @@ AGameCharacter::AGameCharacter()
 		WeaponMesh->SetCollisionProfileName(TEXT("OverlapAll"));
 	}
 
-	// 서브 무기 붙이기(스톰 브레이커)
-	/*if (SK_AXE.Succeeded())
-	{
-		SubWeaponMesh->SetSkeletalMesh(SK_AXE.Object);
-		SubWeaponMesh->SetVisibility(false);
-		SubWeaponMesh->SetCollisionProfileName(TEXT("BlockAllDynamic"));
-	}*/
-
-
+	
 
 
 	// 플레이어 캐릭터의 팀을 설정합니다.
@@ -157,6 +157,10 @@ AGameCharacter::AGameCharacter()
 	// 피해 이벤트 설정
 	OnTakeAnyDamage.AddDynamic(this, &ThisClass::OnDamaged);
 
+	
+
+	
+
 }
 
 // Called when the game starts or when spawned
@@ -164,8 +168,15 @@ void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	LevelTransitionGameInstance =
+		Cast<ULevelTransitionGameInstance>(GetGameInstance());
+
 	// 시작 메인 무기를 샤프너로 설정합니다.
 	CurrentWeaponCode = WEAPON_SHARPNER;
+
+	// 시작 체력을 으로 설정합니다.
+	AGamePlayerController* playerController = Cast<AGamePlayerController>(GetController());
+	CurrentHp = playerController->GetCurrentHp();
 
 	// 시작 위치를 저장합니다.
 	StartLocation = GetActorLocation();
@@ -203,6 +214,14 @@ void AGameCharacter::BeginPlay()
 		PlayerCharacterMovementComponent, &UPlayerCharacterMovementComponent::SetAllowMovementInput);
 	PlayerCharacterAnimController->onRollAnimFinished.BindUObject(
 		PlayerCharacterMovementComponent, &UPlayerCharacterMovementComponent::OnRollFinished);
+
+
+	
+	UpdateGameInstance();
+
+	// 3초 마다 스프링암과 캐릭터 사이의 거리를 확인하여 스프링암 컴포넌트 위치 재설정
+	GetWorldTimerManager().SetTimer(CheckSpringArmLocation, this, &AGameCharacter::CheckSpringArm, 3.0f, true);
+
 }
 
 // Called every frame
@@ -212,11 +231,13 @@ void AGameCharacter::Tick(float DeltaTime)
 
 	// 무기 소켓 위치 갱신
 	UpdateWeaponSocket();
-	//AttackComponent->UpdateStaticWeaponSocketLocation(WeaponMesh);
+
+	// 스프링암 컴포넌트 위치 설정
+	SetSpringArmLocation(DeltaTime);
+
 
 	if (IsDead) Respawn(StartLocation, TIMETOWAITRESPAWN);
 
-	
 }
 
 void AGameCharacter::OnDamaged(
@@ -380,6 +401,12 @@ void AGameCharacter::OnInteractInput()
 	InteractComponent->TryInteraction();
 }
 
+void AGameCharacter::OnInteractItemInput()
+{
+	isInteractable = true;
+	UE_LOG(LogTemp, Warning, TEXT("Interact"));
+}
+
 void AGameCharacter::OnRollForward()
 {
 	PlayerCharacterMovementComponent->OnRollInput(FIntVector2(0, 1));
@@ -455,26 +482,7 @@ void AGameCharacter::OnHitFinished()
 	IsHit = false;
 }
 
-void AGameCharacter::OnWeaponChanged()
-{
-	++WeaponCount;
-	if ((WeaponCount %2) != 0)
-	{
-		// 스톰 브레이커(서브 무기) 선택
-		WeaponMesh->SetVisibility(false);
-		SubWeaponMesh->SetVisibility(true);
-		CurrentWeaponCode = WEAPON_STORMBREAKER;
-	}
-	else
-	{
-		// 샤프너(메인 무기) 선택
-		WeaponMesh->SetVisibility(true);
-		SubWeaponMesh->SetVisibility(false);
-		CurrentWeaponCode = WEAPON_SHARPNER;
-	}
 
-	
-}
 
 void AGameCharacter::PlayAttackBlockAnim()
 {
@@ -503,12 +511,6 @@ void AGameCharacter::DeadBounce()
 
 	// 사망 시 넉백
 	Knockback(forwardVector, 100000.0f);
-	UE_LOG(LogTemp, Warning, TEXT("StartLocation.X = %.2f"), StartLocation.X);
-	UE_LOG(LogTemp, Warning, TEXT("StartLocation.Y = %.2f"), StartLocation.Y);
-	UE_LOG(LogTemp, Warning, TEXT("StartLocation.Z = %.2f"), StartLocation.Z);
-
-	
-
 }
 
 
@@ -617,3 +619,93 @@ void AGameCharacter::HideSkeletalMeshWeapon()
 	WeaponMesh_Onehanded->SetVisibility(false);
 	WeaponMesh->SetVisibility(true);
 }
+
+void AGameCharacter::SetLevelTransition(ULevelTransitionGameInstance* levelTransition)
+{
+	LevelTransitionGameInstance = levelTransition;
+}
+
+void AGameCharacter::SetGameInstance()
+{
+	// Get PlayerController
+	AGamePlayerController* playerController = Cast<AGamePlayerController>(GetController());
+
+	// Get Widgets
+	UPlayerStateSlotWidget* playerStateSlotWidget = playerController->GetPlayerStateSlotWidget();
+	UPlayerWeaponStateWidget* weaponStateWidget = playerController->GetWeaponStateWidget();
+	
+
+	LevelTransitionGameInstance->SaveCharacterInfo(
+		playerController->GetCurrentHp(),
+		weaponStateWidget->PortionCount,
+		EquippedWeaponCode
+		);
+
+
+}
+
+void AGameCharacter::UpdateGameInstance()
+{
+	LevelTransitionGameInstance->UpdateCharacterInfo(this);
+}
+
+void AGameCharacter::PlayRagdoll()
+{
+	GetMesh()->SetCollisionProfileName(TEXT("Ragdoll"));
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetPhysicsLinearVelocity(FVector::ZeroVector);
+
+}
+
+void AGameCharacter::CheckSpringArm()
+{
+	FVector camearaLocation = CameraComponent->GetComponentLocation();
+	
+	Distance = FVector::Distance(GetActorLocation(), camearaLocation);
+}
+
+void AGameCharacter::SetSpringArmLocation(float DeltaTime)
+{
+
+
+	if (Distance < MIN_CAMERA_DISTANCE)
+	{
+		// 카메라와의 거리가 스프링암 컴포넌트 위치 캐릭터 위로 설정
+		TargetSpringArmLocationZ = 80.0f;
+
+		CurrentSpringArmLocationZ = SpringArmComponent->GetRelativeLocation().Z;
+
+		CurrentSpringArmLocationZ = FMath::FInterpTo(CurrentSpringArmLocationZ, TargetSpringArmLocationZ, DeltaTime, 1.0f);
+
+
+		if (FMath::Abs(TargetSpringArmLocationZ - CurrentSpringArmLocationZ) <= 0.1f)
+		{
+			CurrentSpringArmLocationZ = TargetSpringArmLocationZ;
+		}
+
+		SpringArmComponent->SetRelativeLocation(FVector::UpVector * CurrentSpringArmLocationZ);
+
+	}
+	else
+	{
+		// 카메라와의 거리가 정상적으로 유지되는 경우 기존 스프링암 컴포넌트 위치로 재설정
+		TargetSpringArmLocationZ = 0.0f;
+
+		CurrentSpringArmLocationZ = SpringArmComponent->GetRelativeLocation().Z;
+
+
+		CurrentSpringArmLocationZ = FMath::FInterpTo(CurrentSpringArmLocationZ, TargetSpringArmLocationZ, DeltaTime, 1.0f);
+
+		if (FMath::Abs(TargetSpringArmLocationZ - CurrentSpringArmLocationZ) <= 0.1f)
+		{
+			CurrentSpringArmLocationZ = TargetSpringArmLocationZ;
+		}
+
+		SpringArmComponent->SetRelativeLocation(FVector::UpVector * CurrentSpringArmLocationZ);
+
+	}
+}
+
+
+
+

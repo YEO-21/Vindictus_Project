@@ -48,6 +48,8 @@ void AWolfCharacter::BeginPlay()
 
 	// 그룹을 찾습니다.
 	FindGroup();
+
+	GetMesh()->SetCollisionProfileName(TEXT("EnemyCharacter"));
 }
 
 void AWolfCharacter::Tick(float dt)

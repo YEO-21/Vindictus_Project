@@ -15,6 +15,9 @@ class UGameWidget : public UUserWidget
 	GENERATED_BODY()
 
 private :
+	UPROPERTY(meta = (BindWidget))
+	class UOverlay* Overlay_All;
+
 	UPROPERTY()
 	class UOverlay * Overlay_Player;
 
@@ -26,13 +29,22 @@ private :
 
 	UPROPERTY(meta = (BindWidget))
 	class UOverlay* Overlay_PlayerState;
-	
 
 	UPROPERTY()
 	class UTextBlock* TextBlock_Dead;
 
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* TextBlock_Critical;
+
+
+	// 데드씬 애니메이션
 	UPROPERTY(Transient, meta = (BindWidgetAnim))
 	class UWidgetAnimation* TextBlock_Dead_Animation;
+
+	// 크리티컬 공격 성공 시 재생될 애니메이션입니다.
+	UPROPERTY(Transient, meta = (BindWidgetAnim))
+	class UWidgetAnimation* CriticalAttack;
+
 
 	// 상태 위젯을 나타냅니다.
 	UPROPERTY()
@@ -66,6 +78,9 @@ public :
 	// Overlay_Additive 에 위젯을 추가합니다.
 	void FloatingWidgetAdditive(class UUserWidget* widgetInstance);
 
+	// Overlay_Weapon 에 위젯을 추가합니다.
+	void FloatingWidgetWeapon(class UUserWidget* widgetInstance);
+
 	// Overlay_Additive 에 추가된 위젯을 제거합니다.
 	void RemoveWidgetAdditive(class UUserWidget* widgetForClose);
 
@@ -91,6 +106,15 @@ public :
 
 	void ShowPlayerStateWidget();
 	void HidePlayerStateWidget();
+
+	UFUNCTION(BlueprintCallable)
+	void HideAllWidget();
+
+	UFUNCTION(BlueprintCallable)
+	void ShowAllWidget();
+
+	// 크리티컬 공격 성공 시 호출될 함수입니다.
+	void ShowCriticalAttackWidget();
 
 	void InitializePlayerStateSlotWidget(UPlayerStateSlotWidget* playerSlotWidget);
 };

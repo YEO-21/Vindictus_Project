@@ -22,6 +22,9 @@ public :
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bUseMaxTrackingDistance;
 
+private:
+	UPROPERTY()
+	FVector TargetLocation;
 
 
 public :

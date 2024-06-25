@@ -63,6 +63,24 @@ private :
 	UPROPERTY()
 	TSubclassOf<class UNpcDialogWidget> DialogWidgetClass;
 
+	// 상호작용 위젯 클래스
+	UPROPERTY()
+	TSubclassOf<UUserWidget> WidgetBP_InteractionKey;
+
+	// 상호작용 위젯
+	UPROPERTY()
+	UUserWidget* InteractionWidget;
+
+	// 지원 아이템 상점 위젯
+	UPROPERTY()
+	TSubclassOf<class USupplyStoreWidget> SupplyStoreWidgetClass;
+
+
+	UPROPERTY()
+	class USupplyStoreWidget* SupplyStoreWidget;
+
+	
+
 
 	// 플레이어 캐릭터 데이터
 	struct FPlayerCharacterData* PlayerCharacterData;
@@ -93,6 +111,11 @@ protected:
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<class USupplyNpcInteractParam*> SupplyInteractionItems;
+
+	// 레벨 전환용 버프 코드
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<FName> LevelTransitionBuffCodes;
+
 
 
 public :
@@ -133,6 +156,8 @@ private :
 	// 상호작용 키 입력 시 호출됩니다.
 	void OnInteractInput();
 
+	void OnInteractItemInput();
+
 	void OnRollForward();
 	void OnRollBackward();
 	void OnRollRight();
@@ -146,9 +171,6 @@ private :
 	void OnRunPressed();
 	void OnRunReleased();
 
-	// 무기 교체 입력 시 호출됩니다.
-	void OnWeaponChangePressed();
-
 	// 대화 진행 시 호출됩니다.
 	void ProgressDialog();
 
@@ -158,12 +180,16 @@ private :
 	// 플레이어 HP를 회복시키는 함수
 	void RecoverHp(float dt);
 
+	void ConsumeHpPortion();
+
 
 		
 public :
 	class UGameWidget* GetGameWidget() const;
 	class UPlayerWeaponStateWidget* GetWeaponStateWidget() const;
 	class UPlayerStateSlotWidget* GetPlayerStateSlotWidget() const;
+	class UUserWidget* GetInteractionWidget() const;
+	class USupplyStoreWidget* GetSupplyStoreWidget() const;
 
 
 	void SetCameraViewTarget(class AActor* target);
@@ -184,13 +210,32 @@ public :
 
 	void ShowCriticalAttackWidget();
 
+	// 플레이어의 사망 처리를 합니다.
+	void PlayerDead();
+
+
 	FORCEINLINE float GetCurrentHp()
 	{
 		return CurrentHp;
 	}
 
-	
+	FORCEINLINE float GetCurrentStamina()
+	{
+		return CurrentStamina;
+	}
 
+	void SetCurrentHp(float hp)
+	{
+		CurrentHp = hp;
+	}
 
-	
+	void SetCurrentStamina(float stamina)
+	{
+		CurrentStamina = stamina;
+	}
+
+	void SetWeaponStateWidgetImage();
+
+	void AddSupplyItemCode(FName itemCode);
+
 };

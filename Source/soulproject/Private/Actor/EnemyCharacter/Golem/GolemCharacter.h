@@ -38,6 +38,9 @@ protected:
 
 	virtual void OnDamaged(class AGameCharacter* gameCharacter, float damage) override;
 
+
+	virtual void BeginPlay() override;
+
 public:
 	virtual void Tick(float dt) override;
 

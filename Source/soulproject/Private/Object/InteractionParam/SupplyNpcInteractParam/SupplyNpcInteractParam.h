@@ -21,13 +21,18 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsEnable;
 	
+	// 아이템 타입
 	ESupplyItemType ItemType;
+
+	// 아이템 활성화 이미지
+	UMaterialInterface* ItemImage;
+
 
 	
 	
 
 public:
-	void SetPlayerStateSlotMaterial(USupplyNpcInteractParam* supplyParam);
+	
 
 
 };

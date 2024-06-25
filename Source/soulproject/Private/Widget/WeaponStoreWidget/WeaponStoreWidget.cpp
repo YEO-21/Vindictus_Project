@@ -50,12 +50,13 @@ void UWeaponStoreWidget::InitializeWeaponStoreWidget(TArray<FName> itemCodes)
 		gameCharacter->GetEquipWeaponComponent()->InitializeEquippedWeapon(itemCode);
 
 		// 각 무기 위젯을 생성합니다.
-		UStoreItemWidget* createdStoreItemWidget = CreateWidget<UStoreItemWidget>(this, WidgetBP_StoreItemClass);
+		UStoreItemWidget* createdStoreItemWidget = 
+			CreateWidget<UStoreItemWidget>(this, WidgetBP_StoreItemClass);
 
 		TArray<UStoreItemWidget*> weaponWidgets;
 
 		// 무기 UI 이미지를 얻습니다.
-		UTexture2D* weaponImage = gameCharacter->GetEquipWeaponComponent()->PlayerWeaponData->WeaponImage;
+		UTexture2D* weaponImage = gameCharacter->GetEquipWeaponComponent()->PlayerWeaponData->StoreWeaponImage;
 
 		// 무기 UI 이미지를 설정합니다.
 		createdStoreItemWidget->Image_Weapon->SetBrushFromTexture(weaponImage);

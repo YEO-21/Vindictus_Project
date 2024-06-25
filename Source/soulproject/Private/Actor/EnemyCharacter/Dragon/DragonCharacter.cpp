@@ -90,7 +90,7 @@ void ADragonCharacter::BeginPlay()
 	animInst->OnRushAttackStarted.AddUObject(AttackComponent, &UDragonCharacterAttackComponent::StartRushAttack);
 	animInst->OnRushAttackFinished.AddUObject(AttackComponent, &UDragonCharacterAttackComponent::FinishRushAttack);
 
-
+	GetMesh()->SetCollisionProfileName(TEXT("EnemyCharacter"));
 }
 
 void ADragonCharacter::PlayMoveAnimMontage(FName playSectionName)
@@ -106,4 +106,30 @@ void ADragonCharacter::PlayAttackAnimMontage(FName playSectionName)
 void ADragonCharacter::OnPlayerCharacterDetected(AGameCharacter* gameCharacter)
 {
 	Cast<ADragonController>(GetController())->SetPlayerCharacterKey(gameCharacter);
+}
+
+void ADragonCharacter::OnDead()
+{
+	Super::OnDead();
+
+	UDragonCharacterAnimInstance* dragonAnimInst = 
+		Cast<UDragonCharacterAnimInstance>(GetMesh()->GetAnimInstance());
+
+	// 드래곤이 죽었을 경우 애님 인스턴스의 bisDead를 true로 설정합니다.
+	dragonAnimInst->SetDragonDeadState(true);
+
+	
+}
+
+void ADragonCharacter::OnDamaged(AGameCharacter* gameCharacter, float damage)
+{
+	Super::OnDamaged(gameCharacter, damage);
+
+	// 드래곤이 죽고나서 게임 캐릭터와 드래곤이 겹쳐지는 현상을 방지하기 위해
+	//  게임 캐릭터 위치를 재설정함
+	if (IsDead)
+	{
+		gameCharacter->SetActorLocation(
+			DeadLocation.GetLocation() - FVector::ForwardVector *1000.0f);
+	}
 }

@@ -21,8 +21,9 @@ private:
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	class UNiagaraComponent* HitNiagaraComponent;
 
+	// 치명타용 나이아가라 컴포넌트
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	class UNiagaraScript* NiagaraSystemScript;
+	class UNiagaraComponent* CriticalAttackNiagaraComponent;
 
 
 	UPROPERTY()
@@ -39,6 +40,7 @@ public:
 	void ActivateNiagaraSystem();
 
 	void SetNiagaraSystemLocation(FVector location, FVector hitLocation);
+	void SetCriticalNiagaraSystemLocation(FVector hitLocation);
 	void SetNiagaraSystemAsset(UNiagaraSystem* effect, UNiagaraSystem* hiteffect);
 	
 };

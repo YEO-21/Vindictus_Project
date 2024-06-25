@@ -27,6 +27,9 @@ protected :
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FIntVector FlyDirection;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsDead;
+
 
 
 
@@ -84,8 +87,17 @@ private :
 	UFUNCTION()
 	void AnimNotify_OnRushAttackFinished();
 
+	UFUNCTION()
+	void AnimNotify_EnableAttackArea();
+
+	UFUNCTION()
+	void AnimNotify_DisableAttackArea();
+
 
 #pragma endregion
+
+public:
+	void SetDragonDeadState(bool isDead);
 
 	
 };

@@ -1,5 +1,6 @@
 #include "Component/PlayerEquipWeaponComponent/PlayerEquipWeaponComponent.h"
 #include "Actor/GameCharacter/GameCharacter.h"
+#include "Actor/PlayerController/GamePlayerController.h"
 
 #include "AnimInstance/PlayerCharacter/PlayerCharacterAnimInstance.h"
 
@@ -7,6 +8,9 @@
 
 #include "Widget/StoreItemWidget/StoreItemWidget.h"
 #include "Widget/WeaponStoreWidget/WeaponStoreWidget.h"
+#include "Widget/PlayerWeaponStateWidget/PlayerWeaponStateWidget.h"
+
+#include "Object/LevelTransition/LevelTransitionGameInstance/LevelTransitionGameInstance.h"
 
 #include "Structure/PlayerWeaponData/PlayerWeaponData.h"
 
@@ -28,13 +32,11 @@ UPlayerEquipWeaponComponent::UPlayerEquipWeaponComponent()
 	if (BP_WEAPON_STORE.Succeeded()) BP_WeaponStoreWidget = BP_WEAPON_STORE.Class;
 
 
-
 }
 
 void UPlayerEquipWeaponComponent::InitializeEquippedWeapon(FName weaponCode)
 {
 	WeaponCode = weaponCode;
-	//UE_LOG(LogTemp, Warning, TEXT("WeaponCode = %s"), *WeaponCode.ToString());
 	if (WeaponCode.IsNone())
 	{
 		PlayerWeaponData = nullptr;
@@ -58,7 +60,9 @@ void UPlayerEquipWeaponComponent::BeginPlay()
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetOwner());
 	playerCharacter->EquippedWeaponCode = _SHARPNER;
 
+	
 
+	
 }
 
 
@@ -75,12 +79,17 @@ void UPlayerEquipWeaponComponent::EquipWeapon()
 
 	AGameCharacter* playerCharacter = Cast<AGameCharacter>(GetOwner());
 
+	// Get Controller
+	AGamePlayerController* playerController =
+		Cast<AGamePlayerController>(playerCharacter->GetController());
+
+
 	InitializeEquippedWeapon(playerCharacter->EquippedWeaponCode);
-	UE_LOG(LogTemp, Warning, TEXT("playerCharacter->EquippedWeaponCode is %s"), *playerCharacter->EquippedWeaponCode.ToString());
 
 
 	UPlayerCharacterAnimInstance* animInst = 
 		Cast<UPlayerCharacterAnimInstance>(playerCharacter->GetMesh()->GetAnimInstance());
+
 
 	if (PlayerWeaponData == nullptr) return;
 
@@ -95,6 +104,7 @@ void UPlayerEquipWeaponComponent::EquipWeapon()
 		playerCharacter->GetWeaponMeshOneHanded()->SetSkeletalMesh(PlayerWeaponData->WeaponSkeletalMesh);
 		animInst->SetOneHandedWeapon(false);
 		animInst->SetSpear(false);
+		UE_LOG(LogTemp, Warning, TEXT("EquipAxe"));
 		break;
 	case EWeaponType::TWIN_DRAGON_SWORD:
 		playerCharacter->GetWeaponMeshOneHanded()->SetSkeletalMesh(PlayerWeaponData->WeaponSkeletalMesh);
@@ -117,6 +127,11 @@ void UPlayerEquipWeaponComponent::EquipWeapon()
 	// 무기 타입에 따른 이펙트를 설정합니다.
 	playerCharacter->GetAttackNiagaraSystem()->SetNiagaraSystemAsset(
 		PlayerWeaponData->AttackEffect, PlayerWeaponData->AttackHitEffect);
+
+	// 무기 상태 위젯의 이미지 설정
+	UpdateWeaponStateTexture.ExecuteIfBound(PlayerWeaponData->WidgetWeaponImage);
+
+
 }
 
 bool UPlayerEquipWeaponComponent::IsSpearWeapon() const
@@ -125,6 +140,11 @@ bool UPlayerEquipWeaponComponent::IsSpearWeapon() const
 	FName weaponCode = playerCharacter->EquippedWeaponCode;
 
 	return (weaponCode ==_WALLDO) || (weaponCode == _NAMELESSSPEAR);
+}
+
+void UPlayerEquipWeaponComponent::InitializeUpdateWeaponImageEvent(FUpdateTextureEventSignature event)
+{
+	UpdateWeaponStateTexture = event;
 }
 
 
@@ -141,4 +161,6 @@ int32 UPlayerEquipWeaponComponent::CheckWeaponType()
 	else return 1;
 
 }
+
+
 

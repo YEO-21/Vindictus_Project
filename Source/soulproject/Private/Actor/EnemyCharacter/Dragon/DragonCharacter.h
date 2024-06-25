@@ -82,5 +82,11 @@ public :
 		return AttackComponent;
 	}
 
+
+
+protected:
+	virtual void OnDead();
+
+	virtual void OnDamaged(class AGameCharacter* gameCharacter, float damage);
 	
 };

@@ -106,6 +106,13 @@ void AGolemCharacter::OnDamaged(AGameCharacter* gameCharacter, float damage)
 
 }
 
+void AGolemCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	GetMesh()->SetCollisionProfileName(TEXT("EnemyCharacter"));
+}
+
 void AGolemCharacter::Tick(float dt)
 {
 	Super::Tick(dt);

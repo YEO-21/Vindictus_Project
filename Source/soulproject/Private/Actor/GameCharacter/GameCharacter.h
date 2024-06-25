@@ -13,6 +13,9 @@
 #define WEAPON_STORMBREAKER		TEXT("AxeAttack")
 #define WEAPON_SPEAR			TEXT("SpearAttack")
 
+// 카메라 세팅 값
+#define MIN_CAMERA_DISTANCE		200.0f
+
 
 UCLASS()
 class AGameCharacter : public ACharacter, 
@@ -65,12 +68,6 @@ private :
 	class UPlayerBuffControlComponent* BuffControlComponent;
 
 
-	// 추후에 삭제해야함
-	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
-	class USkeletalMeshComponent* SubWeaponMesh;
-
-
-
 	FGenericTeamId Team;
 
 	// 피해를 입었을 경우 재생시킬 애님 몽타주
@@ -101,6 +98,7 @@ private :
 	UPROPERTY()
 	float PlayerDeadTime;
 
+	UPROPERTY()
 	float CurrentHp;
 
 	// 카메라 시작 위치
@@ -111,14 +109,47 @@ private :
 	UPROPERTY()
 	FRotator CameraStartRotation;
 
-	
+	// 카메라 세팅이 변경이 되었는지를 나타냅니다.
+	UPROPERTY()
+	bool isCameraSettingReChanged;
+
+	UPROPERTY()
+	float TargetSpringArmLocationZ;
+
+	UPROPERTY()
+	float CurrentSpringArmLocationZ;
+
+	// 스프링암 위치에 따른 거리르 계산하기 위한 타이머핸들입니다.
+	FTimerHandle CheckSpringArmLocation;
+
+	// 스프링암 컴포넌트와 캐릭터 사이의 거리를 나타냅니다.
+	UPROPERTY()
+	float Distance;
+
+
 	// 공격 애니메이션 재생용 현재 무기 코드입니다.
 	FName CurrentWeaponCode;
+
 
 public:
 	// 장착된 무기 코드
 	UPROPERTY()
 	FName EquippedWeaponCode;
+
+	// 레벨 전환 Game Instance 입니다.
+	UPROPERTY()
+	class ULevelTransitionGameInstance* LevelTransitionGameInstance;
+
+	// 보물 상자 상호작용 여부를 나타냅니다.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+	bool isInteractable;
+
+	// 보물 아이템을 가지고 있는지 여부를 나타냅니다.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interaction")
+	bool isContainItem;
+
+	
+
 
 
 public:
@@ -142,7 +173,12 @@ private :
 	void SetPlayerRespawn();
 
 	void UpdateWeaponSocket();
-	
+
+	// 스프링암 컴포넌트 타깃암 길이가 작을 경우 호출되는 함수입니다.
+	void CheckSpringArm();
+
+	void SetSpringArmLocation(float DeltaTime);
+
 
 public:	
 	virtual void SetupPlayerInputComponent(
@@ -157,6 +193,7 @@ public:
 	void OnJumpInput();
 	void OnAttackInput();
 	void OnInteractInput();
+	void OnInteractItemInput();
 
 	void OnRollForward();
 	void OnRollBackward();
@@ -251,10 +288,6 @@ public:
 		return	WeaponMesh;
 	}
 
-	FORCEINLINE USkeletalMeshComponent* GetSubWeaponMesh()
-	{
-		return	SubWeaponMesh;
-	}
 
 	FORCEINLINE USkeletalMeshComponent* GetWeaponMeshOneHanded()
 	{
@@ -299,5 +332,15 @@ public:
 
 	// 스켈레탈 메시 무기 숨김
 	void HideSkeletalMeshWeapon();
+
+	void SetLevelTransition(ULevelTransitionGameInstance* levelTransition);
+
+	void SetGameInstance();
+	void UpdateGameInstance();
+
+	void PlayRagdoll();
+
+
+
 
 };

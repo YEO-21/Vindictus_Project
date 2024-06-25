@@ -1,6 +1,7 @@
 #include "AI/Service/BTService_GetPlayerLocation.h"
 
 #include "Actor/GameCharacter/GameCharacter.h"
+#include "Actor/EnemyCharacter/Dragon/DragonCharacter.h"
 
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -37,8 +38,23 @@ void UBTService_GetPlayerLocation::TickNode(
 	AController* enemyController = Cast<AController>(blackboardComponent->GetOwner());
 	FVector currentLocation = enemyController->GetPawn()->GetActorLocation();
 
-	// 플레이어 위치를 얻어 목표 위치로 사용합니다.
-	FVector targetLocation = gameCharacter->GetActorLocation() - FVector(1.0);
+	// 적 캐릭터가 Dragon(보스) 인 경우와 그 외 적캐릭터의 경우 목표 위치를 다르게 설정합니다.
+	ADragonCharacter* dragon = Cast<ADragonCharacter>(enemyController->GetPawn());
+	if (IsValid(dragon))
+	{
+		FVector Dragondirection = gameCharacter->GetActorLocation() - currentLocation;
+		Dragondirection.Z = 0.0f;
+		Dragondirection.Normalize();
+
+		// 목표 위치를 플레이어 위치보다 조금 더 뒤로 설정합니다.
+		TargetLocation = gameCharacter->GetActorLocation() - Dragondirection * 1000.0f;
+	}
+	else
+	{
+		// 플레이어 위치를 얻어 목표 위치로 사용합니다.
+		TargetLocation = gameCharacter->GetActorLocation() - FVector(1.0);
+	}
+
 
 	if (bUseMaxTrackingDistance)
 	{
@@ -50,26 +66,26 @@ void UBTService_GetPlayerLocation::TickNode(
 		float minTrackingDistance = 100.0f;
 
 		// 목표 위치까지의 거리가 최대 추적 거리를 초과하는지 확인합니다.
-		if (FVector::Distance(currentLocation, targetLocation) > maxTrackingDistance)
+		if (FVector::Distance(currentLocation, TargetLocation) > maxTrackingDistance)
 		{
 			// 목표 위치까지의 방향을 얻습니다.
-			FVector direction = (targetLocation - currentLocation).GetSafeNormal();
+			FVector direction = (TargetLocation - currentLocation).GetSafeNormal();
 
 			// 최대 추적 거리를 적용합니다.
-			targetLocation = currentLocation + direction * maxTrackingDistance;
+			TargetLocation = currentLocation + direction * maxTrackingDistance;
 		}
 
 		
 		// 목표 위치까지의 방향을 얻습니다.
-		FVector direction = (targetLocation - currentLocation).GetSafeNormal();
+		FVector direction = (TargetLocation - currentLocation).GetSafeNormal();
 
 		// 최소 추적 거리를 적용합니다.
-		targetLocation = targetLocation - direction * minTrackingDistance;
+		TargetLocation = TargetLocation - direction * minTrackingDistance;
 		
 	}
 
 	// 목표 위치를 설정합니다.
 	blackboardComponent->SetValueAsVector(
-		TargetLocationKey.SelectedKeyName, targetLocation);
+		TargetLocationKey.SelectedKeyName, TargetLocation);
 }
 
