@@ -1,6 +1,8 @@
 #include "AnimInstance/DragonCharacter/DragonCharacterAnimInstance.h"
 #include "Actor/EnemyCharacter/Dragon/DragonCharacter.h"
 
+#include "Component/DragonCharacterAttackComponent/DragonCharacterAttackComponent.h"
+
 void UDragonCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
@@ -80,6 +82,18 @@ void UDragonCharacterAnimInstance::AnimNotify_OnRushAttackStarted()
 void UDragonCharacterAnimInstance::AnimNotify_OnRushAttackFinished()
 {
 	OnRushAttackFinished.Broadcast();
+}
+
+void UDragonCharacterAnimInstance::AnimNotify_EnableAttackArea()
+{
+	ADragonCharacter* dragonCharacter = Cast<ADragonCharacter>(GetOwningActor());
+	dragonCharacter->GetAttackComponent()->EnableAttackArea();
+}
+
+void UDragonCharacterAnimInstance::AnimNotify_DisableAttackArea()
+{
+	ADragonCharacter* dragonCharacter = Cast<ADragonCharacter>(GetOwningActor());
+	dragonCharacter->GetAttackComponent()->DisableAttackArea();
 }
 
 void UDragonCharacterAnimInstance::SetDragonDeadState(bool isDead)

@@ -82,6 +82,8 @@ public :
 		return AttackComponent;
 	}
 
+
+
 protected:
 	virtual void OnDead();
 
