@@ -407,7 +407,6 @@ void AGamePlayerController::CheckPlayerBuffState(float deltaTime)
 				float atk = gameCharacter->GetAttackComponent()->GetCurrentAtk();
 				gameCharacter->GetAttackComponent()->UpdateAtk(atk + 15.0f);
 				SupplyInteractionItems.Remove(buff);
-				UE_LOG(LogTemp, Warning, TEXT("Atk Buff is fire!"));
 			}
 			break;
 			case ESupplyItemType::DefBase:
@@ -431,7 +430,6 @@ void AGamePlayerController::CheckPlayerBuffState(float deltaTime)
 			{
 				// 치명타 확률을 +20% 증가시킵니다.
 				gameCharacter->GetAttackComponent()->SetCriticalAttackPercentage(CRITICAL_ATTACK + 20);
-				UE_LOG(LogTemp, Warning, TEXT("CriticalAttack"));
 				SupplyInteractionItems.Remove(buff);
 			}
 			break;

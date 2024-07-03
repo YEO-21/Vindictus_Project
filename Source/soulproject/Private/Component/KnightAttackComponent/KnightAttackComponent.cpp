@@ -49,7 +49,10 @@ void UKnightAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 bool UKnightAttackComponent::IsBlocked(AGameCharacter* gameCharacter, AActor* ownerEnemy) const
 {
+	// Get PlayerForwardVector
 	FVector gameCharacterForward = gameCharacter->GetActorForwardVector();
+
+	// Get EnemyForwardVector
 	FVector enemyCharacterForward = GetOwner()->GetActorForwardVector();
 	enemyCharacterForward *= -1;
 	gameCharacterForward.Z = enemyCharacterForward.Z = 0.0f;
@@ -58,12 +61,9 @@ bool UKnightAttackComponent::IsBlocked(AGameCharacter* gameCharacter, AActor* ow
 		FMathf::ACos(FVector::DotProduct(gameCharacterForward, enemyCharacterForward)));
 
 	// 방어중이며, 방어할 수 있는 각도인 경우
-	if (gameCharacter->GetAttackComponent()->GetBlockState() && angle <= 30.0f)
-	{
-		return true;
-	}
+	return (gameCharacter->GetAttackComponent()->GetBlockState() && angle <= 30.0f)
+		?  true : false;
 
-	return false;
 }
 
 void UKnightAttackComponent::CheckAttackArea()

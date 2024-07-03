@@ -303,8 +303,10 @@ void UPlayerCharacterAttackComponent::CancelAttackState()
 
 void UPlayerCharacterAttackComponent::RequestAttack(FName attackName)
 {
+	// 공격이 시작했음을 나타냅니다.
 	isAttackStarted = true;
 
+	// 공격 이름을 활용하여 공격 데이터 정보를 얻습니다.
 	FString contextString;
 	FAttackData* attackData = DT_AttackData->FindRow<FAttackData>(attackName, contextString);
 

@@ -62,7 +62,6 @@ void UPlayerCharacterInteractComponent::TryInteraction()
 	
 
 	// 상호작용 성공 여부를 얻습니다.
-	//UInteractionParamBase* interactionParam;
 	bool isSucceeded = interactableArea->StartInteraction(onInteractionFinished);
 
 	if (isSucceeded)
@@ -79,6 +78,7 @@ void UPlayerCharacterInteractComponent::TryInteraction()
 			npc->GetInteractionLocation(),
 			npc->GetInteractionRotation());
 
+		// 상호작용 카메라 타겟을 Npc로 설정
 		Cast<AGamePlayerController>(playerCharacter->GetController())->SetCameraViewTarget(npc);
 
 
@@ -88,14 +88,7 @@ void UPlayerCharacterInteractComponent::TryInteraction()
 			 UWeaponNpcInteractParam* weaponNpcInteractParam = 
 				 NewObject<UWeaponNpcInteractParam>(this);
 		 }
-
-
-		// 무기 교환 가능으로 설정합니다.
-		//RequestWeaponChange();
-		//npc->SetIsFullfill(true);
-
-		// Test용 코드
-		//(playerCharacter->GetEquipWeaponComponent())->EquipWeapon();
+	
 	}
 }
 
